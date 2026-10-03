@@ -23,6 +23,8 @@ var _mod: Array[String] = []
 var _organ: Array[String] = []
 var _node: Array[Node3D] = []
 var _bench := {}
+var sugar_release := 1.0          # presynaptic release gain of sugar GRNs (hunger / dopamine, Inagaki et al. 2012)
+var _sugar_release_set := 1.0
 
 
 func setup(p_brain: FlyBrain, p_fly, p_world) -> String:
@@ -122,6 +124,13 @@ func grn_rate(modality: String, chem: Dictionary) -> float:
 
 ## Call every frame before brain.tick().
 func update(_dt: float) -> void:
+	if sugar_release != _sugar_release_set:
+		var si := PackedInt32Array()
+		for k in _idx.size():
+			if _mod[k] in ["sugar", "sugar/low_salt"]:
+				si.append(_idx[k])
+		brain.set_release_gain(si, sugar_release)
+		_sugar_release_set = sugar_release
 	var counts := {}
 	var contact := {"labellum": 0, "leg": 0}
 	if bench_hz > 0.0:

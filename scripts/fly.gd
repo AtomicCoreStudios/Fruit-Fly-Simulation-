@@ -49,6 +49,7 @@ var _body: Node3D
 var taste: FlyTaste
 var taste_bench_hz := 0.0
 var taste_bench_set := "shiu"
+var sugar_release_override := 0.0   # >0: fixed sugar-GRN release gain (test switch)
 var clean_air := false          # resting calibration: no odour, wind or taste stimuli (vision unchanged)
 var opto := {}                 # optogenetic activation: group name -> Poisson rate (Hz), --opto=g:Hz,g2:Hz
 # proboscis extension (PER): MN9 (CB0701, rostrum protractor; McKellar et al. 2020 eLife, Shiu et al.
@@ -422,6 +423,14 @@ func update_senses(dt: float) -> void:
 	if eye != null:
 		eye.update(dt)
 	if taste != null:
+		# hunger -> dopamine onto sugar GRN terminals (DopEcR) -> more release per spike (Inagaki et al. 2012
+		# Cell; Shiu et al. 2022 eLife: hunger acts on sugar GRNs and on second-order neurons G2N-1/Clavicle,
+		# which are not yet identified in FlyWire v783 here). Gain 1 (fed) .. 2 (starved): basis approximate.
+		# Benchmarks (Shiu et al. protocol) keep gain 1 unless --sugar_release is given.
+		if sugar_release_override > 0.0:
+			taste.sugar_release = sugar_release_override
+		elif taste_bench_hz <= 0.0:
+			taste.sugar_release = snappedf(1.0 + hunger, 0.05)
 		taste.update(dt)
 	for gname in opto:
 		b.set_input(gname, opto[gname])

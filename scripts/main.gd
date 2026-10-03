@@ -70,6 +70,7 @@ func _ready() -> void:
 	fly.taste_bench_hz = float(_args.get("taste_bench", "0"))
 	fly.taste_bench_set = _args.get("taste_set", "shiu")
 	fly.clean_air = _args.has("clean_air")
+	fly.sugar_release_override = float(_args.get("sugar_release", "0"))
 	if _args.has("opto") and _args["opto"] != "1":
 		for kv in str(_args["opto"]).split(","):
 			var parts := kv.split(":")

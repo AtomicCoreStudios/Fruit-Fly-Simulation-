@@ -36,6 +36,9 @@ const float TAU_NOISE = 5.0;   // ms, data/physiology_rules.json "noise.tau_ms"
 // p.pad == 1), the offset moves the neuron's excitability toward its set point; afterwards it is frozen.
 layout(set = 0, binding = 19, std430) buffer Homeo         { vec2 homeo[]; };
 const float ETA_H = 0.0001;    // mV per ms per Hz of rate error
+// Presynaptic release gain (neuromodulation of transmitter release, e.g. dopamine via DopEcR on sugar
+// GRN terminals in hungry flies, Inagaki et al. 2012): multiplies every outgoing synaptic weight; 1 = none.
+layout(set = 0, binding = 20, std430) readonly buffer Release { float release_gain[]; };
 
 layout(push_constant, std430) uniform Params {
 	uint n;
@@ -137,8 +140,15 @@ void main() {
 		if (spiked[i] == 0u) return;
 		uint slot = ((p.step + p.delay) % p.slots) * p.n;
 		int e1 = row_ptr[i + 1u];
-		for (int e = row_ptr[i]; e < e1; e++) {
-			atomicAdd(g_in[slot + uint(col[e])], w[e]);
+		float rg = release_gain[i];
+		if (rg == 1.0) {
+			for (int e = row_ptr[i]; e < e1; e++) {
+				atomicAdd(g_in[slot + uint(col[e])], w[e]);
+			}
+		} else {
+			for (int e = row_ptr[i]; e < e1; e++) {
+				atomicAdd(g_in[slot + uint(col[e])], int(float(w[e]) * rg));
+			}
 		}
 	}
 }

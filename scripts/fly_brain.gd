@@ -169,6 +169,7 @@ func _init_gpu(pop_b, group_b, rowptr_b, col_b, w_b) -> String:
 		["activity", zeros_pad], ["gcount", zeros_g], ["rcount", zeros_r],
 		["ext", _ext_cpu.to_byte_array()], ["v_kick", zeros_n], ["gap", _gap_bytes()],
 		["phys", _phys_bytes()], ["st2", _zeros(n * 8)], ["homeo", _homeo_bytes()],
+		["release", _release_init()],
 	]
 	var uniforms: Array[RDUniform] = []
 	for b in specs.size():
@@ -240,6 +241,26 @@ func _homeo_bytes() -> PackedByteArray:
 			a[2 * i + 1] = o[i]
 		homeostasis_loaded = true
 	return a.to_byte_array()
+
+
+var _release := PackedFloat32Array()
+var _release_dirty := false
+
+
+func _release_init() -> PackedByteArray:
+	_release.resize(n)
+	_release.fill(1.0)
+	return _release.to_byte_array()
+
+
+## Presynaptic release gain (neuromodulation): scales all outgoing synapses of the given neurons.
+func set_release_gain(idx: PackedInt32Array, gain: float) -> void:
+	if _release.size() != n:
+		return
+	for i in idx:
+		if i >= 0 and i < n and _release[i] != gain:
+			_release[i] = gain
+			_release_dirty = true
 
 
 ## Save the learned homeostatic offsets (call at the end of a --homeostasis warm-up).
@@ -320,6 +341,9 @@ func tick(frame_dt: float) -> bool:
 	var eye_now := eye_enabled and _eye_pixels.size() > 0
 	if eye_now:
 		_rd.buffer_update(_bufs["eye_pix"], 0, _eye_pixels.size(), _eye_pixels)
+	if _release_dirty:
+		_rd.buffer_update(_bufs["release"], 0, n * 4, _release.to_byte_array())
+		_release_dirty = false
 	var cl := _rd.compute_list_begin()
 	if _sn_n > 0:
 		var spc := PackedByteArray()

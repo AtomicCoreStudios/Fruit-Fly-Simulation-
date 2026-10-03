@@ -126,10 +126,38 @@ def main():
         r, c = linear_sum_assignment(-S)
         acc_thr = 0.4
         kept = [(f_ids[i], b_ids[j], float(S[i, j])) for i, j in zip(r, c) if S[i, j] >= acc_thr]
+        # type-consistent completion: cell types come as left/right homolog sets. From the confident matches,
+        # learn FlyWire type -> BANC type by majority vote (>= 50% of that type's matches); then pair the
+        # still-unmatched members of each type with still-unmatched members of its BANC counterpart type, by
+        # brain-connectivity similarity (Hungarian within the group). Recovers e.g. the left Dandelion
+        # (AN_GNG_68 = AN13B002; Tastekin et al. 2026) whose partner was below the global threshold.
+        n_conf = len(kept)
+        btype = bn.set_index("bid")["Primary Cell Type"]
+        used_b = {b for _, b, _ in kept}; used_f = {f for f, _, _ in kept}
+        votes = pd.DataFrame([(fa.cell_type.get(f), btype.get(b)) for f, b, _ in kept], columns=["ft", "bt"]).dropna()
+        cross = {}
+        for ft, g in votes.groupby("ft"):
+            top = g.bt.value_counts()
+            if top.iloc[0] / len(g) >= 0.5:
+                cross[ft] = top.index[0]
+        fi = {x: i for i, x in enumerate(f_ids)}; bi = {x: j for j, x in enumerate(b_ids)}
+        b_by_type = pd.Series(b_ids).groupby(pd.Series(b_ids).map(btype)).apply(list).to_dict()
+        added = 0
+        for ft, bt in cross.items():
+            fs = [f for f in f_ids if fa.cell_type.get(f) == ft and f not in used_f]
+            bs = [b for b in b_by_type.get(bt, []) if b not in used_b]
+            if not fs or not bs:
+                continue
+            sub = S[np.ix_([fi[f] for f in fs], [bi[b] for b in bs])]
+            rr, cc = linear_sum_assignment(-sub)
+            for i, j in zip(rr, cc):
+                if sub[i, j] > 0:
+                    kept.append((fs[i], bs[j], float(sub[i, j]))); used_f.add(fs[i]); used_b.add(bs[j]); added += 1
         for f, b, s in kept:
             an_pairs[f] = (b, s)
         named = [(f, b, s) for f, b, s in kept if fa.cell_type[f] == bn.set_index("bid").fw_type.get(b)]
         report[fsc] = {"flywire": len(f_ids), "banc": len(b_ids), "matched": len(kept),
+                       "matched_confident": n_conf, "added_by_type_consistency": added, "type_crosswalk_size": len(cross),
                        "median_similarity": round(float(np.median([k[2] for k in kept])) if kept else 0, 3),
                        "pairs_with_identical_type_name": len(named)}
         print(f"{fsc}: {len(kept)}/{len(f_ids)} FlyWire neurons matched (cosine >= {acc_thr}, median "

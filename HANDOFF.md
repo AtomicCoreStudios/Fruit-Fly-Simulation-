@@ -220,4 +220,7 @@ one line. Check whether meshes exist for the right-hand side or need mirroring.
   - Results: the global runaway is gone; resting rates are near the literature; sugar → MN9 rises steadily (lower than Shiu's model); the giant fibre still triggers TTMn.
   - Open: the leg sugar → PER route is too weak; the visual system is excluded from physiology; the APL and AL local neurons are still spiking point neurons, not graded.
   - Run Godot with `--disable-vsync --fixed-fps 30` (vsync freeze on this PC).
+- **Phase 5b, leg sugar → PER (2026-10-03, branch `phase5b-leg-per`, in progress):**
+  - Added: type-consistent AN matching, presynaptic release-gain buffer, hunger → sugar-GRN release, named feeding neurons mapped to v783, and the diagnostics `tools/diag_leg_per.py` and `tools/diag_sugar_path.py`.
+  - The leg arc LgLG4 → AN01B004 → Bract → MN9 is present but too weak. The missing gain is central (see README).
 
