@@ -1942,7 +1942,7 @@
   "mn9_on_hz": 10.0
  },
  "neurons": 161471,
- "synapse_edges": 15914767,
+ "synapse_edges": 15729408,
  "tex_width": 1024,
  "n_pad": 161792,
  "regions": [

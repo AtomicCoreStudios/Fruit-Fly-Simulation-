@@ -45,6 +45,10 @@ func _ready() -> void:
 	var which: String = _args.get("connectome", "flywire")
 	if not FileAccess.file_exists("res://data/connectome_%s.bin" % which):
 		which = "synthetic"
+	brain.physiology = _args.get("physiology", "1") != "0"
+	brain.homeostasis_learning = _args.has("homeostasis")
+	if _args.has("phys_ablate"):
+		brain.phys_ablate = Array(str(_args["phys_ablate"]).split(","))
 	var err := brain.load_connectome("res://data/connectome_%s.bin" % which, "res://data/connectome_%s.json" % which)
 	_build_hud()
 	if err != "":
@@ -65,6 +69,7 @@ func _ready() -> void:
 	fly.graded_c_mv = float(_args.get("vpn_c", "19"))
 	fly.taste_bench_hz = float(_args.get("taste_bench", "0"))
 	fly.taste_bench_set = _args.get("taste_set", "shiu")
+	fly.clean_air = _args.has("clean_air")
 	if _args.has("opto") and _args["opto"] != "1":
 		for kv in str(_args["opto"]).split(","):
 			var parts := kv.split(":")
@@ -77,7 +82,8 @@ func _ready() -> void:
 	if _args.has("yaw"):
 		fly.rotation.y = float(_args["yaw"])
 	_build_brain_view()
-	print("FLY-UI: %d neurons, %d synaptic edges (%s)" % [brain.n, brain.e, brain.meta["source"]])
+	print("FLY-UI: %d neurons, %d synaptic edges (%s); intrinsic physiology %s" % [brain.n, brain.e, brain.meta["source"],
+		("ON (spontaneous activity + adaptation" + (", homeostasis LEARNING" if brain.homeostasis_learning else (", homeostatic offsets loaded" if brain.homeostasis_loaded else "")) + ")") if brain.physiology_loaded else "off"])
 	if brain.flyvis_enabled:
 		print("optic lobe: FlyVis %s graded model, %d cells x 2 eyes driving %d FlyWire neurons (gain %.0f Hz)" % [
 			brain.flyvis_meta["model"], brain.flyvis_meta["n_nodes"], brain.flyvis_meta["n_out"], brain.flyvis_gain])
@@ -642,6 +648,9 @@ func _maybe_finish() -> void:
 		print("screenshot: ", path)
 	if _rec:
 		_rec.close()
+	if brain.homeostasis_learning:
+		brain.save_homeostasis()
+		print("homeostasis: learned offsets saved to data/homeostasis_offsets.bin")
 	if _eye_f:
 		_eye_f.close()
 	if _probe_f:

@@ -394,6 +394,53 @@ def build_flywire(raw, seed):
         MN_TYPES = sorted(tk.type.unique())
     S = np.where(side == "right", "R", "L")
 
+    # Transmitter signs by Dale's principle (FLY_SIGNS=dale, default; FLY_SIGNS=shiu for the original
+    # per-connection signs): each neuron's transmitter is its experimentally known one (known_nt) or
+    # else FlyWire's neuron-level prediction (top_nt; Eckstein et al. 2024 Cell). ACh +, GABA/Glu -,
+    # dopamine/serotonin/octopamine 0 for FAST transmission (they act through metabotropic receptors;
+    # their slow modulatory effects are not modelled). basis: literature
+    sign_mode = os.environ.get("FLY_SIGNS", "dale")
+    if sign_mode == "dale":
+        knt = a["known_nt"].fillna("").astype(str).str.lower().to_numpy() if "known_nt" in a.columns else np.full(n, "")
+        tnt = a["top_nt"].fillna("").astype(str).str.lower().to_numpy() if "top_nt" in a.columns else np.full(n, "")
+        nt = np.where(knt != "", knt, tnt)
+        def nsign(x):
+            if "acetylcholine" in x and "negative" not in x: return 1.0
+            if "gaba" in x or "glutamate" in x: return -1.0
+            if any(k in x for k in ("dopamine", "serotonin", "octopamine", "tyramine")): return 0.0
+            return 1.0 if x == "" else 0.0
+        nsg = np.array([nsign(x) for x in nt], np.float32)
+        counts = np.abs(w) / 0.275
+        w = (0.275 * counts * nsg[pre]).astype(np.float32)
+        print(f"  Dale signs: {int((nsg > 0).sum())} excitatory, {int((nsg < 0).sum())} inhibitory, "
+              f"{int((nsg == 0).sum())} modulatory (no fast effect) neurons")
+    # Input-resistance scaling for very large neurons. A synapse's voltage effect scales with the postsynaptic
+    # cell's input resistance, R_in = R_m / A for a passive membrane (gamma = 1, area ~ input synapse count).
+    # Shiu et al.'s uniform 0.275 mV/synapse was validated on circuits whose neurons have up to ~6000 input
+    # synapses (MN9 ~5.6-5.9k), so it is kept below FLY_SIZE_NREF (default 6000) and the passive correction
+    # (w *= (NREF / N_inputs)^gamma) is applied only above it: the ~0.5% giant integrators, mainly
+    # multiglomerular AL local neurons and APL (9-17k inputs), which otherwise saturate on spontaneous ORN
+    # input. Calibrated on two benchmarks (AL resting rates, sugar -> MN9); see README "Spontaneous activity".
+    # FLY_SIZE_NREF= (empty) and FLY_SIZE_GAMMA=0.38: the FlyVis power law over all neurons; FLY_SIZE_GAMMA=0:
+    # Shiu et al. uniform weights. basis: biophysics (passive membrane) + approximate threshold
+    os.environ.setdefault("FLY_SIZE_NREF", "6000")
+    size_gamma = float(os.environ.get("FLY_SIZE_GAMMA", "1.0"))
+    size_mode = os.environ.get("FLY_SIZE_MODE", "inputs")
+    if size_gamma > 0:
+        if size_mode == "inputs":
+            # total input synapses per neuron (the FlyVis-fitted rule: strength ~ inputs^-0.38)
+            area = np.bincount(post, weights=np.abs(w) / 0.275, minlength=n).astype(np.float64)
+            area[area <= 0] = np.median(area[area > 0])
+        else:
+            cs = pd.read_csv(os.path.join(raw, "cell_stats.csv.gz")).set_index("root_id").area_nm.reindex(ids)
+            area = cs.fillna(cs.median()).to_numpy(np.float64)
+        nref = float(os.environ.get("FLY_SIZE_NREF", "0")) or float(np.median(area))
+        cap = bool(os.environ.get("FLY_SIZE_NREF", ""))     # cap mode: only neurons larger than nref are scaled
+        scale = (nref / area) ** size_gamma
+        if cap:
+            scale = np.minimum(scale, 1.0)
+        w = (w * scale[post]).astype(np.float32)
+        print(f"  input-resistance scaling gamma={size_gamma}: synapse weight factor 5-95% {np.percentile(scale, 5):.2f}-{np.percentile(scale, 95):.2f}")
     # Photoreceptors (R1-6, R7, R8) release histamine onto histamine-gated chloride channels
     # (Hardie 1989; Gengs et al. 2002), i.e. they INHIBIT their targets. FlyWire's transmitter
     # predictor has no histamine class, so their edges come out mixed; force them inhibitory.
@@ -539,6 +586,17 @@ def build_flywire(raw, seed):
         group = np.concatenate([group, np.zeros(nv, np.int32)])
         ids = np.concatenate([ids, vn.bid.to_numpy(np.int64)])
         ve_w = (0.275 * ve["Excitatory x Connectivity"].to_numpy(np.float64)).astype(np.float32)
+        if size_gamma > 0:
+            if size_mode == "inputs":
+                vin = np.bincount(ve.Postsynaptic_Index.to_numpy() - 0, weights=ve.Connectivity.to_numpy(), minlength=len(area) + nv)
+                area_all = np.concatenate([area, vin[len(area):]]).astype(np.float64)
+                area_all[:len(area)] += vin[:len(area)]          # bridged FlyWire DN/AN: add their VNC inputs
+                area_all[area_all <= 0] = np.median(area)
+            else:
+                bnn = pd.read_csv(os.path.join(raw, "banc", "neurons.csv.gz")).set_index("Root ID")["Surface area (nm^2)"]
+                area_all = np.concatenate([area, bnn.reindex(vn.bid).fillna(np.median(area)).to_numpy(np.float64)])
+            vs = (nref / area_all[ve.Postsynaptic_Index.to_numpy()]) ** size_gamma
+            ve_w = (ve_w * (np.minimum(vs, 1.0) if cap else vs)).astype(np.float32)
         pre = np.concatenate([pre, ve.Presynaptic_Index.to_numpy(np.int64)])
         post = np.concatenate([post, ve.Postsynaptic_Index.to_numpy(np.int64)])
         w = np.concatenate([w, ve_w])
@@ -564,6 +622,20 @@ def build_flywire(raw, seed):
         for i, k in enumerate(uniq):
             m_ = popid == i
             pop_meta.append({"name": str(k), "region": int(np.bincount(region[m_]).argmax()), "count": int(m_.sum()), "sign": 1})
+    # Peripheral afferents (ORNs, GRNs, mechanosensory, photoreceptors...) initiate spikes in the periphery
+    # (antenna, labellum, legs); FlyWire/BANC synapses ONTO their axon terminals (ORN-ORN, LN->ORN,
+    # GABAergic feedback onto GRNs) act presynaptically on transmitter release and cannot fire the cell
+    # (Olsen & Wilson 2008 Nature; Root et al. 2008 Cell; Horne et al. 2018 eLife). In a point-neuron LIF
+    # they would wrongly drive spikes, so they are removed (FLY_AFFERENT_INPUTS=1 keeps them, Shiu et al.).
+    # Presynaptic gain control itself is not modelled. basis: literature (approximation: omission)
+    if os.environ.get("FLY_AFFERENT_INPUTS", "0") != "1":
+        aff = np.zeros(n, bool)
+        aff[:len(sc)] = sc == "sensory"
+        if len(sc) < n:
+            aff[len(sc):] = np.isin(vsc, ["sensory", "sensory_ascending", "sensory_descending"])
+        cut = aff[post]
+        print(f"  afferent axon-terminal inputs removed: {int(cut.sum())} edges onto {int(aff.sum())} sensory neurons")
+        pre, post, w = pre[~cut], post[~cut], w[~cut]
     for g in groups:
         g["count"] = int(np.sum(group == gid[g["name"]]))
     print(f"  {len(uniq)} populations, {len(groups) - 1} sensory/motor groups:")

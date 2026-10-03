@@ -215,3 +215,9 @@ one line. Check whether meshes exist for the right-hand side or need mirroring.
     2. Leg biomechanics: motor neurons → joints, proprioceptors ← joints.
     3. Re-run the loom tests.
     4. Resume the FlyVis co-tuning screen.
+- **Phase 5a, spontaneous activity and adaptation (2026-10-03, branch `phase5-physiology`):**
+  - Added: OU noise, a calibrated resting offset, AdEx adaptation, homeostatic offsets (`data/homeostasis_offsets.bin`; re-learn with `--homeostasis --clean_air` after ANY connectome change), Dale signs, removal of inputs onto sensory afferents, and passive scaling only above 6,000 inputs.
+  - Results: the global runaway is gone; resting rates are near the literature; sugar → MN9 rises steadily (lower than Shiu's model); the giant fibre still triggers TTMn.
+  - Open: the leg sugar → PER route is too weak; the visual system is excluded from physiology; the APL and AL local neurons are still spiking point neurons, not graded.
+  - Run Godot with `--disable-vsync --fixed-fps 30` (vsync freeze on this PC).
+

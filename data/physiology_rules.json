@@ -1,0 +1,180 @@
+{
+ "note": "Intrinsic physiology added to the Shiu et al. LIF: spontaneous activity (membrane noise + resting offset calibrated to a target in-vivo spontaneous rate) and spike-frequency adaptation (AdEx-style adaptation current, target adaptation index = steady-state / onset rate for a step that first drives the neuron to 100 Hz). Rules are matched top to bottom; the first match wins. basis per rule given in 'basis'. Edit freely; rebuild with tools/build_physiology.py.",
+ "noise": {
+  "sigma_mv": 2.0,
+  "tau_ms": 5.0,
+  "basis": "approximate: in-vivo membrane-potential fluctuations of a few mV in fly central neurons (e.g. Gouwens & Wilson 2009 J Neurosci for AL neurons); OU noise"
+ },
+ "adaptation": {
+  "tau_w_ms": 300.0,
+  "basis": "approximate: adaptation time constants of hundreds of ms in fly ORNs/PNs (Nagel & Wilson 2011 Nat Neurosci; Bhandawat et al. 2007 Nat Neurosci)"
+ },
+ "rules": [
+  {
+   "match": {
+    "cell_type": [
+     "DNp01"
+    ]
+   },
+   "rate_hz": 0.0,
+   "adapt_index": 1.0,
+   "basis": "literature: giant fibre is silent at rest and follows high frequencies without adaptation (von Reyn et al. 2014 Nat Neurosci; Tanouye & Wyman 1980)"
+  },
+  {
+   "match": {
+    "cell_type": [
+     "APL"
+    ]
+   },
+   "rate_hz": 0.0,
+   "adapt_index": 1.0,
+   "basis": "literature: APL is non-spiking/graded (Papadopoulou et al. 2011 Science); no spontaneous spikes here"
+  },
+  {
+   "match": {
+    "cell_type": [
+     "TTMn",
+     "PSI",
+     "DLM1-4",
+     "DLM5",
+     "tergotrochanter"
+    ]
+   },
+   "rate_hz": 0.0,
+   "adapt_index": 1.0,
+   "basis": "literature: escape/flight motor neurons are quiescent at rest and fire only with giant-fibre or flight drive (Tanouye & Wyman 1980; von Reyn et al. 2014)"
+  },
+  {
+   "match": {
+    "super_class": [
+     "optic",
+     "visual_projection",
+     "visual_centrifugal"
+    ],
+    "cell_class": [
+     "visual"
+    ]
+   },
+   "rate_hz": null,
+   "basis": "excluded: optic lobe/photoreceptors are driven by the eye, FlyVis and the graded optic-lobe model"
+  },
+  {
+   "match": {
+    "cell_class": [
+     "olfactory"
+    ]
+   },
+   "rate_hz": "door_sfr",
+   "adapt_index": 0.5,
+   "basis": "measured: per-receptor spontaneous rate from DoOR (MÃ¼nch & Galizia 2016; Hallem & Carlson 2006; de Bruyne et al. 2001), class median where missing; adaptation approximate (Nagel & Wilson 2011)"
+  },
+  {
+   "match": {
+    "cell_class": [
+     "gustatory"
+    ]
+   },
+   "rate_hz": 1.0,
+   "adapt_index": 0.6,
+   "basis": "literature-approximate: GRN spontaneous activity is low, ~0-2 Hz (Hiroi et al. 2002 Chem Senses)"
+  },
+  {
+   "match": {
+    "cell_class": [
+     "mechanosensory"
+    ]
+   },
+   "rate_hz": 3.0,
+   "adapt_index": 0.6,
+   "basis": "approximate"
+  },
+  {
+   "match": {
+    "cell_class": [
+     "ALPN"
+    ]
+   },
+   "rate_hz": 4.0,
+   "adapt_index": 0.5,
+   "basis": "literature: uniglomerular PNs fire spontaneously at a few Hz (Wilson et al. 2004 Science; Bhandawat et al. 2007)"
+  },
+  {
+   "match": {
+    "cell_class": [
+     "ALLN"
+    ]
+   },
+   "rate_hz": 2.0,
+   "adapt_index": 0.6,
+   "basis": "literature-approximate: spiking AL local neurons (Seki et al. 2010 J Neurophysiol)"
+  },
+  {
+   "match": {
+    "cell_class": [
+     "Kenyon_Cell"
+    ]
+   },
+   "rate_hz": 0.2,
+   "adapt_index": 0.3,
+   "basis": "literature: Kenyon cells are nearly silent at rest (Turner et al. 2008 J Neurophysiol: <0.5 Hz) and adapt strongly"
+  },
+  {
+   "match": {
+    "cell_class": [
+     "MBON"
+    ]
+   },
+   "rate_hz": 6.0,
+   "adapt_index": 0.6,
+   "basis": "literature: MBONs fire tonically at several Hz (Hige et al. 2015 Neuron)"
+  },
+  {
+   "match": {
+    "cell_class": [
+     "DAN",
+     "MBIN"
+    ]
+   },
+   "rate_hz": 2.0,
+   "adapt_index": 0.6,
+   "basis": "approximate"
+  },
+  {
+   "match": {
+    "cell_class": [
+     "LHLN",
+     "LHCENT"
+    ]
+   },
+   "rate_hz": 3.0,
+   "adapt_index": 0.6,
+   "basis": "literature-approximate: LH neurons fire spontaneously at a few Hz (Fisek & Wilson 2014 Nat Neurosci)"
+  },
+  {
+   "match": {
+    "super_class": [
+     "motor"
+    ]
+   },
+   "rate_hz": 0.5,
+   "adapt_index": 0.85,
+   "basis": "approximate: motor neurons largely quiet at rest; weak adaptation"
+  },
+  {
+   "match": {
+    "super_class": [
+     "descending"
+    ]
+   },
+   "rate_hz": 1.0,
+   "adapt_index": 0.7,
+   "basis": "approximate"
+  },
+  {
+   "match": {},
+   "rate_hz": 1.0,
+   "adapt_index": 0.6,
+   "basis": "approximate default: sparse baseline activity across the central brain and nerve cord"
+  }
+ ]
+}

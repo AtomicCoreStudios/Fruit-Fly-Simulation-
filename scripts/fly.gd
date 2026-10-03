@@ -49,6 +49,7 @@ var _body: Node3D
 var taste: FlyTaste
 var taste_bench_hz := 0.0
 var taste_bench_set := "shiu"
+var clean_air := false          # resting calibration: no odour, wind or taste stimuli (vision unchanged)
 var opto := {}                 # optogenetic activation: group name -> Poisson rate (Hz), --opto=g:Hz,g2:Hz
 # proboscis extension (PER): MN9 (CB0701, rostrum protractor; McKellar et al. 2020 eLife, Shiu et al.
 # 2024) drives a muscle activation that extends rostrum + haustellum. Joint directions and the
@@ -392,8 +393,11 @@ func update_senses(dt: float) -> void:
 			_odour_adapt = {"food": maxf(food, 0.03), "aversive": maxf(bad, 0.03)}
 		# ORNs: steep Hill dose-response around a slowly adapting set point, so
 		# they report left/right contrast instead of saturating near the source
-		b.set_input("orn_%s_attractive" % side, 5.0 + 250.0 * _hill(food, _odour_adapt["food"]))
-		b.set_input("orn_%s_aversive" % side, 5.0 + 250.0 * _hill(bad, _odour_adapt["aversive"]))
+		# with intrinsic physiology loaded the spontaneous rate comes from data/physiology.bin (DoOR), so
+		# the old 5 Hz Poisson baseline would double-count it
+		var base := 0.0 if b.physiology_loaded else 5.0
+		b.set_input("orn_%s_attractive" % side, base + 250.0 * _hill(food, _odour_adapt["food"]))
+		b.set_input("orn_%s_aversive" % side, base + 250.0 * _hill(bad, _odour_adapt["aversive"]))
 		odour_sum["food"] += food * 0.5
 		odour_sum["aversive"] += bad * 0.5
 		sense["odour_" + side] = food
@@ -401,7 +405,7 @@ func update_senses(dt: float) -> void:
 		# Johnston's organ: wind blowing onto this side of the head
 		var wind: Vector3 = world.wind
 		var from_side := maxf(0.0, (-wind.normalized()).dot(left * sgn)) if wind.length() > 0.01 else 0.0
-		var jo := 10.0 + wind.length() * (60.0 + 220.0 * from_side)
+		var jo := (0.0 if b.physiology_loaded else 10.0) + wind.length() * (60.0 + 220.0 * from_side)
 		b.set_input("jo_" + side, jo)
 		sense["jo_" + side] = jo
 		# taste: tarsal / labellar GRNs touching a patch
@@ -421,8 +425,8 @@ func update_senses(dt: float) -> void:
 		taste.update(dt)
 	for gname in opto:
 		b.set_input(gname, opto[gname])
-	if taste_bench_hz > 0.0:
-		# Shiu et al. benchmark protocol: only the stimulated GRNs receive input
+	if taste_bench_hz > 0.0 or clean_air:
+		# Shiu et al. benchmark protocol: only the stimulated GRNs receive input; clean air: no stimuli
 		for gdef in b.meta["groups"]:
 			if gdef.get("role", "") == "input":
 				b.set_input(gdef["name"], 0.0)

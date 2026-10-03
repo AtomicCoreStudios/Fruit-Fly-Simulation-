@@ -1,0 +1,47 @@
+{
+ "n": 161471,
+ "sigma_mv": 2.0,
+ "tau_noise_ms": 5.0,
+ "tau_w_ms": 300.0,
+ "rules_used": {
+  "literature: giant fibre is silent at rest and follows high f": 2,
+  "literature: APL is non-spiking/graded (Papadopoulou et al. 2": 2,
+  "literature: escape/flight motor neurons are quiescent at res": 32,
+  "measured: per-receptor spontaneous rate from DoOR (M\u00c3\u0192\u00c2\u00bcnch ": 2279,
+  "literature-approximate: GRN spontaneous activity is low, ~0-": 1413,
+  "approximate": 1297,
+  "literature: uniglomerular PNs fire spontaneously at a few Hz": 685,
+  "literature-approximate: spiking AL local neurons (Seki et al": 429,
+  "literature: Kenyon cells are nearly silent at rest (Turner e": 5177,
+  "literature: MBONs fire tonically at several Hz (Hige et al. ": 96,
+  "literature-approximate: LH neurons fire spontaneously at a f": 556,
+  "approximate: motor neurons largely quiet at rest; weak adapt": 777,
+  "approximate default: sparse baseline activity across the cen": 42595
+ },
+ "calibration": {
+  "mu_mv": [
+   -6.0,
+   -3.99,
+   -1.99,
+   0.02,
+   2.02,
+   4.03,
+   6.03,
+   8.04,
+   10.04,
+   12.05
+  ],
+  "rate_hz": [
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.2,
+   6.05,
+   22.0,
+   36.45,
+   49.05
+  ]
+ }
+}

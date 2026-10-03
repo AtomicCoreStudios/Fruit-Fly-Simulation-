@@ -9,10 +9,10 @@ ROOT = pathlib.Path(__file__).resolve().parents[1]
 GODOT = r"F:\GODOT4.6\Godot_v4.6-stable_win64_console.exe"
 
 
-def run(f, sset, frames=420):
+def run(f, sset, frames=420, extra=()):
     csv = f"recordings/taste_bench_{sset}_{f:g}.csv"
-    subprocess.run([GODOT, "--path", str(ROOT), "--quit-after", str(frames * 4), "--", "--tethered", "--vision=none",
-                    f"--frames={frames}", f"--taste_bench={f}", f"--taste_set={sset}", f"--record={csv}"],
+    subprocess.run([GODOT, "--path", str(ROOT), "--disable-vsync", "--fixed-fps", "30", "--quit-after", str(frames * 4), "--", "--tethered", "--vision=none",
+                    f"--frames={frames}", f"--taste_bench={f}", f"--taste_set={sset}", f"--record={csv}", *extra],
                    capture_output=True, timeout=900)
     d = pd.read_csv(ROOT / csv)
     d = d[d.t_ms > 1000]
@@ -21,6 +21,7 @@ def run(f, sset, frames=420):
 
 def main():
     ap = argparse.ArgumentParser(); ap.add_argument("--set", default="shiu")
+    ap.add_argument("--extra", nargs="*", default=[], help="extra Godot user args, e.g. --phys_ablate=adapt")
     ap.add_argument("--freqs", type=float, nargs="+", default=[20, 40, 60, 80, 100, 150, 200])
     a = ap.parse_args()
     ref = {}
@@ -29,7 +30,7 @@ def main():
         ref = {float(k): v[0] for k, v in json.loads(rp.read_text())["rates"].items()}
     rows = []
     for f in a.freqs:
-        r, l, per = run(f, a.set)
+        r, l, per = run(f, a.set, extra=a.extra)
         rr = ref.get(f, [float("nan")] * 2)
         rows.append((f, r, l, rr[0], rr[1], per))
         print(f"{a.set} {f:5.0f} Hz -> MN9 R/L {r:6.1f}/{l:6.1f} Hz   exact reference R/L {rr[0]:6.1f}/{rr[1]:6.1f}   PER {per:.2f}", flush=True)

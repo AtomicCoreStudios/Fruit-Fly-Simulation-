@@ -27,6 +27,15 @@ layout(set = 0, binding = 14, std430) readonly buffer Ext { float ext[]; };
 // the postsynaptic membrane voltage on the next step (mode 2 fills, mode 0 applies)
 layout(set = 0, binding = 15, std430) buffer VKick         { int v_kick[]; };
 layout(set = 0, binding = 16, std430) readonly buffer Gap  { ivec4 gap[]; };   // pre, post, micro-volts, 0
+// Intrinsic physiology (tools/build_physiology.py, data/physiology_rules.json): per neuron
+// (mu = resting offset mV, sigma = OU membrane noise mV, b = adaptation increment mV, tau_w ms)
+layout(set = 0, binding = 17, std430) readonly buffer Phys { vec4 phys[]; };
+layout(set = 0, binding = 18, std430) buffer State2        { vec2 st2[]; };     // (noise x, adaptation w)
+const float TAU_NOISE = 5.0;   // ms, data/physiology_rules.json "noise.tau_ms"
+// Homeostatic intrinsic plasticity: (target rate Hz, learned offset mV). While learning (mode 0 with
+// p.pad == 1), the offset moves the neuron's excitability toward its set point; afterwards it is frozen.
+layout(set = 0, binding = 19, std430) buffer Homeo         { vec2 homeo[]; };
+const float ETA_H = 0.0001;    // mV per ms per Hz of rate error
 
 layout(push_constant, std430) uniform Params {
 	uint n;
@@ -53,6 +62,14 @@ uint pcg(uint x) {
 	return (w2 >> 22u) ^ w2;
 }
 
+float gauss(uint i, uint step) {
+	uint a = pcg(i * 2654435761u ^ pcg(step * 2246822519u + 7u));
+	uint c = pcg(a + 0x9E3779B9u);
+	float u1 = (float(a & 0xFFFFFFu) + 1.0) / 16777217.0;
+	float u2 = float(c & 0xFFFFFFu) / 16777216.0;
+	return sqrt(-2.0 * log(u1)) * cos(6.2831853 * u2);
+}
+
 void main() {
 	uint i = gl_GlobalInvocationID.x;
 	if (i >= p.n) return;
@@ -67,7 +84,20 @@ void main() {
 		float gi = g[i] + float(atomicExchange(g_in[slot + i], 0)) * 0.001;
 		int gid = group_id[i];
 		float rate = group_rate[gid] + ext[i];
-		float bias = ext[p.n + i];
+		vec4 ph = phys[i];
+		vec2 s2 = st2[i];
+		if (ph.y > 0.0) {
+			float en = exp(-p.dt / TAU_NOISE);
+			s2.x = s2.x * en + ph.y * sqrt(1.0 - en * en) * gauss(i, p.step);
+		}
+		s2.y *= exp(-p.dt / max(ph.w, 1.0));
+		vec2 hm = homeo[i];
+		if (p.pad == 1u && hm.x >= 0.0) {
+			float r_est = activity[i] / 0.06;   // spikes filtered with 60 ms time constant -> Hz
+			hm.y = clamp(hm.y + ETA_H * p.dt * (hm.x - r_est), -40.0, 15.0);
+			homeo[i] = hm;
+		}
+		float bias = ext[p.n + i] + ph.x + s2.x - s2.y + hm.y;
 		float vi = v[i] + float(atomicExchange(v_kick[i], 0)) * 0.001;
 		bool not_refr = refrac[i] <= 0.0;
 		if (not_refr) {
@@ -90,11 +120,13 @@ void main() {
 			vi = p.v_reset;
 			gi = 0.0;
 			refrac[i] = rate > 0.0 ? 0.0 : p.t_ref;   // Poisson-stimulated neurons: no refractory period
+			s2.y += ph.z;                              // spike-frequency adaptation
 			atomicAdd(group_count[gid], 1u);
 			atomicAdd(pop_count[pop_id[i]], 1u);
 		}
 		v[i] = vi;
 		g[i] = gi;
+		st2[i] = s2;
 		spiked[i] = s;
 		activity[i] = activity[i] * p.act_decay + float(s);
 	} else if (p.mode == 2u) {

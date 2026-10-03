@@ -1,0 +1,126 @@
+"""Per-neuron intrinsic physiology for the LIF brain: spontaneous activity and spike-frequency
+adaptation, from data/physiology_rules.json (literature table) -> data/physiology.bin.
+
+Neuron model (identical to shaders/lif.glsl, exact integration at dt = 0.5 ms):
+  dv/dt = (v_rest - v + g + bias + mu + x - w) / tau_m       (x: OU noise, sigma, tau_noise)
+  dw/dt = -w / tau_w ;  on spike: w += b                      (adaptation current, mV)
+Calibration (single neuron, no synaptic input):
+  mu(rate): resting offset that gives the target spontaneous rate under the noise
+  b(index): adaptation increment that makes a step input, which first drives the neuron to
+            100 Hz, settle to adapt_index x 100 Hz
+Output per neuron (model order: FlyWire neurons, then nerve-cord neurons): vec4(mu, sigma, b, tau_w);
+neurons excluded by the rules get (0, 0, 0, 1) i.e. unchanged Shiu et al. behaviour.
+"""
+import json, pathlib
+import numpy as np, pandas as pd
+
+ROOT = pathlib.Path(__file__).resolve().parents[1]
+DT, TM, TS, VR, VTH, TREF = 0.5, 20.0, 5.0, -52.0, -45.0, 2.2
+
+
+def simulate(mu, sigma, b, tau_w, tau_n, t_ms, drive=0.0, n=400, seed=0):
+    """vectorised single-neuron simulations; mu/b arrays of length n. Returns spike counts per 50-ms bin."""
+    rng = np.random.default_rng(seed)
+    v = np.full(n, VR); x = np.zeros(n); w = np.zeros(n); ref = np.zeros(n)
+    em = np.exp(-DT / TM); en = np.exp(-DT / tau_n); ew = np.exp(-DT / tau_w)
+    steps = int(t_ms / DT); bins = np.zeros((steps // 100 + 1, n))
+    for s in range(steps):
+        x = x * en + sigma * np.sqrt(1 - en * en) * rng.standard_normal(n)
+        w = w * ew
+        inp = mu + x - w + drive
+        act = ref <= 0
+        v = np.where(act, VR + inp + (v - VR - inp) * em, v)
+        ref -= DT
+        spk = act & (v > VTH)
+        v[spk] = VR; ref[spk] = TREF; w[spk] += b[spk] if np.ndim(b) else b
+        bins[s // 100] += spk
+    return bins
+
+
+def calibrate(sigma, tau_n, tau_w):
+    mus = np.linspace(-6, 14, 400)
+    rate = simulate(mus, sigma, 0.0, tau_w, tau_n, 20000).sum(0) / 20.0
+    # drive giving ~100 Hz onset without adaptation, then b grid
+    drives = np.linspace(5, 60, 400)
+    r0 = simulate(np.zeros(400), sigma, 0.0, tau_w, tau_n, 2000, drive=drives).sum(0) / 2.0
+    d100 = float(np.interp(100.0, r0, drives))
+    bs = np.linspace(0, 4, 400)
+    bins = simulate(np.zeros(400), sigma, bs, tau_w, tau_n, 3000, drive=d100)
+    onset = bins[:2].sum(0) / 0.1                      # first 100 ms
+    steady = bins[-20:].sum(0) / 1.0                   # last second
+    index = steady / np.maximum(onset, 1)
+    return mus, rate, bs, index, d100
+
+
+def main():
+    rules = json.loads((ROOT / "data/physiology_rules.json").read_text())
+    sigma = rules["noise"]["sigma_mv"]; tau_n = rules["noise"]["tau_ms"]; tau_w = rules["adaptation"]["tau_w_ms"]
+    mus, rate, bs, index, d100 = calibrate(sigma, tau_n, tau_w)
+    print(f"calibration: rate at mu=0 {np.interp(0, mus, rate):.2f} Hz; step drive for 100 Hz onset {d100:.1f} mV; "
+          f"adaptation index at b=0 {index[0]:.2f}, at b=1 {np.interp(1, bs, index):.2f}")
+    # neuron table in model order
+    comp = pd.read_csv(ROOT / "data/raw/Completeness_783.csv", index_col=0)
+    a = pd.read_csv(ROOT / "data/raw/annot_Supplemental_file1_neuron_annotations.tsv", sep="\t", low_memory=False,
+                    usecols=["root_id", "super_class", "cell_class", "cell_type"]).drop_duplicates("root_id").set_index("root_id").reindex(comp.index)
+    tk = pd.read_csv(ROOT / "data/tastekin2026_flywire_types.tsv", sep="\t", comment="#")
+    a.loc[a.index.isin(tk.root_id[tk["class"] == "motor"]), "super_class"] = "motor"
+    tab = a.reset_index(drop=True)
+    vp = ROOT / "data/vnc/vnc_neurons.csv"
+    if vp.exists():
+        vn = pd.read_csv(vp)
+        vsc = vn.super_class.replace({"ventral_nerve_cord_intrinsic": "vnc_intrinsic", "sensory_ascending": "sensory"})
+        vcc = vn.cell_class.replace({"taste_bristle_gustatory_neuron": "gustatory"}).where(
+            ~vn.cell_class.isin(["chordotonal_organ_neuron", "campaniform_sensillum_neuron", "hair_plate_neuron",
+                                 "bristle_neuron", "taste_bristle_tactile_neuron"]), "mechanosensory")
+        tab = pd.concat([tab, pd.DataFrame({"super_class": vsc, "cell_class": vcc, "cell_type": vn.cell_type})], ignore_index=True)
+    # DoOR spontaneous rates per glomerulus (spike-recording datasets only)
+    sfr = pd.read_csv(ROOT / "data/raw/door/door_sfr.csv")
+    ephys = [c for c in sfr.columns if any(k in c for k in ("Hallem", "Bruyne", "Kreher", "Dweck", "Yao", "Goldman", "Kwon", "Montague", "Stensmyr", "Goes", "Ronderos"))]
+    sfr["rate"] = sfr[ephys].where(sfr[ephys] > 0).median(1)
+    mp = pd.read_csv(ROOT / "data/raw/door/door_mappings.csv", sep=";")
+    glo_rate = mp.merge(sfr[["receptor", "rate"]], on="receptor").dropna(subset=["rate"]).groupby("glomerulus").rate.median()
+    orn_median = float(glo_rate.median())
+    print(f"DoOR: {len(glo_rate)} glomeruli with measured ORN spontaneous rates (median {orn_median:.1f} Hz)")
+    out = np.zeros((len(tab), 4), np.float32); out[:, 3] = 1.0
+    target_rate = np.full(len(tab), -1.0, np.float32)     # homeostatic set point (Hz); -1 = none
+    used = {}
+    ct = tab.cell_type.fillna("").astype(str).values; cc = tab.cell_class.fillna("").astype(str).values
+    sc = tab.super_class.fillna("").astype(str).values
+    for i in range(len(tab)):
+        for k, r in enumerate(rules["rules"]):
+            m = r["match"]
+            if "cell_type" in m and ct[i] not in m["cell_type"]:
+                continue
+            if "cell_class" in m and "super_class" in m:
+                if not (cc[i] in m["cell_class"] or sc[i] in m["super_class"]):
+                    continue
+            elif "cell_class" in m and cc[i] not in m["cell_class"]:
+                continue
+            elif "super_class" in m and sc[i] not in m["super_class"]:
+                continue
+            target = r["rate_hz"]
+            if target is None:
+                break
+            if target == "door_sfr":
+                glom = ct[i].replace("ORN_", "")
+                target = float(glo_rate.get(glom, orn_median))
+            mu = float(np.interp(target, rate, mus)) if target > 0 else -8.0   # far below threshold: silent
+            b = float(np.interp(r["adapt_index"], index[::-1], bs[::-1]))
+            out[i] = (mu, sigma, b, tau_w)
+            target_rate[i] = target if r.get("homeostasis", True) else -1.0
+            used[k] = used.get(k, 0) + 1
+            break
+    out.tofile(ROOT / "data/physiology.bin")
+    target_rate.tofile(ROOT / "data/physiology_targets.bin")
+    meta = {"n": len(tab), "sigma_mv": sigma, "tau_noise_ms": tau_n, "tau_w_ms": tau_w,
+            "rules_used": {rules["rules"][k]["basis"][:60]: v for k, v in sorted(used.items())},
+            "calibration": {"mu_mv": mus[::40].round(2).tolist(), "rate_hz": rate[::40].round(2).tolist()}}
+    (ROOT / "data/physiology.json").write_text(json.dumps(meta, indent=1))
+    for k, v in sorted(used.items()):
+        r = rules["rules"][k]
+        print(f"  {v:7d} neurons  rate {r['rate_hz']}  adapt {r.get('adapt_index')}  <- {r['basis'][:70]}")
+    print(f"wrote data/physiology.bin ({len(tab)} neurons)")
+
+
+if __name__ == "__main__":
+    main()

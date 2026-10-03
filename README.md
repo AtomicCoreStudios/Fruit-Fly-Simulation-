@@ -39,6 +39,10 @@ Test harness (arguments go after `--`):
 - `--frames=N` quit after N frames
 - `--shot=screenshots/x.png` save a screenshot before quitting
 - `--connectome=flywire|synthetic` choose the brain
+- `--physiology=0` turn off spontaneous activity and adaptation (pure Shiu et al.)
+- `--phys_ablate=noise,mu,adapt,homeo` turn off parts of the intrinsic physiology
+- `--homeostasis` learn homeostatic offsets during the run and save them at the end; use it with `--clean_air`
+- `--clean_air` no odour, wind or taste stimuli
 - `--opto` start with P9 optogenetics on
 - `--record=recordings/run.csv` write body state plus every population's firing rate every 100 ms of emulated time
 
@@ -419,7 +423,87 @@ Result: about 14,500 output and 2,000 input synapses added; the right-side media
 
 The opposite-side preference flips as a mirror image should. The right side stays weaker because FlyWire types fewer of its neurons as sugar.
 
-## Known model limitation: a global antennal-lobe / mushroom-body runaway
+## Spontaneous activity, adaptation and homeostasis (Phase 5, 2026-10-03, on by default)
+
+Shiu et al.'s model is silent without input and has no adaptation. Real fly neurons fire spontaneously and adapt. Added per neuron (`shaders/lif.glsl`, `tools/build_physiology.py`, rules in `data/physiology_rules.json`):
+- **Membrane noise:** Ornstein–Uhlenbeck, σ = 2 mV, τ = 5 ms. basis: approximate (Gouwens & Wilson 2009).
+- **Resting offset μ:** calibrated so the isolated neuron fires at its cell class's measured spontaneous rate. Values and basis:
+
+  | Cell class | Rate | Basis |
+  |---|---|---|
+  | ORNs | per receptor, from DoOR spike recordings (median 10 Hz) | measured (Münch & Galizia 2016; Hallem & Carlson 2006) |
+  | PNs | 4 Hz | Wilson et al. 2004 |
+  | Kenyon cells | 0.2 Hz | Turner et al. 2008 |
+  | MBONs | 6 Hz | Hige et al. 2015 |
+  | Giant fibre, escape/flight motor neurons, APL | silent | |
+  | Everything else | about 1 Hz | approximate |
+
+- **Spike-frequency adaptation:** AdEx-style current, τ_w = 300 ms. Its step is calibrated to a per-class adaptation index; Kenyon cells adapt strongly (0.3), motor neurons weakly (0.85). basis: approximate (Nagel & Wilson 2011).
+- **Homeostatic intrinsic plasticity:**
+  - A 60 s warm-up (`--homeostasis --clean_air`) learns a per-neuron offset that brings each neuron in the network to its target rate. It is saved to `data/homeostasis_offsets.bin` and loaded automatically.
+  - Offsets: 5th–95th percentile −3.4 to +0.5 mV.
+- **Synapse signs by Dale's principle:** each neuron's transmitter is `known_nt`, else FlyWire's neuron-level `top_nt` (Eckstein et al. 2024).
+  - ACh is excitatory; GABA, glutamate and histamine are inhibitory.
+  - Dopamine, serotonin, octopamine and tyramine have no fast effect.
+  - Shiu et al.'s per-connection signs counted monoamines as excitatory. `FLY_SIGNS=shiu` restores them.
+
+Two wiring corrections were needed to make this hold up:
+1. **No spike-driving inputs onto sensory afferents.**
+   - ORNs, GRNs and mechanoreceptors start their spikes in the periphery. FlyWire/BANC synapses onto their axon terminals (ORN–ORN, LN → ORN, GABA → GRN) act presynaptically on release (Olsen & Wilson 2008; Root et al. 2008), so 185,359 such edges were removed (`FLY_AFFERENT_INPUTS=1` keeps them).
+   - Presynaptic gain control itself is not modelled.
+2. **Input-resistance correction for giant integrators only.**
+   - Shiu's 0.275 mV per synapse is kept for neurons with up to 6,000 input synapses, the range of the circuits Shiu et al. validated (MN9 has 5.6–5.9k).
+   - Above that, a passive-membrane correction w × (6000 / N_inputs) is applied. It affects about 0.5% of neurons, mostly multiglomerular antennal-lobe local neurons (9–17k inputs) and APL.
+   - Without it those cells saturate on spontaneous ORN input (local neurons 61 Hz, APL 70–96 Hz, even with homeostasis).
+   - The FlyVis power law over all neurons (γ = 0.38) also tames them but weakens sugar → MN9 about 5× by scaling down the premotor hubs (CB0553, CB0493, DNge062).
+   - No single power law fits both benchmarks (it would need γ > 1), hence the threshold. basis: biophysics + approximate threshold; `FLY_SIZE_NREF`, `FLY_SIZE_GAMMA`.
+
+Also changed:
+- The old 5 Hz (ORN) and 10 Hz (Johnston's organ) Poisson baselines are dropped when physiology is loaded, since they would double-count spontaneous activity.
+- `--clean_air` turns off odour, wind and taste stimuli for resting calibration, like in-vivo recordings in clean air.
+
+Results:
+- **Resting rates** (clean air, no vision, 10 s; `tools/run_rest_test.sh`): measured against target.
+
+  | Population | Measured | Target |
+  |---|---|---|
+  | ORNs | 12.4 | 10 |
+  | PNs | 4.5 | 4 |
+  | AL local neurons | 4.7 | 2 |
+  | Kenyon cells | 0.1 | 0.2 |
+  | MBONs | 4.7 | 6 |
+  | DANs | 1.9 | 2 |
+  | LH local neurons | 1.1 | 3 |
+  | LH centrifugal | 1.9 | 3 |
+  | APL | 0 | 0 |
+  | MN9 | 0.2 | 0.5 |
+
+  - Rates are averages over cell types.
+  - Per neuron, AL local neurons have median 0 Hz and 13% above 10 Hz. The fastest are the serotonergic lLN2T_b (~100 Hz), which have no fast output here.
+- **Global runaway:** gone. Bilateral 200 Hz sugar leaves APL at 0, AL local neurons at about 2 Hz and Kenyon cells at 0.1 Hz.
+- **Sugar → MN9:** bilateral labellar sugar at 30/60/100/200 Hz gives MN9_R 8/14/20/38 Hz and MN9_L 5/7/11/20 Hz, rising steadily with input.
+  - Shiu's exact model gives about 29/75/116 Hz at 60/100/200 Hz.
+  - Much of that comes from a recurrent pharyngeal premotor loop (CB4055 / CB0910 / CB0707 / CB0708) that ignites to about 100 Hz in Shiu's model. With bilateral input it ignites 8,002 neurons at ≥ 15 Hz. With adaptation that loop stays moderate, so our MN9 is lower. Which is closer to the real fly is not settled by data; MN9 has not been recorded in Hz.
+- **Giant fibre:** opto at 100 Hz drives TTMn at 44–57 Hz through the gap junction. Escape still works.
+- **Leg sugar** (embodied, standing on the food patch): MN9 rises from 0.2 to 2.8 Hz but there is no visible PER. Real flies extend the proboscis to tarsal sugar, so the leg → PER route is still too weak (open issue).
+- **Ablations** (`--phys_ablate=noise,mu,adapt,homeo`, γ = 0.38 build, 100 Hz bilateral sugar, MN9_R):
+
+  | Configuration | MN9_R |
+  |---|---|
+  | All physiology on | 2 Hz |
+  | No homeostasis | 18 Hz |
+  | No adaptation | 18 Hz |
+  | Neither | 36 Hz |
+  | No noise | 0 Hz |
+  | Physiology off | 0 Hz |
+
+  Noise lets weak synaptic drive reach threshold.
+
+Diagnostics: `tools/diag_sugar_path.py` compares the reference sugar pathway neuron by neuron with the embodied brain.
+
+Note on running Godot: on this PC windowed Godot started freezing on vsync (2026-10-03, even with an empty project). All test scripts now launch it with `--disable-vsync --fixed-fps 30`, which gives about 33 ms of simulation per frame, as before.
+
+## Former limitation: a global antennal-lobe / mushroom-body runaway (fixed, see the next section)
 
 Strong, sustained bilateral sugar input (both labellar sugar sets at 100 Hz) drives the Shiu et al. spiking model into a self-sustaining global state:
 - APL about 435 Hz

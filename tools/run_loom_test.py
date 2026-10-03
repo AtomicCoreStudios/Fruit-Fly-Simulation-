@@ -22,7 +22,7 @@ def run(bias, angle, threat=True, frames=480, launch=240, optic="lif", gain=60.0
     tag = {"lif": f"loom_b{bias}_a{angle}", "flyvis": f"loom_flyvis_g{gain:g}_a{angle}",
            "graded": f"loom_graded_c{vpn_c:g}_a{angle}"}[optic] + ("" if threat else "_ctrl")
     csv = f"recordings/{tag}.csv"
-    args = [GODOT, "--path", str(ROOT), "--quit-after", str(frames * 4), "--", "--tethered", "--log",
+    args = [GODOT, "--path", str(ROOT), "--disable-vsync", "--fixed-fps", "30", "--quit-after", str(frames * 4), "--", "--tethered", "--log",
             f"--frames={frames}", f"--record={csv}", f"--columnar_bias={bias}",
             f"--threat_at={launch if threat else 10**9}", f"--threat_angle={angle}",
             f"--shot=screenshots/{tag}.png", f"--optic_lobe={'lif' if optic == 'lif' else 'flyvis'}",

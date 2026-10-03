@@ -145,11 +145,21 @@ def main():
     # ---------------- edges in VNC neuropils among (resident + bridged)
     e = bvnc[bvnc.pre_root_id.isin(idx_of) & bvnc.post_root_id.isin(idx_of)].copy()
     e["Presynaptic_Index"] = e.pre_root_id.map(idx_of); e["Postsynaptic_Index"] = e.post_root_id.map(idx_of)
+    # Dale's principle, as in build_connectome.py: ACh +, GABA/Glu -, monoamines 0 (no fast effect)
+    def nsign(x):
+        x = str(x).lower()
+        if "acetylcholine" in x or x in ("ach",): return 1
+        if "gaba" in x or "glut" in x or "hist" in x: return -1     # histamine: HisCl/Ort chloride channels
+        if x in ("da", "ser", "oct", "tyr") or any(k in x for k in ("dopamine", "serotonin", "octopamine", "tyramine")): return 0
+        return 1
     nt = bn.set_index("bid")["Predicted NT type"].fillna("")
-    sign_b = np.where(nt.reindex(e.pre_root_id).isin(INHIB).values, -1, 1)
-    # bridged FlyWire neurons keep their FlyWire transmitter sign
-    fsign = np.array([fw_sign.get(bridged_b.get(p), 0) for p in e.pre_root_id])
-    e["Excitatory"] = np.where(fsign != 0, fsign, sign_b)
+    sign_b = np.array([nsign(x) for x in nt.reindex(e.pre_root_id).fillna("").values])
+    # bridged FlyWire neurons keep their FlyWire neuron-level transmitter (known_nt, else top_nt)
+    fa_nt = pd.read_csv(ROOT / "data/raw/annot_Supplemental_file1_neuron_annotations.tsv", sep="	", low_memory=False,
+                        usecols=["root_id", "top_nt", "known_nt"]).drop_duplicates("root_id").set_index("root_id")
+    fnt = fa_nt.known_nt.fillna(fa_nt.top_nt).fillna("")
+    fsign = np.array([nsign(fnt.get(bridged_b[p], "")) if p in bridged_b else 99 for p in e.pre_root_id])
+    e["Excitatory"] = np.where(fsign != 99, fsign, sign_b)
     e["Connectivity"] = e.syn_count.astype(int)
     e["Excitatory x Connectivity"] = e.Excitatory * e.Connectivity
     e[["Presynaptic_Index", "Postsynaptic_Index", "Connectivity", "Excitatory", "Excitatory x Connectivity",

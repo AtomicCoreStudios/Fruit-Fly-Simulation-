@@ -168,6 +168,7 @@ func _init_gpu(pop_b, group_b, rowptr_b, col_b, w_b) -> String:
 		["col", col_b if e > 0 else zeros_g], ["w", w_b if e > 0 else zeros_g],
 		["activity", zeros_pad], ["gcount", zeros_g], ["rcount", zeros_r],
 		["ext", _ext_cpu.to_byte_array()], ["v_kick", zeros_n], ["gap", _gap_bytes()],
+		["phys", _phys_bytes()], ["st2", _zeros(n * 8)], ["homeo", _homeo_bytes()],
 	]
 	var uniforms: Array[RDUniform] = []
 	for b in specs.size():
@@ -185,6 +186,75 @@ func _init_gpu(pop_b, group_b, rowptr_b, col_b, w_b) -> String:
 
 
 var n_gap := 0
+
+
+var physiology := true          # spontaneous activity + adaptation (data/physiology.bin)
+var physiology_loaded := false
+var phys_ablate := []           # ablation switches: "noise", "adapt", "mu", "homeo"
+
+
+func _zeros(nbytes: int) -> PackedByteArray:
+	var z := PackedByteArray()
+	z.resize(nbytes)
+	return z
+
+
+func _phys_bytes() -> PackedByteArray:
+	# per neuron vec4(mu, sigma, b, tau_w); zeros (+tau 1) = original Shiu et al. behaviour
+	var f := FileAccess.open("res://data/physiology.bin", FileAccess.READ)
+	if physiology and f != null and f.get_length() == n * 16:
+		physiology_loaded = true
+		var pa := f.get_buffer(n * 16).to_float32_array()
+		for i in n:
+			if "mu" in phys_ablate: pa[4 * i] = 0.0
+			if "noise" in phys_ablate: pa[4 * i + 1] = 0.0
+			if "adapt" in phys_ablate: pa[4 * i + 2] = 0.0
+		return pa.to_byte_array()
+	var a := PackedFloat32Array()
+	a.resize(n * 4)
+	for i in n:
+		a[4 * i + 3] = 1.0
+	return a.to_byte_array()
+
+
+var homeostasis_learning := false
+var homeostasis_loaded := false
+
+
+func _homeo_bytes() -> PackedByteArray:
+	# vec2(target Hz, learned offset mV) per neuron; targets from build_physiology, offsets from a
+	# previous --homeostasis warm-up (data/homeostasis_offsets.bin)
+	var a := PackedFloat32Array()
+	a.resize(n * 2)
+	for i in n:
+		a[2 * i] = -1.0
+	var tf := FileAccess.open("res://data/physiology_targets.bin", FileAccess.READ)
+	if physiology and tf != null and tf.get_length() == n * 4:
+		var t := tf.get_buffer(n * 4).to_float32_array()
+		for i in n:
+			a[2 * i] = t[i]
+	var of := FileAccess.open("res://data/homeostasis_offsets.bin", FileAccess.READ)
+	if physiology and of != null and of.get_length() == n * 4 and not homeostasis_learning and not "homeo" in phys_ablate:
+		var o := of.get_buffer(n * 4).to_float32_array()
+		for i in n:
+			a[2 * i + 1] = o[i]
+		homeostasis_loaded = true
+	return a.to_byte_array()
+
+
+## Save the learned homeostatic offsets (call at the end of a --homeostasis warm-up).
+func save_homeostasis() -> void:
+	if _pending_steps > 0:          # GPU work still in flight: finish it before reading buffers
+		_rd.sync()
+		_pending_steps = 0
+	var h := _rd.buffer_get_data(_bufs["homeo"]).to_float32_array()
+	var o := PackedFloat32Array()
+	o.resize(n)
+	for i in n:
+		o[i] = h[2 * i + 1]
+	var f := FileAccess.open("res://data/homeostasis_offsets.bin", FileAccess.WRITE)
+	f.store_buffer(o.to_byte_array())
+	f.close()
 
 
 func _gap_bytes() -> PackedByteArray:
@@ -218,7 +288,7 @@ func _push(mode: int) -> PackedByteArray:
 	pc.encode_u32(48, _delay_steps)
 	pc.encode_u32(52, _delay_steps + 1)
 	pc.encode_u32(56, 1 if _lif.get("reset_g_on_spike", false) else 0)
-	pc.encode_u32(60, n_gap)
+	pc.encode_u32(60, n_gap if mode == 2 else (1 if homeostasis_learning else 0))
 	return pc
 
 
