@@ -1,0 +1,14 @@
+[remap]
+
+importer="glsl"
+type="RDShaderFile"
+uid="uid://c4eo3qmxqffm2"
+path="res://.godot/imported/eye.glsl-bc4c59b4c57088b07aebf6faedc5dcb3.res"
+
+[deps]
+
+source_file="res://shaders/eye.glsl"
+dest_files=["res://.godot/imported/eye.glsl-bc4c59b4c57088b07aebf6faedc5dcb3.res"]
+
+[params]
+

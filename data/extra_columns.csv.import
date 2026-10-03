@@ -1,0 +1,19 @@
+[remap]
+
+importer="csv_translation"
+type="Translation"
+uid="uid://dqgctakaeo0qb"
+
+[deps]
+
+files=["res://data/extra_columns.hemisphere.translation", "res://data/extra_columns.p.translation", "res://data/extra_columns.q.translation", "res://data/extra_columns.n.translation", "res://data/extra_columns.type.translation", "res://data/extra_columns.fw.translation", "res://data/extra_columns.method.translation"]
+
+source_file="res://data/extra_columns.csv"
+dest_files=["res://data/extra_columns.hemisphere.translation", "res://data/extra_columns.p.translation", "res://data/extra_columns.q.translation", "res://data/extra_columns.n.translation", "res://data/extra_columns.type.translation", "res://data/extra_columns.fw.translation", "res://data/extra_columns.method.translation"]
+
+[params]
+
+compress=1
+delimiter=0
+unescape_keys=false
+unescape_translations=true

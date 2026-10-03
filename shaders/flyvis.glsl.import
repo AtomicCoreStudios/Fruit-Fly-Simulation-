@@ -1,0 +1,14 @@
+[remap]
+
+importer="glsl"
+type="RDShaderFile"
+uid="uid://8a60fx6cur70"
+path="res://.godot/imported/flyvis.glsl-ad6632e4d1014a2ee40001f148b214ea.res"
+
+[deps]
+
+source_file="res://shaders/flyvis.glsl"
+dest_files=["res://.godot/imported/flyvis.glsl-ad6632e4d1014a2ee40001f148b214ea.res"]
+
+[params]
+

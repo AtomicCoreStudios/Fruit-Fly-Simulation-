@@ -1,0 +1,83 @@
+Godot Engine v4.6.stable.official.89cea1439 - https://godotengine.org
+Vulkan 1.4.341 - Forward+ - Using Device #0: NVIDIA - NVIDIA GeForce RTX 2080
+
+FLY-UI: 138639 neurons, 15091983 synaptic edges (flywire_v783)
+optic lobe: FlyVis flow/0000/000 graded model, 45669 cells x 2 eyes driving 37627 FlyWire neurons (gain 120 Hz)
+t=0.7s spikes/s=1325235 gpu=40.2ms fps=10 | pos=(-2.0,7.0) spd=0.00 turn=0.00 air=false feed=false esc=0 hunger=0.80
+   DN: P9 0.0/0.0  DNa02 29.4/0.0  MDN 0.0  GF 0.0  MN9 0.0 | odourL/R 0.02/0.02 loom 0.0
+   Hz: OpticL=4.8 OpticR=6.2 AntennalL=54.1 AntennalR=52.1 MushroomL=68.1 MushroomR=55.4 LateralL=98.0 LateralR=89.4 Centralx=1.0 SEZy=2.0 AMMCL=0.0 AMMCR=0.0 Centraln=8.7 Descendingg=6.0 Ascendingg=0.2
+   eye: lumL/R 0.396/0.426 contrastL/R +0.00/+0.00 R1-6 40/40 Hz | R1-6 19.5/31.3  R7 28.8/36.6  R8 30.8/35.5  L1 0.0/0.0  L2 0.0/0.0  L3 0.5/0.3  Mi1 8.2/9.5  Tm3 8.7/10.6  Tm1 0.0/0.0  Tm2 0.2/0.0  Tm9 0.3/0.1  T4a 2.1/0.8  T4b 2.2/0.4  T4c 1.3/0.6  T4d 0.6/0.3  T5a 2.1/1.2  T5b 0.5/0.2  T5c 1.6/1.5  T5d 1.2/1.3  LC4 9.3/8.2  LPLC1 0.0/0.0  LPLC2 0.0/0.0  LC6 0.0/0.0  DNp01 0.0/0.0  DNp02 29.4/58.8  DNp11 0.0/0.0
+t=1.5s spikes/s=1312088 gpu=36.2ms fps=24 | pos=(-2.0,7.0) spd=0.00 turn=0.00 air=false feed=false esc=0 hunger=0.80
+   DN: P9 0.0/0.0  DNa02 29.4/0.0  MDN 0.0  GF 0.0  MN9 0.0 | odourL/R 0.02/0.02 loom 0.0
+   Hz: OpticL=4.7 OpticR=6.0 AntennalL=54.2 AntennalR=51.8 MushroomL=68.0 MushroomR=55.3 LateralL=98.9 LateralR=89.4 Centralx=1.3 SEZy=1.7 AMMCL=0.0 AMMCR=0.0 Centraln=8.6 Descendingg=5.9 Ascendingg=0.2
+   eye: lumL/R 0.396/0.426 contrastL/R +0.00/+0.00 R1-6 40/40 Hz | R1-6 19.2/30.3  R7 30.5/33.7  R8 27.3/35.6  L1 0.0/0.0  L2 0.1/0.0  L3 0.6/0.4  Mi1 9.0/9.0  Tm3 10.2/13.0  Tm1 0.1/0.0  Tm2 0.0/0.0  Tm9 0.3/0.0  T4a 2.3/1.2  T4b 1.8/0.6  T4c 0.8/0.7  T4d 0.7/0.2  T5a 1.6/1.1  T5b 0.5/0.1  T5c 1.0/1.2  T5d 0.9/0.7  LC4 12.5/5.3  LPLC1 0.0/0.0  LPLC2 0.0/0.0  LC6 0.0/0.0  DNp01 0.0/0.0  DNp02 0.0/58.8  DNp11 0.0/0.0
+t=2.4s spikes/s=1313441 gpu=36.6ms fps=25 | pos=(-2.0,7.0) spd=0.00 turn=0.00 air=false feed=false esc=0 hunger=0.80
+   DN: P9 0.0/0.0  DNa02 88.2/0.0  MDN 0.0  GF 0.0  MN9 0.0 | odourL/R 0.02/0.02 loom 0.0
+   Hz: OpticL=4.7 OpticR=6.1 AntennalL=53.7 AntennalR=51.7 MushroomL=68.3 MushroomR=55.0 LateralL=100.8 LateralR=88.7 Centralx=0.9 SEZy=2.0 AMMCL=0.0 AMMCR=0.0 Centraln=8.6 Descendingg=5.8 Ascendingg=0.2
+   eye: lumL/R 0.396/0.426 contrastL/R +0.00/+0.00 R1-6 40/40 Hz | R1-6 18.9/30.7  R7 30.2/34.4  R8 29.6/35.9  L1 0.0/0.0  L2 0.0/0.0  L3 0.6/0.4  Mi1 8.5/10.6  Tm3 10.3/12.7  Tm1 0.1/0.0  Tm2 0.2/0.0  Tm9 0.4/0.0  T4a 1.9/1.1  T4b 2.5/0.4  T4c 1.1/0.8  T4d 0.4/0.1  T5a 1.8/1.2  T5b 0.7/0.2  T5c 0.8/1.4  T5d 1.0/1.2  LC4 9.3/7.1  LPLC1 0.0/0.0  LPLC2 0.0/0.0  LC6 0.0/0.0  DNp01 0.0/0.0  DNp02 0.0/58.8  DNp11 0.0/0.0
+t=3.3s spikes/s=1321411 gpu=37.9ms fps=26 | pos=(-2.0,7.0) spd=0.00 turn=0.00 air=false feed=false esc=0 hunger=0.80
+   DN: P9 0.0/0.0  DNa02 58.8/0.0  MDN 0.0  GF 0.0  MN9 0.0 | odourL/R 0.02/0.02 loom 0.0
+   Hz: OpticL=4.8 OpticR=6.2 AntennalL=53.9 AntennalR=51.6 MushroomL=68.2 MushroomR=54.9 LateralL=101.7 LateralR=88.0 Centralx=1.1 SEZy=1.7 AMMCL=0.0 AMMCR=0.0 Centraln=8.6 Descendingg=6.0 Ascendingg=0.1
+   eye: lumL/R 0.396/0.426 contrastL/R +0.00/+0.00 R1-6 40/40 Hz | R1-6 19.3/31.2  R7 30.9/36.1  R8 29.8/36.0  L1 0.0/0.0  L2 0.0/0.0  L3 0.8/0.4  Mi1 8.8/10.3  Tm3 9.1/12.4  Tm1 0.1/0.0  Tm2 0.2/0.0  Tm9 0.3/0.0  T4a 2.4/1.2  T4b 1.9/0.8  T4c 1.0/0.7  T4d 0.4/0.2  T5a 1.4/1.0  T5b 0.5/0.1  T5c 1.0/1.2  T5d 1.0/0.7  LC4 13.6/7.1  LPLC1 0.0/0.0  LPLC2 0.0/0.0  LC6 0.0/0.0  DNp01 0.0/0.0  DNp02 29.4/58.8  DNp11 0.0/0.0
+t=4.2s spikes/s=1314029 gpu=38.4ms fps=25 | pos=(-2.0,7.0) spd=0.00 turn=0.00 air=false feed=false esc=0 hunger=0.80
+   DN: P9 0.0/0.0  DNa02 88.2/0.0  MDN 0.0  GF 0.0  MN9 0.0 | odourL/R 0.02/0.02 loom 0.0
+   Hz: OpticL=4.7 OpticR=6.1 AntennalL=53.9 AntennalR=51.6 MushroomL=67.8 MushroomR=55.3 LateralL=99.9 LateralR=87.7 Centralx=0.8 SEZy=1.6 AMMCL=0.0 AMMCR=0.0 Centraln=8.7 Descendingg=6.0 Ascendingg=0.2
+   eye: lumL/R 0.396/0.426 contrastL/R +0.00/+0.00 R1-6 40/40 Hz | R1-6 18.9/30.7  R7 31.6/37.2  R8 30.9/35.1  L1 0.0/0.0  L2 0.0/0.0  L3 0.4/0.4  Mi1 8.4/10.5  Tm3 10.3/12.4  Tm1 0.2/0.0  Tm2 0.2/0.0  Tm9 0.4/0.1  T4a 1.6/1.5  T4b 2.1/0.6  T4c 0.8/0.5  T4d 0.4/0.1  T5a 2.0/1.1  T5b 0.4/0.1  T5c 1.3/1.5  T5d 1.1/0.6  LC4 8.7/4.1  LPLC1 0.0/0.0  LPLC2 0.0/0.0  LC6 0.0/0.0  DNp01 0.0/0.0  DNp02 0.0/29.4  DNp11 0.0/0.0
+ESCAPE (giant fibre) at t=4.81s
+t=5.0s spikes/s=1327264 gpu=38.5ms fps=24 | pos=(-2.0,7.0) spd=0.00 turn=0.00 air=false feed=false esc=1 hunger=0.80
+   DN: P9 0.0/0.0  DNa02 58.8/0.0  MDN 0.0  GF 0.0  MN9 0.0 | odourL/R 0.02/0.02 loom 0.0
+   Hz: OpticL=4.7 OpticR=6.3 AntennalL=53.9 AntennalR=52.6 MushroomL=67.8 MushroomR=55.7 LateralL=99.0 LateralR=87.9 Centralx=1.0 SEZy=1.8 AMMCL=0.0 AMMCR=0.0 Centraln=8.6 Descendingg=6.1 Ascendingg=0.2
+   eye: lumL/R 0.396/0.426 contrastL/R +0.00/+0.00 R1-6 40/40 Hz | R1-6 19.1/31.0  R7 29.8/36.9  R8 29.5/37.0  L1 0.0/0.0  L2 0.0/0.0  L3 0.8/0.2  Mi1 8.8/10.6  Tm3 9.8/12.1  Tm1 0.1/0.0  Tm2 0.2/0.0  Tm9 0.5/0.2  T4a 1.6/1.4  T4b 1.7/0.7  T4c 1.2/0.5  T4d 0.4/0.2  T5a 2.4/0.8  T5b 0.6/0.2  T5c 1.2/1.4  T5d 1.0/0.8  LC4 9.8/8.8  LPLC1 0.0/0.0  LPLC2 0.0/0.0  LC6 0.0/0.0  DNp01 0.0/0.0  DNp02 0.0/58.8  DNp11 0.0/0.0
+t=5.9s spikes/s=1315941 gpu=38.6ms fps=25 | pos=(-2.0,7.0) spd=0.00 turn=0.00 air=false feed=false esc=1 hunger=0.80
+   DN: P9 0.0/0.0  DNa02 29.4/0.0  MDN 0.0  GF 0.0  MN9 0.0 | odourL/R 0.02/0.02 loom 0.0
+   Hz: OpticL=4.8 OpticR=6.1 AntennalL=53.8 AntennalR=51.3 MushroomL=68.4 MushroomR=54.9 LateralL=100.0 LateralR=88.6 Centralx=1.0 SEZy=1.6 AMMCL=0.0 AMMCR=0.0 Centraln=8.6 Descendingg=6.0 Ascendingg=0.1
+   eye: lumL/R 0.396/0.426 contrastL/R +0.00/+0.00 R1-6 40/40 Hz | R1-6 18.9/30.5  R7 30.1/35.4  R8 32.0/34.3  L1 0.0/0.0  L2 0.0/0.0  L3 0.6/0.0  Mi1 8.6/10.3  Tm3 10.0/11.8  Tm1 0.0/0.0  Tm2 0.1/0.0  Tm9 0.2/0.0  T4a 2.1/1.5  T4b 1.6/0.7  T4c 1.1/0.6  T4d 0.5/0.1  T5a 1.9/1.1  T5b 0.4/0.2  T5c 1.3/1.0  T5d 1.2/0.6  LC4 9.8/11.8  LPLC1 0.0/0.0  LPLC2 0.0/0.0  LC6 0.0/0.0  DNp01 0.0/0.0  DNp02 29.4/58.8  DNp11 0.0/0.0
+t=6.7s spikes/s=1328558 gpu=37.3ms fps=25 | pos=(-2.0,7.0) spd=0.00 turn=0.00 air=false feed=false esc=1 hunger=0.80
+   DN: P9 0.0/0.0  DNa02 58.8/0.0  MDN 0.0  GF 0.0  MN9 0.0 | odourL/R 0.02/0.02 loom 0.0
+   Hz: OpticL=4.8 OpticR=6.3 AntennalL=54.0 AntennalR=51.9 MushroomL=67.6 MushroomR=55.3 LateralL=100.0 LateralR=87.5 Centralx=0.9 SEZy=1.8 AMMCL=0.0 AMMCR=0.0 Centraln=8.6 Descendingg=6.1 Ascendingg=0.2
+   eye: lumL/R 0.396/0.426 contrastL/R +0.00/+0.00 R1-6 40/40 Hz | R1-6 19.6/31.2  R7 30.3/36.7  R8 30.7/37.8  L1 0.0/0.0  L2 0.0/0.0  L3 0.5/0.4  Mi1 9.5/10.2  Tm3 10.1/12.5  Tm1 0.1/0.0  Tm2 0.3/0.0  Tm9 0.4/0.1  T4a 2.3/1.2  T4b 2.1/0.7  T4c 1.2/0.5  T4d 0.7/0.2  T5a 2.0/0.8  T5b 0.4/0.0  T5c 0.8/1.4  T5d 1.1/0.9  LC4 12.0/5.3  LPLC1 0.0/0.0  LPLC2 0.0/0.0  LC6 0.0/0.0  DNp01 0.0/0.0  DNp02 58.8/29.4  DNp11 0.0/0.0
+t=7.6s spikes/s=1319735 gpu=38.1ms fps=25 | pos=(-2.0,7.0) spd=0.00 turn=0.00 air=false feed=false esc=1 hunger=0.80
+   DN: P9 0.0/0.0  DNa02 88.2/0.0  MDN 0.0  GF 0.0  MN9 0.0 | odourL/R 0.02/0.02 loom 0.0
+   Hz: OpticL=4.7 OpticR=6.2 AntennalL=53.7 AntennalR=52.2 MushroomL=68.5 MushroomR=55.0 LateralL=100.0 LateralR=87.1 Centralx=0.9 SEZy=1.5 AMMCL=0.0 AMMCR=0.0 Centraln=8.6 Descendingg=6.3 Ascendingg=0.1
+   eye: lumL/R 0.396/0.426 contrastL/R +0.00/+0.00 R1-6 40/40 Hz | R1-6 18.5/31.9  R7 31.4/34.7  R8 32.0/35.4  L1 0.0/0.0  L2 0.0/0.0  L3 0.4/0.3  Mi1 8.3/9.4  Tm3 9.1/12.2  Tm1 0.1/0.0  Tm2 0.1/0.0  Tm9 0.4/0.1  T4a 2.1/0.9  T4b 2.1/0.8  T4c 0.7/0.6  T4d 0.4/0.3  T5a 1.6/1.2  T5b 0.4/0.2  T5c 1.1/1.0  T5d 1.1/0.6  LC4 12.0/7.1  LPLC1 0.0/0.0  LPLC2 0.0/0.0  LC6 0.0/0.0  DNp01 0.0/0.0  DNp02 29.4/58.8  DNp11 0.0/0.0
+t=8.5s spikes/s=1324882 gpu=37.7ms fps=25 | pos=(-2.0,7.0) spd=0.00 turn=0.00 air=false feed=false esc=1 hunger=0.80
+   DN: P9 0.0/0.0  DNa02 117.6/0.0  MDN 0.0  GF 0.0  MN9 0.0 | odourL/R 0.02/0.02 loom 0.0
+   Hz: OpticL=4.8 OpticR=6.1 AntennalL=54.4 AntennalR=52.3 MushroomL=68.1 MushroomR=55.5 LateralL=99.5 LateralR=87.6 Centralx=0.9 SEZy=1.7 AMMCL=0.0 AMMCR=0.0 Centraln=8.6 Descendingg=6.2 Ascendingg=0.2
+   eye: lumL/R 0.396/0.426 contrastL/R +0.00/+0.00 R1-6 40/40 Hz | R1-6 19.4/30.9  R7 30.8/34.3  R8 32.0/35.0  L1 0.0/0.0  L2 0.0/0.0  L3 0.7/0.4  Mi1 8.0/10.1  Tm3 10.5/12.7  Tm1 0.1/0.0  Tm2 0.1/0.0  Tm9 0.3/0.0  T4a 1.7/1.6  T4b 1.8/0.7  T4c 0.8/0.5  T4d 0.5/0.1  T5a 2.1/1.2  T5b 0.2/0.0  T5c 1.0/1.0  T5d 1.0/0.5  LC4 10.9/6.5  LPLC1 0.0/0.0  LPLC2 0.0/0.0  LC6 0.0/0.0  DNp01 0.0/0.0  DNp02 29.4/58.8  DNp11 0.0/0.0
+t=9.3s spikes/s=1317470 gpu=37.7ms fps=25 | pos=(-2.0,7.0) spd=0.00 turn=0.00 air=false feed=false esc=1 hunger=0.80
+   DN: P9 0.0/0.0  DNa02 29.4/0.0  MDN 0.0  GF 0.0  MN9 0.0 | odourL/R 0.02/0.02 loom 0.0
+   Hz: OpticL=4.7 OpticR=6.2 AntennalL=53.7 AntennalR=51.2 MushroomL=68.2 MushroomR=55.1 LateralL=100.0 LateralR=89.1 Centralx=0.8 SEZy=1.6 AMMCL=0.0 AMMCR=0.0 Centraln=8.6 Descendingg=6.0 Ascendingg=0.2
+   eye: lumL/R 0.396/0.426 contrastL/R +0.00/+0.00 R1-6 40/40 Hz | R1-6 19.3/31.8  R7 29.9/34.4  R8 30.5/36.8  L1 0.0/0.0  L2 0.1/0.0  L3 0.3/0.3  Mi1 8.3/10.6  Tm3 9.0/11.4  Tm1 0.0/0.0  Tm2 0.1/0.0  Tm9 0.2/0.0  T4a 2.0/1.4  T4b 2.3/0.4  T4c 1.0/0.5  T4d 0.5/0.2  T5a 1.6/1.2  T5b 0.4/0.2  T5c 1.1/1.5  T5d 1.1/0.5  LC4 11.4/5.3  LPLC1 0.0/0.0  LPLC2 0.0/0.0  LC6 0.0/0.0  DNp01 0.0/0.0  DNp02 29.4/29.4  DNp11 0.0/0.0
+t=10.2s spikes/s=1325529 gpu=38.3ms fps=25 | pos=(-2.0,7.0) spd=0.00 turn=0.00 air=false feed=false esc=1 hunger=0.80
+   DN: P9 0.0/0.0  DNa02 58.8/0.0  MDN 0.0  GF 0.0  MN9 0.0 | odourL/R 0.02/0.02 loom 0.0
+   Hz: OpticL=4.8 OpticR=6.2 AntennalL=53.6 AntennalR=52.2 MushroomL=68.1 MushroomR=55.1 LateralL=100.4 LateralR=88.2 Centralx=1.0 SEZy=1.9 AMMCL=0.0 AMMCR=0.0 Centraln=8.6 Descendingg=6.1 Ascendingg=0.2
+   eye: lumL/R 0.396/0.426 contrastL/R +0.00/+0.00 R1-6 40/40 Hz | R1-6 19.2/31.3  R7 29.4/34.6  R8 30.6/37.3  L1 0.0/0.0  L2 0.0/0.0  L3 0.5/0.4  Mi1 9.5/10.2  Tm3 10.0/12.5  Tm1 0.0/0.0  Tm2 0.2/0.0  Tm9 0.3/0.0  T4a 2.4/1.5  T4b 2.4/0.8  T4c 1.3/0.5  T4d 0.5/0.0  T5a 1.9/1.3  T5b 0.4/0.2  T5c 1.2/1.0  T5d 0.7/0.7  LC4 10.9/6.5  LPLC1 0.0/0.0  LPLC2 0.0/0.0  LC6 0.0/0.0  DNp01 0.0/0.0  DNp02 0.0/29.4  DNp11 0.0/0.0
+t=11.1s spikes/s=1319500 gpu=37.8ms fps=25 | pos=(-2.0,7.0) spd=0.00 turn=0.00 air=false feed=false esc=1 hunger=0.80
+   DN: P9 0.0/0.0  DNa02 29.4/0.0  MDN 0.0  GF 0.0  MN9 0.0 | odourL/R 0.02/0.02 loom 0.0
+   Hz: OpticL=4.7 OpticR=6.1 AntennalL=53.7 AntennalR=51.7 MushroomL=68.1 MushroomR=55.3 LateralL=99.7 LateralR=89.1 Centralx=1.0 SEZy=1.5 AMMCL=0.0 AMMCR=0.0 Centraln=8.7 Descendingg=6.2 Ascendingg=0.2
+   eye: lumL/R 0.396/0.426 contrastL/R +0.00/+0.00 R1-6 40/40 Hz | R1-6 19.2/31.0  R7 31.0/33.3  R8 27.5/37.3  L1 0.0/0.0  L2 0.0/0.0  L3 0.5/0.5  Mi1 8.5/9.7  Tm3 10.5/12.1  Tm1 0.1/0.0  Tm2 0.1/0.0  Tm9 0.3/0.0  T4a 2.5/1.4  T4b 2.3/0.9  T4c 0.9/0.2  T4d 0.4/0.2  T5a 1.6/1.5  T5b 0.3/0.2  T5c 1.4/1.3  T5d 0.9/0.7  LC4 9.8/7.1  LPLC1 0.0/0.0  LPLC2 0.0/0.0  LC6 0.0/0.0  DNp01 0.0/0.0  DNp02 0.0/29.4  DNp11 0.0/0.0
+t=11.9s spikes/s=1315235 gpu=37.3ms fps=24 | pos=(-2.0,7.0) spd=0.00 turn=0.00 air=false feed=false esc=1 hunger=0.80
+   DN: P9 0.0/0.0  DNa02 58.8/0.0  MDN 0.0  GF 0.0  MN9 0.0 | odourL/R 0.02/0.02 loom 0.0
+   Hz: OpticL=4.7 OpticR=6.2 AntennalL=53.8 AntennalR=51.7 MushroomL=67.9 MushroomR=55.2 LateralL=99.4 LateralR=87.6 Centralx=1.2 SEZy=1.6 AMMCL=0.0 AMMCR=0.0 Centraln=8.5 Descendingg=6.2 Ascendingg=0.2
+   eye: lumL/R 0.396/0.426 contrastL/R +0.00/+0.00 R1-6 40/40 Hz | R1-6 19.2/31.3  R7 28.3/37.6  R8 28.8/35.7  L1 0.0/0.0  L2 0.0/0.0  L3 0.5/0.6  Mi1 8.0/10.2  Tm3 11.1/13.8  Tm1 0.0/0.0  Tm2 0.2/0.0  Tm9 0.4/0.1  T4a 2.3/1.1  T4b 1.6/0.9  T4c 0.8/0.8  T4d 0.5/0.2  T5a 1.6/1.1  T5b 0.6/0.2  T5c 1.0/1.2  T5d 1.5/0.6  LC4 10.3/5.3  LPLC1 0.0/0.0  LPLC2 0.0/0.0  LC6 0.0/0.0  DNp01 0.0/0.0  DNp02 29.4/29.4  DNp11 0.0/0.0
+t=12.8s spikes/s=1317000 gpu=38.3ms fps=25 | pos=(-2.0,7.0) spd=0.00 turn=0.00 air=false feed=false esc=1 hunger=0.80
+   DN: P9 0.0/0.0  DNa02 58.8/0.0  MDN 0.0  GF 0.0  MN9 0.0 | odourL/R 0.02/0.02 loom 0.0
+   Hz: OpticL=4.8 OpticR=6.1 AntennalL=53.7 AntennalR=51.9 MushroomL=68.0 MushroomR=54.8 LateralL=100.4 LateralR=89.7 Centralx=1.0 SEZy=1.7 AMMCL=0.0 AMMCR=0.0 Centraln=8.6 Descendingg=5.7 Ascendingg=0.1
+   eye: lumL/R 0.396/0.426 contrastL/R +0.00/+0.00 R1-6 40/40 Hz | R1-6 19.2/31.4  R7 28.8/35.1  R8 29.4/35.6  L1 0.0/0.0  L2 0.1/0.0  L3 0.5/0.6  Mi1 8.1/9.2  Tm3 9.9/11.5  Tm1 0.1/0.0  Tm2 0.0/0.0  Tm9 0.3/0.0  T4a 2.0/1.2  T4b 2.3/0.8  T4c 0.8/0.5  T4d 0.7/0.2  T5a 1.9/0.9  T5b 0.5/0.2  T5c 1.0/1.5  T5d 1.2/0.9  LC4 11.4/6.5  LPLC1 0.0/0.0  LPLC2 0.0/0.0  LC6 0.0/0.0  DNp01 0.0/0.0  DNp02 29.4/58.8  DNp11 0.0/0.0
+t=13.6s spikes/s=1320852 gpu=37.9ms fps=25 | pos=(-2.0,7.0) spd=0.00 turn=0.00 air=false feed=false esc=1 hunger=0.80
+   DN: P9 0.0/0.0  DNa02 0.0/0.0  MDN 0.0  GF 0.0  MN9 0.0 | odourL/R 0.02/0.02 loom 0.0
+   Hz: OpticL=4.8 OpticR=6.2 AntennalL=54.0 AntennalR=51.6 MushroomL=68.2 MushroomR=55.0 LateralL=100.7 LateralR=85.6 Centralx=1.0 SEZy=1.5 AMMCL=0.0 AMMCR=0.0 Centraln=8.6 Descendingg=5.8 Ascendingg=0.1
+   eye: lumL/R 0.396/0.426 contrastL/R +0.00/+0.00 R1-6 40/40 Hz | R1-6 19.4/31.4  R7 28.8/35.1  R8 31.6/37.7  L1 0.0/0.0  L2 0.0/0.0  L3 0.4/0.3  Mi1 8.7/10.2  Tm3 10.4/12.1  Tm1 0.0/0.0  Tm2 0.2/0.0  Tm9 0.3/0.1  T4a 2.1/1.6  T4b 2.2/0.7  T4c 1.1/0.5  T4d 0.3/0.3  T5a 2.1/1.3  T5b 0.4/0.2  T5c 1.0/1.0  T5d 1.1/1.0  LC4 8.7/5.9  LPLC1 0.0/0.0  LPLC2 0.0/0.0  LC6 0.0/0.0  DNp01 0.0/0.0  DNp02 29.4/29.4  DNp11 0.0/0.0
+t=14.5s spikes/s=1322588 gpu=39.8ms fps=25 | pos=(-2.0,7.0) spd=0.00 turn=0.00 air=false feed=false esc=1 hunger=0.80
+   DN: P9 0.0/0.0  DNa02 88.2/0.0  MDN 0.0  GF 0.0  MN9 0.0 | odourL/R 0.02/0.02 loom 0.0
+   Hz: OpticL=4.8 OpticR=6.2 AntennalL=53.9 AntennalR=51.1 MushroomL=68.6 MushroomR=54.8 LateralL=101.1 LateralR=87.8 Centralx=0.8 SEZy=1.7 AMMCL=0.0 AMMCR=0.0 Centraln=8.7 Descendingg=6.0 Ascendingg=0.1
+   eye: lumL/R 0.396/0.426 contrastL/R +0.00/+0.00 R1-6 40/40 Hz | R1-6 19.5/31.0  R7 30.7/34.8  R8 30.3/35.5  L1 0.0/0.0  L2 0.0/0.0  L3 0.4/0.4  Mi1 8.9/9.5  Tm3 10.2/11.9  Tm1 0.1/0.0  Tm2 0.1/0.0  Tm9 0.2/0.0  T4a 2.5/1.0  T4b 2.2/0.6  T4c 1.2/0.6  T4d 0.3/0.2  T5a 1.5/1.1  T5b 0.5/0.3  T5c 1.3/1.3  T5d 0.6/0.8  LC4 9.8/5.3  LPLC1 0.0/0.0  LPLC2 0.0/0.0  LC6 0.0/0.0  DNp01 0.0/0.0  DNp02 29.4/29.4  DNp11 0.0/0.0
+t=15.3s spikes/s=1319970 gpu=37.4ms fps=25 | pos=(-2.0,7.0) spd=0.00 turn=0.00 air=false feed=false esc=1 hunger=0.80
+   DN: P9 0.0/0.0  DNa02 88.2/0.0  MDN 0.0  GF 0.0  MN9 0.0 | odourL/R 0.02/0.02 loom 0.0
+   Hz: OpticL=4.7 OpticR=6.0 AntennalL=54.6 AntennalR=52.5 MushroomL=68.2 MushroomR=55.9 LateralL=100.2 LateralR=87.9 Centralx=1.0 SEZy=1.8 AMMCL=0.0 AMMCR=0.0 Centraln=8.7 Descendingg=6.5 Ascendingg=0.1
+   eye: lumL/R 0.396/0.426 contrastL/R +0.00/+0.00 R1-6 40/40 Hz | R1-6 18.6/30.8  R7 30.3/34.3  R8 29.7/35.1  L1 0.0/0.0  L2 0.0/0.0  L3 0.5/0.4  Mi1 8.2/9.2  Tm3 10.3/11.5  Tm1 0.1/0.0  Tm2 0.2/0.0  Tm9 0.4/0.0  T4a 2.4/1.3  T4b 1.9/0.7  T4c 0.7/0.9  T4d 0.4/0.2  T5a 2.1/0.8  T5b 0.4/0.2  T5c 1.2/1.0  T5d 0.9/1.0  LC4 11.4/5.3  LPLC1 0.0/0.0  LPLC2 0.0/0.0  LC6 0.0/0.0  DNp01 0.0/0.0  DNp02 29.4/29.4  DNp11 0.0/0.0
+t=16.2s spikes/s=1321882 gpu=38.9ms fps=25 | pos=(-2.0,7.0) spd=0.00 turn=0.00 air=false feed=false esc=1 hunger=0.80
+   DN: P9 0.0/0.0  DNa02 29.4/0.0  MDN 0.0  GF 0.0  MN9 0.0 | odourL/R 0.02/0.02 loom 0.0
+   Hz: OpticL=4.8 OpticR=6.2 AntennalL=54.0 AntennalR=51.9 MushroomL=68.1 MushroomR=54.8 LateralL=100.2 LateralR=87.6 Centralx=0.9 SEZy=1.7 AMMCL=0.0 AMMCR=0.0 Centraln=8.7 Descendingg=6.0 Ascendingg=0.1
+   eye: lumL/R 0.396/0.426 contrastL/R +0.00/+0.00 R1-6 40/40 Hz | R1-6 19.1/30.7  R7 31.2/34.1  R8 29.7/36.5  L1 0.0/0.0  L2 0.0/0.0  L3 0.6/0.4  Mi1 8.0/9.5  Tm3 9.0/13.4  Tm1 0.0/0.0  Tm2 0.1/0.0  Tm9 0.2/0.1  T4a 2.2/1.3  T4b 2.3/0.6  T4c 0.9/0.6  T4d 0.4/0.1  T5a 1.7/1.1  T5b 0.5/0.2  T5c 0.9/1.2  T5d 0.8/1.0  LC4 11.4/4.1  LPLC1 0.0/0.0  LPLC2 0.0/0.0  LC6 0.0/0.0  DNp01 0.0/0.0  DNp02 29.4/58.8  DNp11 0.0/0.0
+screenshot: F:/Fruit Fly Experiment/screenshots/loom_flyvis_g120_a90_ctrl.png

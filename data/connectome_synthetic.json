@@ -1,0 +1,1192 @@
+{
+ "source": "synthetic",
+ "note": "Hand-designed stand-in with FlyWire-scale neuron count and literature-based pathways. Not the real synapse-level wiring.",
+ "w_poisson_mv": 20.0,
+ "populations": [
+  {
+   "name": "PR_L0",
+   "region": 0,
+   "count": 800,
+   "sign": 1
+  },
+  {
+   "name": "PRT_L0",
+   "region": 0,
+   "count": 200,
+   "sign": 1
+  },
+  {
+   "name": "MED_L0",
+   "region": 0,
+   "count": 3000,
+   "sign": 1
+  },
+  {
+   "name": "OFF_L0",
+   "region": 0,
+   "count": 400,
+   "sign": 1
+  },
+  {
+   "name": "PR_L1",
+   "region": 0,
+   "count": 800,
+   "sign": 1
+  },
+  {
+   "name": "PRT_L1",
+   "region": 0,
+   "count": 200,
+   "sign": 1
+  },
+  {
+   "name": "MED_L1",
+   "region": 0,
+   "count": 3000,
+   "sign": 1
+  },
+  {
+   "name": "OFF_L1",
+   "region": 0,
+   "count": 400,
+   "sign": 1
+  },
+  {
+   "name": "PR_L2",
+   "region": 0,
+   "count": 800,
+   "sign": 1
+  },
+  {
+   "name": "PRT_L2",
+   "region": 0,
+   "count": 200,
+   "sign": 1
+  },
+  {
+   "name": "MED_L2",
+   "region": 0,
+   "count": 3000,
+   "sign": 1
+  },
+  {
+   "name": "OFF_L2",
+   "region": 0,
+   "count": 400,
+   "sign": 1
+  },
+  {
+   "name": "PR_L3",
+   "region": 0,
+   "count": 800,
+   "sign": 1
+  },
+  {
+   "name": "PRT_L3",
+   "region": 0,
+   "count": 200,
+   "sign": 1
+  },
+  {
+   "name": "MED_L3",
+   "region": 0,
+   "count": 3000,
+   "sign": 1
+  },
+  {
+   "name": "OFF_L3",
+   "region": 0,
+   "count": 400,
+   "sign": 1
+  },
+  {
+   "name": "PR_L4",
+   "region": 0,
+   "count": 800,
+   "sign": 1
+  },
+  {
+   "name": "PRT_L4",
+   "region": 0,
+   "count": 200,
+   "sign": 1
+  },
+  {
+   "name": "MED_L4",
+   "region": 0,
+   "count": 3000,
+   "sign": 1
+  },
+  {
+   "name": "OFF_L4",
+   "region": 0,
+   "count": 400,
+   "sign": 1
+  },
+  {
+   "name": "PR_L5",
+   "region": 0,
+   "count": 800,
+   "sign": 1
+  },
+  {
+   "name": "PRT_L5",
+   "region": 0,
+   "count": 200,
+   "sign": 1
+  },
+  {
+   "name": "MED_L5",
+   "region": 0,
+   "count": 3000,
+   "sign": 1
+  },
+  {
+   "name": "OFF_L5",
+   "region": 0,
+   "count": 400,
+   "sign": 1
+  },
+  {
+   "name": "OLI_L",
+   "region": 0,
+   "count": 4000,
+   "sign": -1
+  },
+  {
+   "name": "LPLC2_L",
+   "region": 0,
+   "count": 80,
+   "sign": 1
+  },
+  {
+   "name": "LCoff_L",
+   "region": 0,
+   "count": 300,
+   "sign": 1
+  },
+  {
+   "name": "LC_L",
+   "region": 0,
+   "count": 2000,
+   "sign": 1
+  },
+  {
+   "name": "OLfill_L",
+   "region": 0,
+   "count": 10500,
+   "sign": 1
+  },
+  {
+   "name": "PR_R0",
+   "region": 1,
+   "count": 800,
+   "sign": 1
+  },
+  {
+   "name": "PRT_R0",
+   "region": 1,
+   "count": 200,
+   "sign": 1
+  },
+  {
+   "name": "MED_R0",
+   "region": 1,
+   "count": 3000,
+   "sign": 1
+  },
+  {
+   "name": "OFF_R0",
+   "region": 1,
+   "count": 400,
+   "sign": 1
+  },
+  {
+   "name": "PR_R1",
+   "region": 1,
+   "count": 800,
+   "sign": 1
+  },
+  {
+   "name": "PRT_R1",
+   "region": 1,
+   "count": 200,
+   "sign": 1
+  },
+  {
+   "name": "MED_R1",
+   "region": 1,
+   "count": 3000,
+   "sign": 1
+  },
+  {
+   "name": "OFF_R1",
+   "region": 1,
+   "count": 400,
+   "sign": 1
+  },
+  {
+   "name": "PR_R2",
+   "region": 1,
+   "count": 800,
+   "sign": 1
+  },
+  {
+   "name": "PRT_R2",
+   "region": 1,
+   "count": 200,
+   "sign": 1
+  },
+  {
+   "name": "MED_R2",
+   "region": 1,
+   "count": 3000,
+   "sign": 1
+  },
+  {
+   "name": "OFF_R2",
+   "region": 1,
+   "count": 400,
+   "sign": 1
+  },
+  {
+   "name": "PR_R3",
+   "region": 1,
+   "count": 800,
+   "sign": 1
+  },
+  {
+   "name": "PRT_R3",
+   "region": 1,
+   "count": 200,
+   "sign": 1
+  },
+  {
+   "name": "MED_R3",
+   "region": 1,
+   "count": 3000,
+   "sign": 1
+  },
+  {
+   "name": "OFF_R3",
+   "region": 1,
+   "count": 400,
+   "sign": 1
+  },
+  {
+   "name": "PR_R4",
+   "region": 1,
+   "count": 800,
+   "sign": 1
+  },
+  {
+   "name": "PRT_R4",
+   "region": 1,
+   "count": 200,
+   "sign": 1
+  },
+  {
+   "name": "MED_R4",
+   "region": 1,
+   "count": 3000,
+   "sign": 1
+  },
+  {
+   "name": "OFF_R4",
+   "region": 1,
+   "count": 400,
+   "sign": 1
+  },
+  {
+   "name": "PR_R5",
+   "region": 1,
+   "count": 800,
+   "sign": 1
+  },
+  {
+   "name": "PRT_R5",
+   "region": 1,
+   "count": 200,
+   "sign": 1
+  },
+  {
+   "name": "MED_R5",
+   "region": 1,
+   "count": 3000,
+   "sign": 1
+  },
+  {
+   "name": "OFF_R5",
+   "region": 1,
+   "count": 400,
+   "sign": 1
+  },
+  {
+   "name": "OLI_R",
+   "region": 1,
+   "count": 4000,
+   "sign": -1
+  },
+  {
+   "name": "LPLC2_R",
+   "region": 1,
+   "count": 80,
+   "sign": 1
+  },
+  {
+   "name": "LCoff_R",
+   "region": 1,
+   "count": 300,
+   "sign": 1
+  },
+  {
+   "name": "LC_R",
+   "region": 1,
+   "count": 2000,
+   "sign": 1
+  },
+  {
+   "name": "OLfill_R",
+   "region": 1,
+   "count": 10500,
+   "sign": 1
+  },
+  {
+   "name": "ORNa_L",
+   "region": 2,
+   "count": 400,
+   "sign": 1
+  },
+  {
+   "name": "ORNv_L",
+   "region": 2,
+   "count": 200,
+   "sign": 1
+  },
+  {
+   "name": "ORNo_L",
+   "region": 2,
+   "count": 700,
+   "sign": 1
+  },
+  {
+   "name": "PNa_L",
+   "region": 2,
+   "count": 60,
+   "sign": 1
+  },
+  {
+   "name": "PNv_L",
+   "region": 2,
+   "count": 30,
+   "sign": 1
+  },
+  {
+   "name": "PNo_L",
+   "region": 2,
+   "count": 80,
+   "sign": 1
+  },
+  {
+   "name": "LN_L",
+   "region": 2,
+   "count": 100,
+   "sign": -1
+  },
+  {
+   "name": "KC_L",
+   "region": 4,
+   "count": 2500,
+   "sign": 1
+  },
+  {
+   "name": "APL_L",
+   "region": 4,
+   "count": 1,
+   "sign": -1
+  },
+  {
+   "name": "MBONapp_L",
+   "region": 4,
+   "count": 20,
+   "sign": 1
+  },
+  {
+   "name": "MBONavo_L",
+   "region": 4,
+   "count": 20,
+   "sign": 1
+  },
+  {
+   "name": "LHNa_L",
+   "region": 6,
+   "count": 150,
+   "sign": 1
+  },
+  {
+   "name": "LHNv_L",
+   "region": 6,
+   "count": 100,
+   "sign": 1
+  },
+  {
+   "name": "LHIa_L",
+   "region": 6,
+   "count": 30,
+   "sign": -1
+  },
+  {
+   "name": "LHfill_L",
+   "region": 6,
+   "count": 1150,
+   "sign": 1
+  },
+  {
+   "name": "ORNa_R",
+   "region": 3,
+   "count": 400,
+   "sign": 1
+  },
+  {
+   "name": "ORNv_R",
+   "region": 3,
+   "count": 200,
+   "sign": 1
+  },
+  {
+   "name": "ORNo_R",
+   "region": 3,
+   "count": 700,
+   "sign": 1
+  },
+  {
+   "name": "PNa_R",
+   "region": 3,
+   "count": 60,
+   "sign": 1
+  },
+  {
+   "name": "PNv_R",
+   "region": 3,
+   "count": 30,
+   "sign": 1
+  },
+  {
+   "name": "PNo_R",
+   "region": 3,
+   "count": 80,
+   "sign": 1
+  },
+  {
+   "name": "LN_R",
+   "region": 3,
+   "count": 100,
+   "sign": -1
+  },
+  {
+   "name": "KC_R",
+   "region": 5,
+   "count": 2500,
+   "sign": 1
+  },
+  {
+   "name": "APL_R",
+   "region": 5,
+   "count": 1,
+   "sign": -1
+  },
+  {
+   "name": "MBONapp_R",
+   "region": 5,
+   "count": 20,
+   "sign": 1
+  },
+  {
+   "name": "MBONavo_R",
+   "region": 5,
+   "count": 20,
+   "sign": 1
+  },
+  {
+   "name": "LHNa_R",
+   "region": 7,
+   "count": 150,
+   "sign": 1
+  },
+  {
+   "name": "LHNv_R",
+   "region": 7,
+   "count": 100,
+   "sign": 1
+  },
+  {
+   "name": "LHIa_R",
+   "region": 7,
+   "count": 30,
+   "sign": -1
+  },
+  {
+   "name": "LHfill_R",
+   "region": 7,
+   "count": 1150,
+   "sign": 1
+  },
+  {
+   "name": "JO_L",
+   "region": 10,
+   "count": 480,
+   "sign": 1
+  },
+  {
+   "name": "AMMC_L",
+   "region": 10,
+   "count": 300,
+   "sign": 1
+  },
+  {
+   "name": "JO_R",
+   "region": 11,
+   "count": 480,
+   "sign": 1
+  },
+  {
+   "name": "AMMC_R",
+   "region": 11,
+   "count": 300,
+   "sign": 1
+  },
+  {
+   "name": "GRNs_L",
+   "region": 9,
+   "count": 60,
+   "sign": 1
+  },
+  {
+   "name": "GRNb_L",
+   "region": 9,
+   "count": 40,
+   "sign": 1
+  },
+  {
+   "name": "GRNs_R",
+   "region": 9,
+   "count": 60,
+   "sign": 1
+  },
+  {
+   "name": "GRNb_R",
+   "region": 9,
+   "count": 40,
+   "sign": 1
+  },
+  {
+   "name": "FEED",
+   "region": 9,
+   "count": 200,
+   "sign": 1
+  },
+  {
+   "name": "BITINH",
+   "region": 9,
+   "count": 60,
+   "sign": -1
+  },
+  {
+   "name": "STOP",
+   "region": 9,
+   "count": 40,
+   "sign": -1
+  },
+  {
+   "name": "MN9",
+   "region": 9,
+   "count": 10,
+   "sign": 1
+  },
+  {
+   "name": "SEZfill",
+   "region": 9,
+   "count": 4000,
+   "sign": 1
+  },
+  {
+   "name": "CMP_0",
+   "region": 8,
+   "count": 10,
+   "sign": 1
+  },
+  {
+   "name": "EPG_0",
+   "region": 8,
+   "count": 6,
+   "sign": 1
+  },
+  {
+   "name": "CMP_1",
+   "region": 8,
+   "count": 10,
+   "sign": 1
+  },
+  {
+   "name": "EPG_1",
+   "region": 8,
+   "count": 6,
+   "sign": 1
+  },
+  {
+   "name": "CMP_2",
+   "region": 8,
+   "count": 10,
+   "sign": 1
+  },
+  {
+   "name": "EPG_2",
+   "region": 8,
+   "count": 6,
+   "sign": 1
+  },
+  {
+   "name": "CMP_3",
+   "region": 8,
+   "count": 10,
+   "sign": 1
+  },
+  {
+   "name": "EPG_3",
+   "region": 8,
+   "count": 6,
+   "sign": 1
+  },
+  {
+   "name": "CMP_4",
+   "region": 8,
+   "count": 10,
+   "sign": 1
+  },
+  {
+   "name": "EPG_4",
+   "region": 8,
+   "count": 6,
+   "sign": 1
+  },
+  {
+   "name": "CMP_5",
+   "region": 8,
+   "count": 10,
+   "sign": 1
+  },
+  {
+   "name": "EPG_5",
+   "region": 8,
+   "count": 6,
+   "sign": 1
+  },
+  {
+   "name": "CMP_6",
+   "region": 8,
+   "count": 10,
+   "sign": 1
+  },
+  {
+   "name": "EPG_6",
+   "region": 8,
+   "count": 6,
+   "sign": 1
+  },
+  {
+   "name": "CMP_7",
+   "region": 8,
+   "count": 10,
+   "sign": 1
+  },
+  {
+   "name": "EPG_7",
+   "region": 8,
+   "count": 6,
+   "sign": 1
+  },
+  {
+   "name": "D7",
+   "region": 8,
+   "count": 40,
+   "sign": -1
+  },
+  {
+   "name": "CXfill",
+   "region": 8,
+   "count": 2900,
+   "sign": 1
+  },
+  {
+   "name": "EXPLORE",
+   "region": 12,
+   "count": 50,
+   "sign": 1
+  },
+  {
+   "name": "WANDER_L",
+   "region": 12,
+   "count": 30,
+   "sign": 1
+  },
+  {
+   "name": "WANDER_R",
+   "region": 12,
+   "count": 30,
+   "sign": 1
+  },
+  {
+   "name": "CBe",
+   "region": 12,
+   "count": 24000,
+   "sign": 1
+  },
+  {
+   "name": "CBi",
+   "region": 12,
+   "count": 7059,
+   "sign": -1
+  },
+  {
+   "name": "DNa02_L",
+   "region": 13,
+   "count": 5,
+   "sign": 1
+  },
+  {
+   "name": "P9_L",
+   "region": 13,
+   "count": 5,
+   "sign": 1
+  },
+  {
+   "name": "DNa02_R",
+   "region": 13,
+   "count": 5,
+   "sign": 1
+  },
+  {
+   "name": "P9_R",
+   "region": 13,
+   "count": 5,
+   "sign": 1
+  },
+  {
+   "name": "MDN",
+   "region": 13,
+   "count": 4,
+   "sign": 1
+  },
+  {
+   "name": "GF",
+   "region": 13,
+   "count": 2,
+   "sign": 1
+  },
+  {
+   "name": "DNfill",
+   "region": 13,
+   "count": 1280,
+   "sign": 1
+  }
+ ],
+ "neurons": 139255,
+ "synapse_edges": 2712538,
+ "tex_width": 1024,
+ "n_pad": 139264,
+ "regions": [
+  {
+   "name": "Optic lobe L",
+   "color": "#3a7bd5",
+   "count": 43280
+  },
+  {
+   "name": "Optic lobe R",
+   "color": "#3a7bd5",
+   "count": 43280
+  },
+  {
+   "name": "Antennal lobe L",
+   "color": "#e8a33d",
+   "count": 1570
+  },
+  {
+   "name": "Antennal lobe R",
+   "color": "#e8a33d",
+   "count": 1570
+  },
+  {
+   "name": "Mushroom body L",
+   "color": "#c04fd0",
+   "count": 2541
+  },
+  {
+   "name": "Mushroom body R",
+   "color": "#c04fd0",
+   "count": 2541
+  },
+  {
+   "name": "Lateral horn L",
+   "color": "#4fd08a",
+   "count": 1430
+  },
+  {
+   "name": "Lateral horn R",
+   "color": "#4fd08a",
+   "count": 1430
+  },
+  {
+   "name": "Central complex",
+   "color": "#f25c54",
+   "count": 3068
+  },
+  {
+   "name": "SEZ / gustatory",
+   "color": "#f2d05c",
+   "count": 4510
+  },
+  {
+   "name": "AMMC / JO L",
+   "color": "#5cc8f2",
+   "count": 780
+  },
+  {
+   "name": "AMMC / JO R",
+   "color": "#5cc8f2",
+   "count": 780
+  },
+  {
+   "name": "Central brain",
+   "color": "#9a9a9a",
+   "count": 31169
+  },
+  {
+   "name": "Descending",
+   "color": "#ffffff",
+   "count": 1306
+  },
+  {
+   "name": "Ascending",
+   "color": "#b0ffb0",
+   "count": 0
+  }
+ ],
+ "groups": [
+  {
+   "name": "none",
+   "role": "none",
+   "count": 55882
+  },
+  {
+   "name": "eye_L_tonic_0",
+   "role": "input",
+   "count": 800
+  },
+  {
+   "name": "eye_L_transient_0",
+   "role": "input",
+   "count": 200
+  },
+  {
+   "name": "bg_off",
+   "role": "bg",
+   "count": 4800
+  },
+  {
+   "name": "eye_L_tonic_1",
+   "role": "input",
+   "count": 800
+  },
+  {
+   "name": "eye_L_transient_1",
+   "role": "input",
+   "count": 200
+  },
+  {
+   "name": "eye_L_tonic_2",
+   "role": "input",
+   "count": 800
+  },
+  {
+   "name": "eye_L_transient_2",
+   "role": "input",
+   "count": 200
+  },
+  {
+   "name": "eye_L_tonic_3",
+   "role": "input",
+   "count": 800
+  },
+  {
+   "name": "eye_L_transient_3",
+   "role": "input",
+   "count": 200
+  },
+  {
+   "name": "eye_L_tonic_4",
+   "role": "input",
+   "count": 800
+  },
+  {
+   "name": "eye_L_transient_4",
+   "role": "input",
+   "count": 200
+  },
+  {
+   "name": "eye_L_tonic_5",
+   "role": "input",
+   "count": 800
+  },
+  {
+   "name": "eye_L_transient_5",
+   "role": "input",
+   "count": 200
+  },
+  {
+   "name": "bg_spont",
+   "role": "bg",
+   "count": 63939
+  },
+  {
+   "name": "eye_R_tonic_0",
+   "role": "input",
+   "count": 800
+  },
+  {
+   "name": "eye_R_transient_0",
+   "role": "input",
+   "count": 200
+  },
+  {
+   "name": "eye_R_tonic_1",
+   "role": "input",
+   "count": 800
+  },
+  {
+   "name": "eye_R_transient_1",
+   "role": "input",
+   "count": 200
+  },
+  {
+   "name": "eye_R_tonic_2",
+   "role": "input",
+   "count": 800
+  },
+  {
+   "name": "eye_R_transient_2",
+   "role": "input",
+   "count": 200
+  },
+  {
+   "name": "eye_R_tonic_3",
+   "role": "input",
+   "count": 800
+  },
+  {
+   "name": "eye_R_transient_3",
+   "role": "input",
+   "count": 200
+  },
+  {
+   "name": "eye_R_tonic_4",
+   "role": "input",
+   "count": 800
+  },
+  {
+   "name": "eye_R_transient_4",
+   "role": "input",
+   "count": 200
+  },
+  {
+   "name": "eye_R_tonic_5",
+   "role": "input",
+   "count": 800
+  },
+  {
+   "name": "eye_R_transient_5",
+   "role": "input",
+   "count": 200
+  },
+  {
+   "name": "orn_L_attractive",
+   "role": "input",
+   "count": 400
+  },
+  {
+   "name": "orn_L_aversive",
+   "role": "input",
+   "count": 200
+  },
+  {
+   "name": "orn_R_attractive",
+   "role": "input",
+   "count": 400
+  },
+  {
+   "name": "orn_R_aversive",
+   "role": "input",
+   "count": 200
+  },
+  {
+   "name": "jo_L",
+   "role": "input",
+   "count": 480
+  },
+  {
+   "name": "jo_R",
+   "role": "input",
+   "count": 480
+  },
+  {
+   "name": "grn_L_sweet",
+   "role": "input",
+   "count": 60
+  },
+  {
+   "name": "grn_L_bitter",
+   "role": "input",
+   "count": 40
+  },
+  {
+   "name": "grn_R_sweet",
+   "role": "input",
+   "count": 60
+  },
+  {
+   "name": "grn_R_bitter",
+   "role": "input",
+   "count": 40
+  },
+  {
+   "name": "mn9_proboscis",
+   "role": "output",
+   "count": 10
+  },
+  {
+   "name": "compass_0",
+   "role": "input",
+   "count": 10
+  },
+  {
+   "name": "epg_0",
+   "role": "output",
+   "count": 6
+  },
+  {
+   "name": "compass_1",
+   "role": "input",
+   "count": 10
+  },
+  {
+   "name": "epg_1",
+   "role": "output",
+   "count": 6
+  },
+  {
+   "name": "compass_2",
+   "role": "input",
+   "count": 10
+  },
+  {
+   "name": "epg_2",
+   "role": "output",
+   "count": 6
+  },
+  {
+   "name": "compass_3",
+   "role": "input",
+   "count": 10
+  },
+  {
+   "name": "epg_3",
+   "role": "output",
+   "count": 6
+  },
+  {
+   "name": "compass_4",
+   "role": "input",
+   "count": 10
+  },
+  {
+   "name": "epg_4",
+   "role": "output",
+   "count": 6
+  },
+  {
+   "name": "compass_5",
+   "role": "input",
+   "count": 10
+  },
+  {
+   "name": "epg_5",
+   "role": "output",
+   "count": 6
+  },
+  {
+   "name": "compass_6",
+   "role": "input",
+   "count": 10
+  },
+  {
+   "name": "epg_6",
+   "role": "output",
+   "count": 6
+  },
+  {
+   "name": "compass_7",
+   "role": "input",
+   "count": 10
+  },
+  {
+   "name": "epg_7",
+   "role": "output",
+   "count": 6
+  },
+  {
+   "name": "drive_explore",
+   "role": "input",
+   "count": 110
+  },
+  {
+   "name": "dn_turn_L",
+   "role": "output",
+   "count": 5
+  },
+  {
+   "name": "dn_forward_L",
+   "role": "output",
+   "count": 5
+  },
+  {
+   "name": "dn_turn_R",
+   "role": "output",
+   "count": 5
+  },
+  {
+   "name": "dn_forward_R",
+   "role": "output",
+   "count": 5
+  },
+  {
+   "name": "dn_backward",
+   "role": "output",
+   "count": 4
+  },
+  {
+   "name": "dn_giant_fiber",
+   "role": "output",
+   "count": 2
+  }
+ ],
+ "lif": {
+  "v_rest": -52.0,
+  "v_reset": -52.0,
+  "v_th": -45.0,
+  "tau_m_ms": 20.0,
+  "tau_syn_ms": 5.0,
+  "refractory_ms": 2.2,
+  "dt_ms": 0.5,
+  "delay_ms": 0.5,
+  "reset_g_on_spike": false
+ }
+}

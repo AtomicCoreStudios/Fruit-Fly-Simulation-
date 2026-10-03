@@ -1,0 +1,19 @@
+[remap]
+
+importer="csv_translation"
+type="Translation"
+uid="uid://cioh33lgkl31l"
+
+[deps]
+
+files=["res://assets/flygym/model/neuromechfly/meshes/simplified_max2000faces/simplification_metadata.n.translation", "res://assets/flygym/model/neuromechfly/meshes/simplified_max2000faces/simplification_metadata.filesize.translation", "res://assets/flygym/model/neuromechfly/meshes/simplified_max2000faces/simplification_metadata.face.translation", "res://assets/flygym/model/neuromechfly/meshes/simplified_max2000faces/simplification_metadata.n.translation", "res://assets/flygym/model/neuromechfly/meshes/simplified_max2000faces/simplification_metadata.file.translation", "res://assets/flygym/model/neuromechfly/meshes/simplified_max2000faces/simplification_metadata.pct.translation", "res://assets/flygym/model/neuromechfly/meshes/simplified_max2000faces/simplification_metadata.pct.translation", "res://assets/flygym/model/neuromechfly/meshes/simplified_max2000faces/simplification_metadata.pct.translation", "res://assets/flygym/model/neuromechfly/meshes/simplified_max2000faces/simplification_metadata.face.translation"]
+
+source_file="res://assets/flygym/model/neuromechfly/meshes/simplified_max2000faces/simplification_metadata.csv"
+dest_files=["res://assets/flygym/model/neuromechfly/meshes/simplified_max2000faces/simplification_metadata.n.translation", "res://assets/flygym/model/neuromechfly/meshes/simplified_max2000faces/simplification_metadata.filesize.translation", "res://assets/flygym/model/neuromechfly/meshes/simplified_max2000faces/simplification_metadata.face.translation", "res://assets/flygym/model/neuromechfly/meshes/simplified_max2000faces/simplification_metadata.n.translation", "res://assets/flygym/model/neuromechfly/meshes/simplified_max2000faces/simplification_metadata.file.translation", "res://assets/flygym/model/neuromechfly/meshes/simplified_max2000faces/simplification_metadata.pct.translation", "res://assets/flygym/model/neuromechfly/meshes/simplified_max2000faces/simplification_metadata.pct.translation", "res://assets/flygym/model/neuromechfly/meshes/simplified_max2000faces/simplification_metadata.pct.translation", "res://assets/flygym/model/neuromechfly/meshes/simplified_max2000faces/simplification_metadata.face.translation"]
+
+[params]
+
+compress=1
+delimiter=0
+unescape_keys=false
+unescape_translations=true

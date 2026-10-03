@@ -1,0 +1,1608 @@
+{
+ "source": "flywire_v783",
+ "note": "Real FlyWire v783 connectome (Dorkenwald et al. 2024), annotations (Schlegel et al. 2024), LIF weights and parameters from Shiu et al. 2024. Sector mapping of eye inputs is approximate.",
+ "w_poisson_mv": 68.75,
+ "populations": [
+  {
+   "name": ":unannotated_L",
+   "region": 12,
+   "count": 14,
+   "sign": 1
+  },
+  {
+   "name": "ascending:AN_L",
+   "region": 14,
+   "count": 838,
+   "sign": 1
+  },
+  {
+   "name": "ascending:AN_R",
+   "region": 14,
+   "count": 898,
+   "sign": 1
+  },
+  {
+   "name": "central:ALIN_L",
+   "region": 2,
+   "count": 12,
+   "sign": 1
+  },
+  {
+   "name": "central:ALIN_R",
+   "region": 3,
+   "count": 12,
+   "sign": 1
+  },
+  {
+   "name": "central:ALLN_L",
+   "region": 2,
+   "count": 216,
+   "sign": 1
+  },
+  {
+   "name": "central:ALLN_R",
+   "region": 3,
+   "count": 213,
+   "sign": 1
+  },
+  {
+   "name": "central:ALON_L",
+   "region": 2,
+   "count": 7,
+   "sign": 1
+  },
+  {
+   "name": "central:ALON_R",
+   "region": 3,
+   "count": 7,
+   "sign": 1
+  },
+  {
+   "name": "central:ALPN_L",
+   "region": 2,
+   "count": 341,
+   "sign": 1
+  },
+  {
+   "name": "central:ALPN_R",
+   "region": 3,
+   "count": 344,
+   "sign": 1
+  },
+  {
+   "name": "central:CX_L",
+   "region": 8,
+   "count": 1414,
+   "sign": 1
+  },
+  {
+   "name": "central:CX_R",
+   "region": 8,
+   "count": 1414,
+   "sign": 1
+  },
+  {
+   "name": "central:DAN_L",
+   "region": 4,
+   "count": 166,
+   "sign": 1
+  },
+  {
+   "name": "central:DAN_R",
+   "region": 5,
+   "count": 165,
+   "sign": 1
+  },
+  {
+   "name": "central:Kenyon_Cell_L",
+   "region": 4,
+   "count": 2580,
+   "sign": 1
+  },
+  {
+   "name": "central:Kenyon_Cell_R",
+   "region": 5,
+   "count": 2597,
+   "sign": 1
+  },
+  {
+   "name": "central:LHCENT_L",
+   "region": 6,
+   "count": 21,
+   "sign": 1
+  },
+  {
+   "name": "central:LHCENT_R",
+   "region": 7,
+   "count": 21,
+   "sign": 1
+  },
+  {
+   "name": "central:LHLN_L",
+   "region": 6,
+   "count": 255,
+   "sign": 1
+  },
+  {
+   "name": "central:LHLN_R",
+   "region": 7,
+   "count": 259,
+   "sign": 1
+  },
+  {
+   "name": "central:MBIN_L",
+   "region": 4,
+   "count": 1,
+   "sign": 1
+  },
+  {
+   "name": "central:MBIN_R",
+   "region": 5,
+   "count": 1,
+   "sign": 1
+  },
+  {
+   "name": "central:MBON_L",
+   "region": 4,
+   "count": 48,
+   "sign": 1
+  },
+  {
+   "name": "central:MBON_R",
+   "region": 5,
+   "count": 48,
+   "sign": 1
+  },
+  {
+   "name": "central:TPN_L",
+   "region": 12,
+   "count": 1,
+   "sign": 1
+  },
+  {
+   "name": "central:TPN_R",
+   "region": 12,
+   "count": 1,
+   "sign": 1
+  },
+  {
+   "name": "central:TuBu_L",
+   "region": 12,
+   "count": 75,
+   "sign": 1
+  },
+  {
+   "name": "central:TuBu_R",
+   "region": 12,
+   "count": 75,
+   "sign": 1
+  },
+  {
+   "name": "central:central_L",
+   "region": 12,
+   "count": 11020,
+   "sign": 1
+  },
+  {
+   "name": "central:central_R",
+   "region": 12,
+   "count": 10939,
+   "sign": 1
+  },
+  {
+   "name": "central:mAL_L",
+   "region": 2,
+   "count": 38,
+   "sign": 1
+  },
+  {
+   "name": "central:mAL_R",
+   "region": 3,
+   "count": 39,
+   "sign": 1
+  },
+  {
+   "name": "descending:descending_L",
+   "region": 13,
+   "count": 645,
+   "sign": 1
+  },
+  {
+   "name": "descending:descending_R",
+   "region": 13,
+   "count": 638,
+   "sign": 1
+  },
+  {
+   "name": "descending:ocellar_L",
+   "region": 13,
+   "count": 1,
+   "sign": 1
+  },
+  {
+   "name": "descending:ocellar_R",
+   "region": 13,
+   "count": 1,
+   "sign": 1
+  },
+  {
+   "name": "endocrine:endocrine_L",
+   "region": 12,
+   "count": 3,
+   "sign": 1
+  },
+  {
+   "name": "endocrine:endocrine_R",
+   "region": 12,
+   "count": 3,
+   "sign": 1
+  },
+  {
+   "name": "endocrine:pars_intercerebralis_L",
+   "region": 12,
+   "count": 21,
+   "sign": 1
+  },
+  {
+   "name": "endocrine:pars_intercerebralis_R",
+   "region": 12,
+   "count": 21,
+   "sign": 1
+  },
+  {
+   "name": "endocrine:pars_lateralis_L",
+   "region": 12,
+   "count": 13,
+   "sign": 1
+  },
+  {
+   "name": "endocrine:pars_lateralis_R",
+   "region": 12,
+   "count": 15,
+   "sign": 1
+  },
+  {
+   "name": "motor:brain_motor_neuron_L",
+   "region": 9,
+   "count": 51,
+   "sign": 1
+  },
+  {
+   "name": "motor:brain_motor_neuron_R",
+   "region": 9,
+   "count": 52,
+   "sign": 1
+  },
+  {
+   "name": "motor:motor_L",
+   "region": 9,
+   "count": 2,
+   "sign": 1
+  },
+  {
+   "name": "motor:motor_R",
+   "region": 9,
+   "count": 2,
+   "sign": 1
+  },
+  {
+   "name": "motor:neck_motor_neuron_R",
+   "region": 9,
+   "count": 1,
+   "sign": 1
+  },
+  {
+   "name": "optic:LA>ME_L",
+   "region": 0,
+   "count": 360,
+   "sign": 1
+  },
+  {
+   "name": "optic:LA>ME_R",
+   "region": 1,
+   "count": 6,
+   "sign": 1
+  },
+  {
+   "name": "optic:LA_L",
+   "region": 0,
+   "count": 84,
+   "sign": 1
+  },
+  {
+   "name": "optic:LA_R",
+   "region": 1,
+   "count": 229,
+   "sign": 1
+  },
+  {
+   "name": "optic:LO.LOP_L",
+   "region": 0,
+   "count": 1,
+   "sign": 1
+  },
+  {
+   "name": "optic:LO.LOP_R",
+   "region": 1,
+   "count": 1,
+   "sign": 1
+  },
+  {
+   "name": "optic:LO>LOP_L",
+   "region": 0,
+   "count": 3,
+   "sign": 1
+  },
+  {
+   "name": "optic:LO>LOP_R",
+   "region": 1,
+   "count": 1,
+   "sign": 1
+  },
+  {
+   "name": "optic:LO>ME_L",
+   "region": 0,
+   "count": 149,
+   "sign": 1
+  },
+  {
+   "name": "optic:LO>ME_R",
+   "region": 1,
+   "count": 149,
+   "sign": 1
+  },
+  {
+   "name": "optic:LOP>LO.ME_L",
+   "region": 0,
+   "count": 113,
+   "sign": 1
+  },
+  {
+   "name": "optic:LOP>LO.ME_R",
+   "region": 1,
+   "count": 93,
+   "sign": 1
+  },
+  {
+   "name": "optic:LOP>LO_L",
+   "region": 0,
+   "count": 302,
+   "sign": 1
+  },
+  {
+   "name": "optic:LOP>LO_R",
+   "region": 1,
+   "count": 286,
+   "sign": 1
+  },
+  {
+   "name": "optic:LOP>ME.LO_L",
+   "region": 0,
+   "count": 512,
+   "sign": 1
+  },
+  {
+   "name": "optic:LOP>ME.LO_R",
+   "region": 1,
+   "count": 552,
+   "sign": 1
+  },
+  {
+   "name": "optic:LOP>ME_L",
+   "region": 0,
+   "count": 1,
+   "sign": 1
+  },
+  {
+   "name": "optic:LOP>ME_R",
+   "region": 1,
+   "count": 3,
+   "sign": 1
+  },
+  {
+   "name": "optic:LOP_L",
+   "region": 0,
+   "count": 350,
+   "sign": 1
+  },
+  {
+   "name": "optic:LOP_R",
+   "region": 1,
+   "count": 358,
+   "sign": 1
+  },
+  {
+   "name": "optic:LO_L",
+   "region": 0,
+   "count": 747,
+   "sign": 1
+  },
+  {
+   "name": "optic:LO_R",
+   "region": 1,
+   "count": 773,
+   "sign": 1
+  },
+  {
+   "name": "optic:ME.LO.LOP_L",
+   "region": 0,
+   "count": 22,
+   "sign": 1
+  },
+  {
+   "name": "optic:ME.LO.LOP_R",
+   "region": 1,
+   "count": 14,
+   "sign": 1
+  },
+  {
+   "name": "optic:ME.LOP_L",
+   "region": 0,
+   "count": 1,
+   "sign": 1
+  },
+  {
+   "name": "optic:ME.LOP_R",
+   "region": 1,
+   "count": 2,
+   "sign": 1
+  },
+  {
+   "name": "optic:ME.LO_L",
+   "region": 0,
+   "count": 87,
+   "sign": 1
+  },
+  {
+   "name": "optic:ME.LO_R",
+   "region": 1,
+   "count": 85,
+   "sign": 1
+  },
+  {
+   "name": "optic:ME>LA_L",
+   "region": 0,
+   "count": 2404,
+   "sign": 1
+  },
+  {
+   "name": "optic:ME>LA_R",
+   "region": 1,
+   "count": 2563,
+   "sign": 1
+  },
+  {
+   "name": "optic:ME>LO.LOP_L",
+   "region": 0,
+   "count": 2815,
+   "sign": 1
+  },
+  {
+   "name": "optic:ME>LO.LOP_R",
+   "region": 1,
+   "count": 2748,
+   "sign": 1
+  },
+  {
+   "name": "optic:ME>LOP.LO_L",
+   "region": 0,
+   "count": 204,
+   "sign": 1
+  },
+  {
+   "name": "optic:ME>LOP.LO_R",
+   "region": 1,
+   "count": 222,
+   "sign": 1
+  },
+  {
+   "name": "optic:ME>LOP_L",
+   "region": 0,
+   "count": 3,
+   "sign": 1
+  },
+  {
+   "name": "optic:ME>LO_L",
+   "region": 0,
+   "count": 8114,
+   "sign": 1
+  },
+  {
+   "name": "optic:ME>LO_R",
+   "region": 1,
+   "count": 7825,
+   "sign": 1
+  },
+  {
+   "name": "optic:ME_L",
+   "region": 0,
+   "count": 8660,
+   "sign": 1
+  },
+  {
+   "name": "optic:ME_R",
+   "region": 1,
+   "count": 8587,
+   "sign": 1
+  },
+  {
+   "name": "optic:bilateral_L",
+   "region": 0,
+   "count": 76,
+   "sign": 1
+  },
+  {
+   "name": "optic:bilateral_R",
+   "region": 1,
+   "count": 75,
+   "sign": 1
+  },
+  {
+   "name": "optic:ocellar_L",
+   "region": 0,
+   "count": 7,
+   "sign": 1
+  },
+  {
+   "name": "optic:ocellar_R",
+   "region": 1,
+   "count": 9,
+   "sign": 1
+  },
+  {
+   "name": "optic:optic_L",
+   "region": 0,
+   "count": 1,
+   "sign": 1
+  },
+  {
+   "name": "optic:optic_R",
+   "region": 1,
+   "count": 5,
+   "sign": 1
+  },
+  {
+   "name": "optic:optic_lobes_L",
+   "region": 0,
+   "count": 27,
+   "sign": 1
+  },
+  {
+   "name": "optic:optic_lobes_R",
+   "region": 1,
+   "count": 3,
+   "sign": 1
+  },
+  {
+   "name": "sensory:gustatory_L",
+   "region": 9,
+   "count": 169,
+   "sign": 1
+  },
+  {
+   "name": "sensory:gustatory_R",
+   "region": 9,
+   "count": 167,
+   "sign": 1
+  },
+  {
+   "name": "sensory:hygrosensory_L",
+   "region": 12,
+   "count": 39,
+   "sign": 1
+  },
+  {
+   "name": "sensory:hygrosensory_R",
+   "region": 12,
+   "count": 35,
+   "sign": 1
+  },
+  {
+   "name": "sensory:mechanosensory_L",
+   "region": 9,
+   "count": 1363,
+   "sign": 1
+  },
+  {
+   "name": "sensory:mechanosensory_R",
+   "region": 9,
+   "count": 1292,
+   "sign": 1
+  },
+  {
+   "name": "sensory:olfactory_L",
+   "region": 2,
+   "count": 1146,
+   "sign": 1
+  },
+  {
+   "name": "sensory:olfactory_R",
+   "region": 3,
+   "count": 1133,
+   "sign": 1
+  },
+  {
+   "name": "sensory:optic_lobes_L",
+   "region": 12,
+   "count": 4,
+   "sign": 1
+  },
+  {
+   "name": "sensory:sensory_L",
+   "region": 12,
+   "count": 2,
+   "sign": 1
+  },
+  {
+   "name": "sensory:thermosensory_L",
+   "region": 12,
+   "count": 13,
+   "sign": 1
+  },
+  {
+   "name": "sensory:thermosensory_R",
+   "region": 12,
+   "count": 16,
+   "sign": 1
+  },
+  {
+   "name": "sensory:unknown_sensory_L",
+   "region": 12,
+   "count": 59,
+   "sign": 1
+  },
+  {
+   "name": "sensory:unknown_sensory_R",
+   "region": 12,
+   "count": 59,
+   "sign": 1
+  },
+  {
+   "name": "sensory:visual_L",
+   "region": 0,
+   "count": 176,
+   "sign": 1
+  },
+  {
+   "name": "sensory:visual_R",
+   "region": 1,
+   "count": 97,
+   "sign": 1
+  },
+  {
+   "name": "sensory_ascending:AN_L",
+   "region": 9,
+   "count": 193,
+   "sign": 1
+  },
+  {
+   "name": "sensory_ascending:AN_R",
+   "region": 9,
+   "count": 302,
+   "sign": 1
+  },
+  {
+   "name": "sensory_ascending:gustatory_L",
+   "region": 9,
+   "count": 37,
+   "sign": 1
+  },
+  {
+   "name": "sensory_ascending:gustatory_R",
+   "region": 9,
+   "count": 37,
+   "sign": 1
+  },
+  {
+   "name": "sensory_ascending:unknown_sensory_L",
+   "region": 9,
+   "count": 4,
+   "sign": 1
+  },
+  {
+   "name": "sensory_ascending:unknown_sensory_R",
+   "region": 9,
+   "count": 8,
+   "sign": 1
+  },
+  {
+   "name": "type:APL_L",
+   "region": 4,
+   "count": 1,
+   "sign": 1
+  },
+  {
+   "name": "type:APL_R",
+   "region": 5,
+   "count": 1,
+   "sign": 1
+  },
+  {
+   "name": "type:CB0701_L",
+   "region": 9,
+   "count": 1,
+   "sign": 1
+  },
+  {
+   "name": "type:CB0701_R",
+   "region": 9,
+   "count": 1,
+   "sign": 1
+  },
+  {
+   "name": "type:DNa02_L",
+   "region": 13,
+   "count": 1,
+   "sign": 1
+  },
+  {
+   "name": "type:DNa02_R",
+   "region": 13,
+   "count": 1,
+   "sign": 1
+  },
+  {
+   "name": "type:DNp01_L",
+   "region": 13,
+   "count": 1,
+   "sign": 1
+  },
+  {
+   "name": "type:DNp01_R",
+   "region": 13,
+   "count": 1,
+   "sign": 1
+  },
+  {
+   "name": "type:DNp02_L",
+   "region": 13,
+   "count": 1,
+   "sign": 1
+  },
+  {
+   "name": "type:DNp02_R",
+   "region": 13,
+   "count": 1,
+   "sign": 1
+  },
+  {
+   "name": "type:DNp09_L",
+   "region": 13,
+   "count": 1,
+   "sign": 1
+  },
+  {
+   "name": "type:DNp09_R",
+   "region": 13,
+   "count": 1,
+   "sign": 1
+  },
+  {
+   "name": "type:DNp11_L",
+   "region": 13,
+   "count": 1,
+   "sign": 1
+  },
+  {
+   "name": "type:DNp11_R",
+   "region": 13,
+   "count": 1,
+   "sign": 1
+  },
+  {
+   "name": "type:EPG_L",
+   "region": 8,
+   "count": 24,
+   "sign": 1
+  },
+  {
+   "name": "type:EPG_R",
+   "region": 8,
+   "count": 23,
+   "sign": 1
+  },
+  {
+   "name": "type:L1_L",
+   "region": 0,
+   "count": 802,
+   "sign": 1
+  },
+  {
+   "name": "type:L1_R",
+   "region": 1,
+   "count": 789,
+   "sign": 1
+  },
+  {
+   "name": "type:L2_L",
+   "region": 0,
+   "count": 900,
+   "sign": 1
+  },
+  {
+   "name": "type:L2_R",
+   "region": 1,
+   "count": 797,
+   "sign": 1
+  },
+  {
+   "name": "type:L3_L",
+   "region": 0,
+   "count": 703,
+   "sign": 1
+  },
+  {
+   "name": "type:L3_R",
+   "region": 1,
+   "count": 739,
+   "sign": 1
+  },
+  {
+   "name": "type:L4_L",
+   "region": 0,
+   "count": 653,
+   "sign": 1
+  },
+  {
+   "name": "type:L4_R",
+   "region": 1,
+   "count": 725,
+   "sign": 1
+  },
+  {
+   "name": "type:L5_L",
+   "region": 0,
+   "count": 791,
+   "sign": 1
+  },
+  {
+   "name": "type:L5_R",
+   "region": 1,
+   "count": 785,
+   "sign": 1
+  },
+  {
+   "name": "type:LC4_L",
+   "region": 0,
+   "count": 54,
+   "sign": 1
+  },
+  {
+   "name": "type:LC4_R",
+   "region": 1,
+   "count": 50,
+   "sign": 1
+  },
+  {
+   "name": "type:LC6_L",
+   "region": 0,
+   "count": 65,
+   "sign": 1
+  },
+  {
+   "name": "type:LC6_R",
+   "region": 1,
+   "count": 60,
+   "sign": 1
+  },
+  {
+   "name": "type:LPLC1_L",
+   "region": 0,
+   "count": 68,
+   "sign": 1
+  },
+  {
+   "name": "type:LPLC1_R",
+   "region": 1,
+   "count": 72,
+   "sign": 1
+  },
+  {
+   "name": "type:LPLC2_L",
+   "region": 0,
+   "count": 108,
+   "sign": 1
+  },
+  {
+   "name": "type:LPLC2_R",
+   "region": 1,
+   "count": 102,
+   "sign": 1
+  },
+  {
+   "name": "type:MDN_L",
+   "region": 13,
+   "count": 2,
+   "sign": 1
+  },
+  {
+   "name": "type:MDN_R",
+   "region": 13,
+   "count": 2,
+   "sign": 1
+  },
+  {
+   "name": "type:Mi1_L",
+   "region": 0,
+   "count": 788,
+   "sign": 1
+  },
+  {
+   "name": "type:Mi1_R",
+   "region": 1,
+   "count": 796,
+   "sign": 1
+  },
+  {
+   "name": "type:R1-6_L",
+   "region": 0,
+   "count": 4044,
+   "sign": 1
+  },
+  {
+   "name": "type:R1-6_R",
+   "region": 1,
+   "count": 3888,
+   "sign": 1
+  },
+  {
+   "name": "type:R7_L",
+   "region": 0,
+   "count": 668,
+   "sign": 1
+  },
+  {
+   "name": "type:R7_R",
+   "region": 1,
+   "count": 668,
+   "sign": 1
+  },
+  {
+   "name": "type:R8_L",
+   "region": 0,
+   "count": 662,
+   "sign": 1
+  },
+  {
+   "name": "type:R8_R",
+   "region": 1,
+   "count": 652,
+   "sign": 1
+  },
+  {
+   "name": "type:T4a_L",
+   "region": 0,
+   "count": 725,
+   "sign": 1
+  },
+  {
+   "name": "type:T4a_R",
+   "region": 1,
+   "count": 737,
+   "sign": 1
+  },
+  {
+   "name": "type:T4b_L",
+   "region": 0,
+   "count": 752,
+   "sign": 1
+  },
+  {
+   "name": "type:T4b_R",
+   "region": 1,
+   "count": 748,
+   "sign": 1
+  },
+  {
+   "name": "type:T4c_L",
+   "region": 0,
+   "count": 864,
+   "sign": 1
+  },
+  {
+   "name": "type:T4c_R",
+   "region": 1,
+   "count": 842,
+   "sign": 1
+  },
+  {
+   "name": "type:T4d_L",
+   "region": 0,
+   "count": 796,
+   "sign": 1
+  },
+  {
+   "name": "type:T4d_R",
+   "region": 1,
+   "count": 777,
+   "sign": 1
+  },
+  {
+   "name": "type:T5a_L",
+   "region": 0,
+   "count": 741,
+   "sign": 1
+  },
+  {
+   "name": "type:T5a_R",
+   "region": 1,
+   "count": 743,
+   "sign": 1
+  },
+  {
+   "name": "type:T5b_L",
+   "region": 0,
+   "count": 753,
+   "sign": 1
+  },
+  {
+   "name": "type:T5b_R",
+   "region": 1,
+   "count": 760,
+   "sign": 1
+  },
+  {
+   "name": "type:T5c_L",
+   "region": 0,
+   "count": 775,
+   "sign": 1
+  },
+  {
+   "name": "type:T5c_R",
+   "region": 1,
+   "count": 766,
+   "sign": 1
+  },
+  {
+   "name": "type:T5d_L",
+   "region": 0,
+   "count": 740,
+   "sign": 1
+  },
+  {
+   "name": "type:T5d_R",
+   "region": 1,
+   "count": 727,
+   "sign": 1
+  },
+  {
+   "name": "type:Tm1_L",
+   "region": 0,
+   "count": 780,
+   "sign": 1
+  },
+  {
+   "name": "type:Tm1_R",
+   "region": 1,
+   "count": 775,
+   "sign": 1
+  },
+  {
+   "name": "type:Tm2_L",
+   "region": 0,
+   "count": 784,
+   "sign": 1
+  },
+  {
+   "name": "type:Tm2_R",
+   "region": 1,
+   "count": 767,
+   "sign": 1
+  },
+  {
+   "name": "type:Tm3_L",
+   "region": 0,
+   "count": 897,
+   "sign": 1
+  },
+  {
+   "name": "type:Tm3_R",
+   "region": 1,
+   "count": 859,
+   "sign": 1
+  },
+  {
+   "name": "type:Tm9_L",
+   "region": 0,
+   "count": 767,
+   "sign": 1
+  },
+  {
+   "name": "type:Tm9_R",
+   "region": 1,
+   "count": 755,
+   "sign": 1
+  },
+  {
+   "name": "visual_centrifugal:ocellar_L",
+   "region": 0,
+   "count": 12,
+   "sign": 1
+  },
+  {
+   "name": "visual_centrifugal:ocellar_R",
+   "region": 1,
+   "count": 13,
+   "sign": 1
+  },
+  {
+   "name": "visual_centrifugal:visual_centrifugal_L",
+   "region": 0,
+   "count": 253,
+   "sign": 1
+  },
+  {
+   "name": "visual_centrifugal:visual_centrifugal_R",
+   "region": 1,
+   "count": 246,
+   "sign": 1
+  },
+  {
+   "name": "visual_projection:bilateral_L",
+   "region": 0,
+   "count": 37,
+   "sign": 1
+  },
+  {
+   "name": "visual_projection:bilateral_R",
+   "region": 1,
+   "count": 32,
+   "sign": 1
+  },
+  {
+   "name": "visual_projection:ocellar_L",
+   "region": 0,
+   "count": 10,
+   "sign": 1
+  },
+  {
+   "name": "visual_projection:ocellar_R",
+   "region": 1,
+   "count": 10,
+   "sign": 1
+  },
+  {
+   "name": "visual_projection:visual_projection_L",
+   "region": 0,
+   "count": 3666,
+   "sign": 1
+  },
+  {
+   "name": "visual_projection:visual_projection_R",
+   "region": 1,
+   "count": 3704,
+   "sign": 1
+  }
+ ],
+ "motor": {
+  "fwd_offset_hz": 0.0,
+  "fwd_full_hz": 40.0,
+  "back_full_hz": 30.0,
+  "turn_full_hz": 45.0,
+  "mn9_on_hz": 10.0
+ },
+ "neurons": 138639,
+ "synapse_edges": 15091983,
+ "tex_width": 1024,
+ "n_pad": 139264,
+ "regions": [
+  {
+   "name": "Optic lobe L",
+   "color": "#3a7bd5",
+   "count": 48877
+  },
+  {
+   "name": "Optic lobe R",
+   "color": "#3a7bd5",
+   "count": 48070
+  },
+  {
+   "name": "Antennal lobe L",
+   "color": "#e8a33d",
+   "count": 1760
+  },
+  {
+   "name": "Antennal lobe R",
+   "color": "#e8a33d",
+   "count": 1748
+  },
+  {
+   "name": "Mushroom body L",
+   "color": "#c04fd0",
+   "count": 2796
+  },
+  {
+   "name": "Mushroom body R",
+   "color": "#c04fd0",
+   "count": 2812
+  },
+  {
+   "name": "Lateral horn L",
+   "color": "#4fd08a",
+   "count": 276
+  },
+  {
+   "name": "Lateral horn R",
+   "color": "#4fd08a",
+   "count": 280
+  },
+  {
+   "name": "Central complex",
+   "color": "#f25c54",
+   "count": 2875
+  },
+  {
+   "name": "SEZ / gustatory",
+   "color": "#f2d05c",
+   "count": 2814
+  },
+  {
+   "name": "AMMC / JO L",
+   "color": "#5cc8f2",
+   "count": 461
+  },
+  {
+   "name": "AMMC / JO R",
+   "color": "#5cc8f2",
+   "count": 407
+  },
+  {
+   "name": "Central brain",
+   "color": "#9a9a9a",
+   "count": 22428
+  },
+  {
+   "name": "Descending",
+   "color": "#ffffff",
+   "count": 1299
+  },
+  {
+   "name": "Ascending",
+   "color": "#b0ffb0",
+   "count": 1736
+  }
+ ],
+ "groups": [
+  {
+   "name": "none",
+   "role": "none",
+   "count": 129464
+  },
+  {
+   "name": "eye_L_tonic_0",
+   "role": "input",
+   "count": 340
+  },
+  {
+   "name": "eye_L_tonic_1",
+   "role": "input",
+   "count": 339
+  },
+  {
+   "name": "eye_L_tonic_2",
+   "role": "input",
+   "count": 338
+  },
+  {
+   "name": "eye_L_tonic_3",
+   "role": "input",
+   "count": 339
+  },
+  {
+   "name": "eye_L_tonic_4",
+   "role": "input",
+   "count": 339
+  },
+  {
+   "name": "eye_L_tonic_5",
+   "role": "input",
+   "count": 338
+  },
+  {
+   "name": "eye_L_transient_0",
+   "role": "input",
+   "count": 150
+  },
+  {
+   "name": "eye_L_transient_1",
+   "role": "input",
+   "count": 150
+  },
+  {
+   "name": "eye_L_transient_2",
+   "role": "input",
+   "count": 150
+  },
+  {
+   "name": "eye_L_transient_3",
+   "role": "input",
+   "count": 150
+  },
+  {
+   "name": "eye_L_transient_4",
+   "role": "input",
+   "count": 150
+  },
+  {
+   "name": "eye_L_transient_5",
+   "role": "input",
+   "count": 150
+  },
+  {
+   "name": "eye_L_on_0",
+   "role": "input",
+   "count": 134
+  },
+  {
+   "name": "eye_L_on_1",
+   "role": "input",
+   "count": 134
+  },
+  {
+   "name": "eye_L_on_2",
+   "role": "input",
+   "count": 133
+  },
+  {
+   "name": "eye_L_on_3",
+   "role": "input",
+   "count": 134
+  },
+  {
+   "name": "eye_L_on_4",
+   "role": "input",
+   "count": 134
+  },
+  {
+   "name": "eye_L_on_5",
+   "role": "input",
+   "count": 133
+  },
+  {
+   "name": "dra_L",
+   "role": "input",
+   "count": 1
+  },
+  {
+   "name": "ocelli",
+   "role": "input",
+   "count": 273
+  },
+  {
+   "name": "orn_L_attractive",
+   "role": "input",
+   "count": 153
+  },
+  {
+   "name": "orn_L_aversive",
+   "role": "input",
+   "count": 51
+  },
+  {
+   "name": "jo_L",
+   "role": "input",
+   "count": 249
+  },
+  {
+   "name": "jo_auditory_L",
+   "role": "input",
+   "count": 212
+  },
+  {
+   "name": "grn_L_sweet",
+   "role": "input",
+   "count": 33
+  },
+  {
+   "name": "grn_L_bitter",
+   "role": "input",
+   "count": 21
+  },
+  {
+   "name": "grn_L_water",
+   "role": "input",
+   "count": 15
+  },
+  {
+   "name": "dn_turn_L",
+   "role": "output",
+   "count": 1
+  },
+  {
+   "name": "dn_forward_L",
+   "role": "output",
+   "count": 1
+  },
+  {
+   "name": "eye_R_tonic_0",
+   "role": "input",
+   "count": 344
+  },
+  {
+   "name": "eye_R_tonic_1",
+   "role": "input",
+   "count": 343
+  },
+  {
+   "name": "eye_R_tonic_2",
+   "role": "input",
+   "count": 343
+  },
+  {
+   "name": "eye_R_tonic_3",
+   "role": "input",
+   "count": 343
+  },
+  {
+   "name": "eye_R_tonic_4",
+   "role": "input",
+   "count": 343
+  },
+  {
+   "name": "eye_R_tonic_5",
+   "role": "input",
+   "count": 343
+  },
+  {
+   "name": "eye_R_transient_0",
+   "role": "input",
+   "count": 133
+  },
+  {
+   "name": "eye_R_transient_1",
+   "role": "input",
+   "count": 133
+  },
+  {
+   "name": "eye_R_transient_2",
+   "role": "input",
+   "count": 133
+  },
+  {
+   "name": "eye_R_transient_3",
+   "role": "input",
+   "count": 133
+  },
+  {
+   "name": "eye_R_transient_4",
+   "role": "input",
+   "count": 133
+  },
+  {
+   "name": "eye_R_transient_5",
+   "role": "input",
+   "count": 132
+  },
+  {
+   "name": "eye_R_on_0",
+   "role": "input",
+   "count": 132
+  },
+  {
+   "name": "eye_R_on_1",
+   "role": "input",
+   "count": 131
+  },
+  {
+   "name": "eye_R_on_2",
+   "role": "input",
+   "count": 132
+  },
+  {
+   "name": "eye_R_on_3",
+   "role": "input",
+   "count": 131
+  },
+  {
+   "name": "eye_R_on_4",
+   "role": "input",
+   "count": 132
+  },
+  {
+   "name": "eye_R_on_5",
+   "role": "input",
+   "count": 131
+  },
+  {
+   "name": "dra_R",
+   "role": "input",
+   "count": 0
+  },
+  {
+   "name": "orn_R_attractive",
+   "role": "input",
+   "count": 145
+  },
+  {
+   "name": "orn_R_aversive",
+   "role": "input",
+   "count": 55
+  },
+  {
+   "name": "jo_R",
+   "role": "input",
+   "count": 232
+  },
+  {
+   "name": "jo_auditory_R",
+   "role": "input",
+   "count": 175
+  },
+  {
+   "name": "grn_R_sweet",
+   "role": "input",
+   "count": 24
+  },
+  {
+   "name": "grn_R_bitter",
+   "role": "input",
+   "count": 21
+  },
+  {
+   "name": "grn_R_water",
+   "role": "input",
+   "count": 15
+  },
+  {
+   "name": "dn_turn_R",
+   "role": "output",
+   "count": 1
+  },
+  {
+   "name": "dn_forward_R",
+   "role": "output",
+   "count": 1
+  },
+  {
+   "name": "thermo_hot",
+   "role": "input",
+   "count": 7
+  },
+  {
+   "name": "thermo_cold",
+   "role": "input",
+   "count": 9
+  },
+  {
+   "name": "hygro_moist",
+   "role": "input",
+   "count": 16
+  },
+  {
+   "name": "hygro_dry",
+   "role": "input",
+   "count": 29
+  },
+  {
+   "name": "dn_backward",
+   "role": "output",
+   "count": 4
+  },
+  {
+   "name": "dn_giant_fiber",
+   "role": "output",
+   "count": 2
+  },
+  {
+   "name": "mn9_proboscis",
+   "role": "output",
+   "count": 2
+  },
+  {
+   "name": "epg_all",
+   "role": "output",
+   "count": 47
+  }
+ ],
+ "lif": {
+  "v_rest": -52.0,
+  "v_reset": -52.0,
+  "v_th": -45.0,
+  "tau_m_ms": 20.0,
+  "tau_syn_ms": 5.0,
+  "refractory_ms": 2.2,
+  "dt_ms": 0.5,
+  "delay_ms": 1.8,
+  "reset_g_on_spike": true
+ }
+}
