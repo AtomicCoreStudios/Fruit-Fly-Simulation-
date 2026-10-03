@@ -28,12 +28,16 @@ SUGAR_R = [720575940624963786, 720575940630233916, 720575940637568838, 720575940
 
 
 class LIF:
-    def __init__(self, scheme="shiu", dt_ms=None, extra_w=None):
+    def __init__(self, scheme="shiu", dt_ms=None, extra_w=None, mirror=False):
         comp = pd.read_csv(ROOT / "data/raw/Completeness_783.csv", index_col=0)
         self.ids = comp.index.to_numpy(np.int64); self.n = len(self.ids)
         self.index = pd.Series(np.arange(self.n), index=self.ids)
         con = pd.read_parquet(ROOT / "data/raw/Connectivity_783.parquet",
                               columns=["Presynaptic_Index", "Postsynaptic_Index", "Excitatory x Connectivity"])
+        patch = ROOT / "data/grn_mirror_patch.parquet"
+        if mirror and patch.exists():
+            pt = pd.read_parquet(patch, columns=["Presynaptic_Index", "Postsynaptic_Index", "Excitatory x Connectivity"])
+            con = pd.concat([con, pt]).groupby(["Presynaptic_Index", "Postsynaptic_Index"], as_index=False).sum()
         pre = con.Presynaptic_Index.to_numpy(); post = con.Postsynaptic_Index.to_numpy()
         w = 0.275 * con["Excitatory x Connectivity"].to_numpy(np.float64)
         if extra_w is not None:
@@ -46,7 +50,7 @@ class LIF:
         self.dt = dt_ms or (0.1 if scheme == "shiu" else 0.5)
         self.delay = int(round(1.8 / self.dt))
 
-    def run(self, stim, t_ms=1000.0, seed=0, record=None):
+    def run(self, stim, t_ms=1000.0, seed=0, record=None, bin_ms=100.0):
         """stim: list of (neuron indices, rate Hz). Returns spike counts per neuron."""
         rng = np.random.default_rng(seed)
         n, dt = self.n, self.dt
@@ -62,6 +66,8 @@ class LIF:
         k = 5.0 / (20.0 - 5.0)                              # tau / (t_mbr - tau)
         counts = np.zeros(n, np.int64)
         steps = int(round(t_ms / dt))
+        trace = {key: [] for key in (record or {})}
+        bin_steps = int(round(bin_ms / dt)); bin_counts = np.zeros(n, np.int64)
         for s in range(steps):
             slot = s % (self.delay + 1)
             g += ring[slot]; ring[slot] = 0.0
@@ -81,13 +87,20 @@ class LIF:
                 v = np.where(active, v + dt / 20.0 * (-52.0 - v + g), -52.0)
             ref -= dt
             spk = np.where((v > -45.0) & active)[0] if self.scheme in ("shiu", "gpu2") else np.where((v >= -45.0) & active)[0]
+            if record and s % bin_steps == bin_steps - 1:
+                for key, ix in record.items():
+                    trace[key].append(bin_counts[ix].sum() / len(ix) * 1000.0 / bin_ms)
+                bin_counts[:] = 0
             if len(spk):
                 counts[spk] += 1
+                bin_counts[spk] += 1
                 v[spk] = -52.0; g[spk] = 0.0; ref[spk] = rfc[spk]
                 tgt_slot = (s + self.delay) % (self.delay + 1)
                 for i in spk:
                     a, b = self.row[i], self.row[i + 1]
                     np.add.at(ring[tgt_slot], self.post[a:b], self.w[a:b])
+        if record:
+            self.trace = trace
         return counts / (t_ms / 1000.0)
 
 

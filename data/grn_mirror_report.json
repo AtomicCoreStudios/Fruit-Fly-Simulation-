@@ -1,0 +1,16 @@
+{
+ "out": {
+  "synapses_added": 14490,
+  "template_share_to_untyped_partners": 0.0
+ },
+ "in": {
+  "synapses_added": 2047,
+  "template_share_to_untyped_partners": 0.0
+ },
+ "median_output_synapses": {
+  "left": 204.0,
+  "right_before": 101.0,
+  "right_after": 221.0
+ },
+ "edges_in_patch": 6862
+}

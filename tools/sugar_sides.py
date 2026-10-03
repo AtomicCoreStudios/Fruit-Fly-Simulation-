@@ -4,7 +4,8 @@ import numpy as np, pandas as pd
 sys.path.insert(0, str(pathlib.Path(__file__).parent))
 from reference_lif import LIF, MN9, ROOT
 g = pd.read_csv(ROOT / "data/taste_neurons.csv")
-m = LIF(sys.argv[1] if len(sys.argv) > 1 else "gpu2")
+mirror = "--mirror" in sys.argv
+m = LIF(sys.argv[1] if len(sys.argv) > 1 else "gpu2", mirror=mirror)
 mn9 = m.index.reindex(MN9).values
 res = {}
 for side in ("left", "right"):
@@ -16,4 +17,4 @@ for side in ("left", "right"):
             key = f"{side} {'+'.join(typ)} n={len(idx)} @ {f} Hz"
             res[key] = r.round(1).tolist()
             print(f"{key:34s} -> MN9 R/L {r[0]:6.1f}/{r[1]:6.1f}", flush=True)
-(ROOT / "recordings/sugar_sides_mn9.json").write_text(json.dumps(res, indent=1))
+(ROOT / f"recordings/sugar_sides_mn9{'_mirror' if mirror else ''}.json").write_text(json.dumps(res, indent=1))

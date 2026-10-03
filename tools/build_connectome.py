@@ -356,6 +356,13 @@ def build_flywire(raw, seed):
     n = len(ids)
     con = pd.read_parquet(os.path.join(raw, "Connectivity_783.parquet"),
                           columns=["Presynaptic_Index", "Postsynaptic_Index", "Excitatory x Connectivity"])
+    # Bilateral completion of the under-reconstructed right labellar GRNs (tools/mirror_grn.py):
+    # synapses are ADDED to existing pairs or as new pairs; disable with FLY_NO_MIRROR=1
+    patch = os.path.join(os.path.dirname(raw), "grn_mirror_patch.parquet")
+    if os.path.exists(patch) and os.environ.get("FLY_NO_MIRROR") != "1":
+        pt = pd.read_parquet(patch, columns=["Presynaptic_Index", "Postsynaptic_Index", "Excitatory x Connectivity"])
+        con = pd.concat([con, pt]).groupby(["Presynaptic_Index", "Postsynaptic_Index"], as_index=False).sum()
+        print(f"  GRN mirror patch applied: {len(pt)} edges, {int(pt['Excitatory x Connectivity'].abs().sum())} synapses added")
     pre = con["Presynaptic_Index"].to_numpy(np.int64)
     post = con["Postsynaptic_Index"].to_numpy(np.int64)
     w = (0.275 * con["Excitatory x Connectivity"].to_numpy(np.float64)).astype(np.float32)

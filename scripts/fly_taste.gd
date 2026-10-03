@@ -60,6 +60,10 @@ func setup(p_brain: FlyBrain, p_fly, p_world) -> String:
 			_bench["shiu"] = _bench.get("shiu", []) + [_idx.size() - 1]
 		if row[col["organ"]] == "labellum_bristle" and row[col["side"]] == "right" and row[col["modality"]] in ["sugar", "sugar/low_salt"]:
 			_bench["sugar"] = _bench.get("sugar", []) + [_idx.size() - 1]
+		if row[col["organ"]] == "labellum_bristle" and row[col["side"]] == "left" and row[col["modality"]] in ["sugar", "sugar/low_salt"]:
+			_bench["sugar_left"] = _bench.get("sugar_left", []) + [_idx.size() - 1]
+		if row[col["organ"]] == "labellum_bristle" and row[col["modality"]] in ["sugar", "sugar/low_salt"]:
+			_bench["sugar_both"] = _bench.get("sugar_both", []) + [_idx.size() - 1]
 		if row[col["organ"]] == "leg" and row[col["modality"]] == "sugar":
 			_bench["leg_sugar"] = _bench.get("leg_sugar", []) + [_idx.size() - 1]
 		if row[col["organ"]] == "labellum_bristle" and row[col["modality"]] == "bitter":

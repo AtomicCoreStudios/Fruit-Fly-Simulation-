@@ -388,3 +388,51 @@ Where each piece comes from:
    - So in this model the fly cannot start feeding from its legs. That's a missing-data result: the nerve cord (MANC/BANC) is needed to close the loop.
 
 Bench: `tools/run_taste_bench.py --set shiu|sugar|leg_sugar|bitter`.
+
+## Mirrored right labellar taste neurons (on by default)
+
+**The problem.** In FlyWire v783, right-annotated labellar taste neurons have about half the output synapses of the left ones:
+
+| Class | Neurons L/R | Median output synapses L/R |
+|---|---|---|
+| Labellar bristles | 108 / 105 | 240 / 127 |
+| Taste pegs | 37 / 36 | 149 / 74 |
+
+Their cable is only about 14% shorter, but their synapse density is 43% lower (364 vs 634 per mm). Labial mechanosensory neurons in the same nerve, and the pharyngeal and leg taste neurons, are symmetric. Engert et al. 2022 report EM-volume misalignments that prevented labellar taste-neuron reconstruction in FAFB's left hemisphere. That is the side FlyWire labels right, because FAFB was imaged as a mirror image.
+
+**The fix** (`tools/mirror_grn.py` → `data/grn_mirror_patch.parquet`; turn it off with `FLY_NO_MIRROR=1`):
+- Each right taste neuron is topped up to the left-side mean for its type.
+- Each type keeps its own pattern of same-side vs opposite-side partners, copied from the left. Bitter neurons reach the midline ring; sugar, water and salt neurons stay on their own side (Engert et al. 2022).
+- Synapses are added only to the mirror-image partner neurons (same type, opposite side), in proportion to the synapses those partners already receive.
+- Measured synapses are never removed.
+- Taste-to-taste contacts are added once, from the presynaptic side.
+
+Result: about 14,500 output and 2,000 input synapses added; the right-side median goes from 101 to 221 synapses (left: 204). basis: approximate.
+
+**Functional check** (reference model, `tools/sugar_sides.py --mirror`). MN9 R/L in Hz:
+
+| Sugar set | Neurons | 60 Hz input | 100 Hz input |
+|---|---|---|---|
+| left | 33 | 64 / 40 | 96 / 51 |
+| right, before | 24 | 0 / 0 | 0 / 0 |
+| right, after | 24 | 21 / 26 | 44 / 61 |
+
+The opposite-side preference flips as a mirror image should. The right side stays weaker because FlyWire types fewer of its neurons as sugar.
+
+## Known model limitation: a global antennal-lobe / mushroom-body runaway
+
+Strong, sustained bilateral sugar input (both labellar sugar sets at 100 Hz) drives the Shiu et al. spiking model into a self-sustaining global state:
+- APL about 435 Hz
+- antennal-lobe local neurons about 200 Hz
+- mushroom-body input neurons (MBIN) about 330 Hz
+- Kenyon cells about 60 Hz
+- MN9 silenced
+
+It happens in their exact model at 0.1 ms (`tools/reference_lif.py`), with or without the mirror patch (the patch delays it from 0.4 to 1.4 s), and with APL's output removed. Their published 1-second trials mostly end before it fully shows.
+
+The ignition path, at 10 ms resolution:
+1. ALIN (taste input to the antennal lobe) at 280 ms
+2. antennal-lobe local neurons at 340 ms
+3. the whole antennal lobe, lateral horn and mushroom body within 20 ms after that
+
+Real antennal lobes have spike-frequency adaptation, gap junctions and non-spiking local neurons (Seki et al. 2010), and none of these is in the model. That is the next fidelity fix for the central brain.
