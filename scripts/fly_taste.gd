@@ -64,6 +64,8 @@ func setup(p_brain: FlyBrain, p_fly, p_world) -> String:
 			_bench["sugar_left"] = _bench.get("sugar_left", []) + [_idx.size() - 1]
 		if row[col["organ"]] == "labellum_bristle" and row[col["modality"]] in ["sugar", "sugar/low_salt"]:
 			_bench["sugar_both"] = _bench.get("sugar_both", []) + [_idx.size() - 1]
+		if row[col["organ"]] == "leg_vnc" and row[col["modality"]] in ["sugar", "sugar/low_salt"]:
+			_bench["leg_vnc_sugar"] = _bench.get("leg_vnc_sugar", []) + [_idx.size() - 1]
 		if row[col["organ"]] == "leg" and row[col["modality"]] == "sugar":
 			_bench["leg_sugar"] = _bench.get("leg_sugar", []) + [_idx.size() - 1]
 		if row[col["organ"]] == "labellum_bristle" and row[col["modality"]] == "bitter":
@@ -151,10 +153,10 @@ func update(_dt: float) -> void:
 					chem = world.chemistry_at(fly.labellum_position() * Vector3(1, 0, 1))
 					if not chem.is_empty():
 						contact["labellum"] += 1
-			elif node.global_position.y < CONTACT_CM and fly.airborne <= 0.0:
+			elif node.global_position.y < CONTACT_CM and fly.airborne <= 0.0:   # legs (brain-ascending and VNC-local GRNs)
 				chem = world.chemistry_at(node.global_position)
 				if not chem.is_empty():
-					contact["leg" if _organ[k] == "leg" else "labellum"] += 1
+					contact["leg" if _organ[k].begins_with("leg") else "labellum"] += 1
 			cache[node] = chem
 		var r := grn_rate(_mod[k], chem)
 		_rate[k] = r

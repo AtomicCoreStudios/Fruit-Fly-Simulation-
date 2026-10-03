@@ -1,0 +1,19 @@
+[remap]
+
+importer="csv_translation"
+type="Translation"
+uid="uid://bjdk53ll6igr3"
+
+[deps]
+
+files=["res://data/vnc/vnc_neurons.bid.translation", "res://data/vnc/vnc_neurons.super.translation", "res://data/vnc/vnc_neurons.cell.translation", "res://data/vnc/vnc_neurons.sub.translation", "res://data/vnc/vnc_neurons.cell.translation", "res://data/vnc/vnc_neurons.fw.translation", "res://data/vnc/vnc_neurons.side.translation", "res://data/vnc/vnc_neurons.body.translation", "res://data/vnc/vnc_neurons.nerve.translation", "res://data/vnc/vnc_neurons.nt.translation", "res://data/vnc/vnc_neurons.hemilineage.translation", "res://data/vnc/vnc_neurons.function.translation", "res://data/vnc/vnc_neurons.vnc.translation"]
+
+source_file="res://data/vnc/vnc_neurons.csv"
+dest_files=["res://data/vnc/vnc_neurons.bid.translation", "res://data/vnc/vnc_neurons.super.translation", "res://data/vnc/vnc_neurons.cell.translation", "res://data/vnc/vnc_neurons.sub.translation", "res://data/vnc/vnc_neurons.cell.translation", "res://data/vnc/vnc_neurons.fw.translation", "res://data/vnc/vnc_neurons.side.translation", "res://data/vnc/vnc_neurons.body.translation", "res://data/vnc/vnc_neurons.nerve.translation", "res://data/vnc/vnc_neurons.nt.translation", "res://data/vnc/vnc_neurons.hemilineage.translation", "res://data/vnc/vnc_neurons.function.translation", "res://data/vnc/vnc_neurons.vnc.translation"]
+
+[params]
+
+compress=1
+delimiter=0
+unescape_keys=false
+unescape_translations=true

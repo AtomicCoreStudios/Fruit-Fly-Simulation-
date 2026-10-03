@@ -65,6 +65,10 @@ func _ready() -> void:
 	fly.graded_c_mv = float(_args.get("vpn_c", "19"))
 	fly.taste_bench_hz = float(_args.get("taste_bench", "0"))
 	fly.taste_bench_set = _args.get("taste_set", "shiu")
+	if _args.has("opto") and _args["opto"] != "1":
+		for kv in str(_args["opto"]).split(","):
+			var parts := kv.split(":")
+			fly.opto[parts[0]] = float(parts[1]) if parts.size() > 1 else 100.0
 	add_child(fly)
 	fly.position = Vector3(-2, 0.06, 7)
 	if _args.has("start"):

@@ -1442,7 +1442,497 @@
    "region": 1,
    "count": 3704,
    "sign": 1
+  },
+  {
+   "name": "vnc:abdomen_motor_neuron_L",
+   "region": 17,
+   "count": 75,
+   "sign": 1
+  },
+  {
+   "name": "vnc:abdomen_motor_neuron_R",
+   "region": 17,
+   "count": 97,
+   "sign": 1
+  },
+  {
+   "name": "vnc:ascending_neuron_L",
+   "region": 15,
+   "count": 302,
+   "sign": 1
+  },
+  {
+   "name": "vnc:ascending_neuron_R",
+   "region": 15,
+   "count": 351,
+   "sign": 1
+  },
+  {
+   "name": "vnc:bristle_neuron_L",
+   "region": 16,
+   "count": 2125,
+   "sign": 1
+  },
+  {
+   "name": "vnc:bristle_neuron_R",
+   "region": 16,
+   "count": 2261,
+   "sign": 1
+  },
+  {
+   "name": "vnc:campaniform_sensillum_neuron_L",
+   "region": 16,
+   "count": 245,
+   "sign": 1
+  },
+  {
+   "name": "vnc:campaniform_sensillum_neuron_R",
+   "region": 16,
+   "count": 220,
+   "sign": 1
+  },
+  {
+   "name": "vnc:central_complex_output_neuron_L",
+   "region": 15,
+   "count": 6,
+   "sign": 1
+  },
+  {
+   "name": "vnc:central_complex_output_neuron_R",
+   "region": 15,
+   "count": 6,
+   "sign": 1
+  },
+  {
+   "name": "vnc:chordotonal_organ_neuron_L",
+   "region": 16,
+   "count": 473,
+   "sign": 1
+  },
+  {
+   "name": "vnc:chordotonal_organ_neuron_R",
+   "region": 16,
+   "count": 440,
+   "sign": 1
+  },
+  {
+   "name": "vnc:hair_plate_neuron_L",
+   "region": 16,
+   "count": 147,
+   "sign": 1
+  },
+  {
+   "name": "vnc:hair_plate_neuron_R",
+   "region": 16,
+   "count": 172,
+   "sign": 1
+  },
+  {
+   "name": "vnc:haltere_motor_neuron_L",
+   "region": 17,
+   "count": 12,
+   "sign": 1
+  },
+  {
+   "name": "vnc:haltere_motor_neuron_R",
+   "region": 17,
+   "count": 13,
+   "sign": 1
+  },
+  {
+   "name": "vnc:hind_leg_motor_neuron_L",
+   "region": 17,
+   "count": 2,
+   "sign": 1
+  },
+  {
+   "name": "vnc:leg_motor_neuron_front_leg_L",
+   "region": 17,
+   "count": 65,
+   "sign": 1
+  },
+  {
+   "name": "vnc:leg_motor_neuron_front_leg_R",
+   "region": 17,
+   "count": 66,
+   "sign": 1
+  },
+  {
+   "name": "vnc:leg_motor_neuron_hind_leg_L",
+   "region": 17,
+   "count": 60,
+   "sign": 1
+  },
+  {
+   "name": "vnc:leg_motor_neuron_hind_leg_R",
+   "region": 17,
+   "count": 60,
+   "sign": 1
+  },
+  {
+   "name": "vnc:leg_motor_neuron_middle_leg_L",
+   "region": 17,
+   "count": 60,
+   "sign": 1
+  },
+  {
+   "name": "vnc:leg_motor_neuron_middle_leg_R",
+   "region": 17,
+   "count": 60,
+   "sign": 1
+  },
+  {
+   "name": "vnc:multidendritic_neuron_L",
+   "region": 16,
+   "count": 84,
+   "sign": 1
+  },
+  {
+   "name": "vnc:multidendritic_neuron_R",
+   "region": 16,
+   "count": 142,
+   "sign": 1
+  },
+  {
+   "name": "vnc:neck_motor_neuron_L",
+   "region": 17,
+   "count": 13,
+   "sign": 1
+  },
+  {
+   "name": "vnc:neck_motor_neuron_R",
+   "region": 17,
+   "count": 10,
+   "sign": 1
+  },
+  {
+   "name": "vnc:orphan_neuron_L",
+   "region": 16,
+   "count": 97,
+   "sign": 1
+  },
+  {
+   "name": "vnc:orphan_neuron_R",
+   "region": 16,
+   "count": 113,
+   "sign": 1
+  },
+  {
+   "name": "vnc:oxygenation_neuron_L",
+   "region": 16,
+   "count": 7,
+   "sign": 1
+  },
+  {
+   "name": "vnc:oxygenation_neuron_R",
+   "region": 16,
+   "count": 7,
+   "sign": 1
+  },
+  {
+   "name": "vnc:reproductive_tract_sensory_neuron_L",
+   "region": 16,
+   "count": 6,
+   "sign": 1
+  },
+  {
+   "name": "vnc:reproductive_tract_sensory_neuron_R",
+   "region": 16,
+   "count": 28,
+   "sign": 1
+  },
+  {
+   "name": "vnc:sequential_leg_neuromeres_L",
+   "region": 15,
+   "count": 63,
+   "sign": 1
+  },
+  {
+   "name": "vnc:sequential_leg_neuromeres_R",
+   "region": 15,
+   "count": 61,
+   "sign": 1
+  },
+  {
+   "name": "vnc:single_leg_neuromere_L",
+   "region": 15,
+   "count": 1572,
+   "sign": 1
+  },
+  {
+   "name": "vnc:single_leg_neuromere_R",
+   "region": 15,
+   "count": 1547,
+   "sign": 1
+  },
+  {
+   "name": "vnc:strand_neuron_L",
+   "region": 16,
+   "count": 2,
+   "sign": 1
+  },
+  {
+   "name": "vnc:taste_bristle_gustatory_neuron_L",
+   "region": 16,
+   "count": 473,
+   "sign": 1
+  },
+  {
+   "name": "vnc:taste_bristle_gustatory_neuron_R",
+   "region": 16,
+   "count": 530,
+   "sign": 1
+  },
+  {
+   "name": "vnc:taste_bristle_neuron_L",
+   "region": 16,
+   "count": 1,
+   "sign": 1
+  },
+  {
+   "name": "vnc:taste_bristle_neuron_R",
+   "region": 16,
+   "count": 2,
+   "sign": 1
+  },
+  {
+   "name": "vnc:taste_bristle_tactile_neuron_L",
+   "region": 16,
+   "count": 68,
+   "sign": 1
+  },
+  {
+   "name": "vnc:taste_bristle_tactile_neuron_R",
+   "region": 16,
+   "count": 45,
+   "sign": 1
+  },
+  {
+   "name": "vnc:thoracic_abdominal_segmental_motor_neuron_L",
+   "region": 17,
+   "count": 8,
+   "sign": 1
+  },
+  {
+   "name": "vnc:thoracic_abdominal_segmental_motor_neuron_R",
+   "region": 17,
+   "count": 7,
+   "sign": 1
+  },
+  {
+   "name": "vnc:thoracic_abdominal_segmental_sensory_neuron_L",
+   "region": 16,
+   "count": 9,
+   "sign": 1
+  },
+  {
+   "name": "vnc:thoracic_abdominal_segmental_sensory_neuron_R",
+   "region": 16,
+   "count": 10,
+   "sign": 1
+  },
+  {
+   "name": "vnc:unknown_L",
+   "region": 15,
+   "count": 4829,
+   "sign": 1
+  },
+  {
+   "name": "vnc:unknown_R",
+   "region": 15,
+   "count": 4818,
+   "sign": 1
+  },
+  {
+   "name": "vnc:unknown_motor_neuron_L",
+   "region": 17,
+   "count": 1,
+   "sign": 1
+  },
+  {
+   "name": "vnc:unknown_motor_neuron_R",
+   "region": 17,
+   "count": 1,
+   "sign": 1
+  },
+  {
+   "name": "vnc:unknown_thoracic_abdominal_motor_neuron_L",
+   "region": 17,
+   "count": 1,
+   "sign": 1
+  },
+  {
+   "name": "vnc:unknown_thoracic_abdominal_motor_neuron_R",
+   "region": 17,
+   "count": 2,
+   "sign": 1
+  },
+  {
+   "name": "vnc:uterus_motor_neuron_L",
+   "region": 17,
+   "count": 1,
+   "sign": 1
+  },
+  {
+   "name": "vnc:uterus_motor_neuron_R",
+   "region": 17,
+   "count": 1,
+   "sign": 1
+  },
+  {
+   "name": "vnc:ventral_nerve_cord_centrifugal_L",
+   "region": 15,
+   "count": 27,
+   "sign": 1
+  },
+  {
+   "name": "vnc:ventral_nerve_cord_centrifugal_R",
+   "region": 15,
+   "count": 26,
+   "sign": 1
+  },
+  {
+   "name": "vnc:ventral_nerve_cord_centripetal_L",
+   "region": 15,
+   "count": 132,
+   "sign": 1
+  },
+  {
+   "name": "vnc:ventral_nerve_cord_centripetal_R",
+   "region": 15,
+   "count": 129,
+   "sign": 1
+  },
+  {
+   "name": "vnc:ventral_nerve_cord_dorsal_L",
+   "region": 15,
+   "count": 85,
+   "sign": 1
+  },
+  {
+   "name": "vnc:ventral_nerve_cord_dorsal_R",
+   "region": 15,
+   "count": 96,
+   "sign": 1
+  },
+  {
+   "name": "vnc:ventral_nerve_cord_neurosecretory_cell_L",
+   "region": 15,
+   "count": 61,
+   "sign": 1
+  },
+  {
+   "name": "vnc:ventral_nerve_cord_neurosecretory_cell_R",
+   "region": 15,
+   "count": 85,
+   "sign": 1
+  },
+  {
+   "name": "vnc:ventral_nerve_cord_serially_convergent_L",
+   "region": 15,
+   "count": 116,
+   "sign": 1
+  },
+  {
+   "name": "vnc:ventral_nerve_cord_serially_convergent_R",
+   "region": 15,
+   "count": 114,
+   "sign": 1
+  },
+  {
+   "name": "vnc:wing_motor_neuron_L",
+   "region": 17,
+   "count": 26,
+   "sign": 1
+  },
+  {
+   "name": "vnc:wing_motor_neuron_R",
+   "region": 17,
+   "count": 26,
+   "sign": 1
+  },
+  {
+   "name": "vnc_type:DLM1-4_L",
+   "region": 17,
+   "count": 4,
+   "sign": 1
+  },
+  {
+   "name": "vnc_type:DLM1-4_R",
+   "region": 17,
+   "count": 4,
+   "sign": 1
+  },
+  {
+   "name": "vnc_type:DLM5_L",
+   "region": 17,
+   "count": 1,
+   "sign": 1
+  },
+  {
+   "name": "vnc_type:DLM5_R",
+   "region": 17,
+   "count": 1,
+   "sign": 1
+  },
+  {
+   "name": "vnc_type:PSI_L",
+   "region": 17,
+   "count": 1,
+   "sign": 1
+  },
+  {
+   "name": "vnc_type:PSI_R",
+   "region": 17,
+   "count": 1,
+   "sign": 1
+  },
+  {
+   "name": "vnc_type:TTMn_L",
+   "region": 17,
+   "count": 1,
+   "sign": 1
+  },
+  {
+   "name": "vnc_type:TTMn_R",
+   "region": 17,
+   "count": 1,
+   "sign": 1
+  },
+  {
+   "name": "vnc_type:tergotrochanter_L",
+   "region": 17,
+   "count": 9,
+   "sign": 1
+  },
+  {
+   "name": "vnc_type:tergotrochanter_R",
+   "region": 17,
+   "count": 9,
+   "sign": 1
   }
+ ],
+ "gap_junctions": [
+  [
+   108748,
+   146145,
+   8.0
+  ],
+  [
+   57246,
+   143718,
+   8.0
+  ],
+  [
+   108748,
+   159377,
+   8.0
+  ],
+  [
+   57246,
+   151549,
+   8.0
+  ]
  ],
  "motor": {
   "fwd_offset_hz": 0.0,
@@ -1451,10 +1941,10 @@
   "turn_full_hz": 45.0,
   "mn9_on_hz": 10.0
  },
- "neurons": 138639,
- "synapse_edges": 15096971,
+ "neurons": 161471,
+ "synapse_edges": 15914767,
  "tex_width": 1024,
- "n_pad": 139264,
+ "n_pad": 161792,
  "regions": [
   {
    "name": "Optic lobe L",
@@ -1530,13 +2020,28 @@
    "name": "Ascending",
    "color": "#b0ffb0",
    "count": 1736
+  },
+  {
+   "name": "VNC interneurons",
+   "color": "#ff9de2",
+   "count": 14365
+  },
+  {
+   "name": "VNC sensory",
+   "color": "#9de2ff",
+   "count": 7768
+  },
+  {
+   "name": "VNC motor",
+   "color": "#ffd59d",
+   "count": 699
   }
  ],
  "groups": [
   {
    "name": "none",
    "role": "none",
-   "count": 129400
+   "count": 152220
   },
   {
    "name": "eye_L_tonic_0",
@@ -1977,6 +2482,21 @@
    "name": "epg_all",
    "role": "output",
    "count": 47
+  },
+  {
+   "name": "vnc_jump_ttmn",
+   "role": "output",
+   "count": 2
+  },
+  {
+   "name": "vnc_flight_dlm",
+   "role": "output",
+   "count": 8
+  },
+  {
+   "name": "vnc_psi",
+   "role": "output",
+   "count": 2
   }
  ],
  "lif": {

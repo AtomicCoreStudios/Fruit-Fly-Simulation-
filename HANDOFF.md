@@ -207,3 +207,11 @@ one line. Check whether meshes exist for the right-hand side or need mirroring.
     2. Leg sugar can't trigger proboscis extension without the nerve cord.
     3. Re-run the loom tests with the corrected brain.
     4. Resume the FlyVis co-tuning screen; results so far are in `recordings/pd_check/`.
+- **2026-10-03, branch `phase4-vnc`:**
+  - Nerve cord from BANC joined to the FlyWire brain (`tools/build_vnc.py`); giant-fibre gap junctions added; escape now driven by TTMn; 701 leg taste neurons from the nerve cord placed on the tarsi.
+  - Proboscis extension from leg sugar still doesn't happen. The route is disinhibitory and needs spontaneous activity.
+  - Next steps:
+    1. Central-brain physiology: spontaneous activity and adaptation (this would also address the runaway).
+    2. Leg biomechanics: motor neurons → joints, proprioceptors ← joints.
+    3. Re-run the loom tests.
+    4. Resume the FlyVis co-tuning screen.

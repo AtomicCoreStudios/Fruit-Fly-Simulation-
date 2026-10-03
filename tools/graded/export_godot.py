@@ -45,11 +45,13 @@ def main():
     pre = np.repeat(np.arange(n), np.diff(row_ptr))
     vt = pd.read_csv(ROOT / "data/raw/visual_neuron_types.csv.gz")
     comp = pd.read_csv(ROOT / "data/raw/Completeness_783.csv", index_col=0)
-    index = pd.Series(np.arange(n), index=comp.index.astype(np.int64))
-    pr = np.zeros(n, bool)
+    index = pd.Series(np.arange(len(comp)), index=comp.index.astype(np.int64))   # FlyWire neurons come first
+    pr = np.zeros(len(comp), bool)
     pr[index.reindex(vt[vt.type.isin(["R1-6", "R7", "R8"])].root_id).dropna().astype(int).values] = True
-    sil_pre = g["silence_pre"] | pr
-    m = sil_pre[pre] & g["silence_post"][col]
+    pr = np.concatenate([pr, np.zeros(n - len(pr), bool)]) if len(pr) < n else pr
+    pad = lambda x: np.concatenate([x, np.zeros(n - len(x), bool)])   # appended VNC neurons: never silenced
+    sil_pre = pad(g["silence_pre"]) | pr
+    m = sil_pre[pre] & pad(g["silence_post"])[col]
     w[m] = 0
     w.tofile(ROOT / "data/lif_w_graded.bin")
     meta2 = {"w_offset_in_connectome": int(w_off), "n_edges": int(e), "silenced": int(m.sum())}

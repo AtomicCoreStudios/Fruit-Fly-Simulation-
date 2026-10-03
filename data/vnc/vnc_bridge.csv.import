@@ -1,0 +1,19 @@
+[remap]
+
+importer="csv_translation"
+type="Translation"
+uid="uid://diwoc2njsehu3"
+
+[deps]
+
+files=["res://data/vnc/vnc_bridge.banc.translation", "res://data/vnc/vnc_bridge.similarity.translation", "res://data/vnc/vnc_bridge.kind.translation"]
+
+source_file="res://data/vnc/vnc_bridge.csv"
+dest_files=["res://data/vnc/vnc_bridge.banc.translation", "res://data/vnc/vnc_bridge.similarity.translation", "res://data/vnc/vnc_bridge.kind.translation"]
+
+[params]
+
+compress=1
+delimiter=0
+unescape_keys=false
+unescape_translations=true

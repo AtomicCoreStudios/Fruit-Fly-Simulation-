@@ -1,0 +1,19 @@
+{
+ "note": "Gap junctions known from physiology/genetics but invisible in EM connectomes. Modelled as true electrical coupling: a presynaptic spike adds 'coupling_mv' directly to the postsynaptic membrane voltage on the next 0.5 ms step (shaders/lif.glsl mode 2), giving the ~1 ms latency and 1:1 following reported for the giant-fibre system. basis: literature (existence, 1:1 following, latency) + approximate (coupling strength: just above the 7 mV threshold).",
+ "pairs": [
+  {
+   "pre_type": "DNp01",
+   "post_type": "TTMn",
+   "same_side": true,
+   "source": "GF-TTMn mixed electrical/chemical synapse, ShakB; 1:1 following, ~0.8 ms latency (Allen et al. 2006 J Neurosci; Phelan et al. 2008; Tanouye & Wyman 1980)",
+   "coupling_mv": 8.0
+  },
+  {
+   "pre_type": "DNp01",
+   "post_type": "PSI",
+   "same_side": true,
+   "source": "GF-PSI electrical synapse (King & Wyman 1980; Allen et al. 2006)",
+   "coupling_mv": 8.0
+  }
+ ]
+}

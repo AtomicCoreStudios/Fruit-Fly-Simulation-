@@ -1,0 +1,34 @@
+{
+ "DN": {
+  "flywire": 1299,
+  "matched_by_name": 1125,
+  "similarity_matcher_top1_type_accuracy": 0.808
+ },
+ "ascending": {
+  "flywire": 1736,
+  "banc": 1849,
+  "matched": 1139,
+  "median_similarity": 0.648,
+  "pairs_with_identical_type_name": 4
+ },
+ "sensory_ascending": {
+  "flywire": 581,
+  "banc": 516,
+  "matched": 128,
+  "median_similarity": 0.568,
+  "pairs_with_identical_type_name": 4
+ },
+ "vnc_resident_neurons": 22832,
+ "vnc_edges": 817796,
+ "vnc_synapses": 7519802,
+ "resident_by_class": {
+  "ventral_nerve_cord_intrinsic": 12827,
+  "sensory": 7436,
+  "motor": 699,
+  "ascending": 650,
+  "sensory_ascending": 321,
+  "visceral_circulatory": 141,
+  "sensory_descending": 11,
+  "ascending_visceral_circulatory": 5
+ }
+}

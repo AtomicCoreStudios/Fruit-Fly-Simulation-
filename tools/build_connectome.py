@@ -59,6 +59,10 @@ REGIONS = [
     ("Central brain", "#9a9a9a", (0, 5, -10), (165, 115, 95)),
     ("Descending", "#ffffff", (0, -150, -50), (18, 60, 18)),
     ("Ascending", "#b0ffb0", (0, -150, -70), (18, 60, 18)),
+    # ventral nerve cord (BANC, tools/build_vnc.py); viewer positions are schematic (below/behind brain)
+    ("VNC interneurons", "#ff9de2", (0, -330, -380), (70, 60, 260)),
+    ("VNC sensory", "#9de2ff", (0, -330, -380), (90, 70, 290)),
+    ("VNC motor", "#ffd59d", (0, -330, -380), (100, 75, 300)),
 ]
 RID = {r[0]: i for i, r in enumerate(REGIONS)}
 
@@ -505,6 +509,61 @@ def build_flywire(raw, seed):
         if t != "MN9":
             assign(ct == t, "mn_" + t, "output")
     assign(ct == "EPG", "epg_all", "output")
+    gap_junctions = []
+    # ---- ventral nerve cord from BANC (tools/build_vnc.py): new neurons + VNC synapses
+    vnc_dir = os.path.join(os.path.dirname(raw), "vnc")
+    if os.path.exists(os.path.join(vnc_dir, "vnc_neurons.csv")) and os.environ.get("FLY_NO_VNC") != "1":
+        vn = pd.read_csv(os.path.join(vnc_dir, "vnc_neurons.csv"))
+        ve = pd.read_parquet(os.path.join(vnc_dir, "vnc_edges.parquet"))
+        nv = len(vn)
+        assert (vn.model_index.values == n + np.arange(nv)).all()
+        vsc = vn.super_class.fillna("").values
+        vreg = np.where(vsc == "motor", RID["VNC motor"], np.where(np.isin(vsc, ["sensory", "sensory_ascending", "sensory_descending"]),
+                        RID["VNC sensory"], RID["VNC interneurons"])).astype(np.int32)
+        vpos = np.zeros((nv, 3), np.float32)
+        for k in range(nv):
+            _, _, cen, rad = REGIONS[vreg[k]]
+            u = rng.normal(size=3); u /= np.linalg.norm(u)
+            vpos[k] = np.array(cen) + u * rng.random() ** (1 / 3) * np.array(rad)
+        vside = np.where(vn.side.astype(str) == "right", "R", "L")
+        VNC_TYPES = ["TTMn", "PSI", "DLM1-4", "DLM5", "tergotrochanter"]
+        vkey = np.array([f"vnc_type:{t}_{sd}" if t in VNC_TYPES else
+                         (f"vnc:{c}_{bp}_{sd}" if c == "leg_motor_neuron" else f"vnc:{c}_{sd}")
+                         for t, c, bp, sd in zip(vn.cell_type.astype(str), vn.cell_class.fillna("unknown").astype(str),
+                                                 vn.body_part.fillna("").astype(str), vside)], dtype=object)
+        allkey = np.concatenate([uniq[popid].astype(object), vkey])
+        uniq, popid = np.unique(allkey.astype(str), return_inverse=True)
+        popid = popid.astype(np.int32)
+        region = np.concatenate([region, vreg])
+        pos = np.concatenate([pos, vpos])
+        group = np.concatenate([group, np.zeros(nv, np.int32)])
+        ids = np.concatenate([ids, vn.bid.to_numpy(np.int64)])
+        ve_w = (0.275 * ve["Excitatory x Connectivity"].to_numpy(np.float64)).astype(np.float32)
+        pre = np.concatenate([pre, ve.Presynaptic_Index.to_numpy(np.int64)])
+        post = np.concatenate([post, ve.Postsynaptic_Index.to_numpy(np.int64)])
+        w = np.concatenate([w, ve_w])
+        # documented gap junctions (giant-fibre system), data/vnc/electrical_synapses.json: stored as a separate
+        # list (direct voltage coupling in lif.glsl), not as chemical synapses
+        el = json.load(open(os.path.join(vnc_dir, "electrical_synapses.json")))
+        for pr in el["pairs"]:
+            for sd, sdn in (("R", "right"), ("L", "left")):
+                pres = np.where((ct == pr["pre_type"]) & (S == sd))[0]
+                posts = n + np.where((vn.cell_type.astype(str).values == pr["post_type"]) & (vn.side.astype(str).values == sdn))[0]
+                for a_ in pres:
+                    for b_ in posts:
+                        gap_junctions.append([int(a_), int(b_), float(pr["coupling_mv"])])
+        n_el = len(gap_junctions)
+        n += nv
+        for t, g_ in (("TTMn", "vnc_jump_ttmn"), ("DLM1-4", "vnc_flight_dlm"), ("PSI", "vnc_psi")):
+            m_ = np.zeros(n, bool); m_[len(group) - nv:] = (vn.cell_type.astype(str).values == t)
+            if g_ not in gid:
+                gid[g_] = len(groups); groups.append({"name": g_, "role": "output"})
+            group[m_ & (group == 0)] = gid[g_]
+        print(f"  VNC attached: {nv} neurons, {len(ve)} VNC edges, {n_el} gap junctions -> {n} neurons total")
+        pop_meta = []
+        for i, k in enumerate(uniq):
+            m_ = popid == i
+            pop_meta.append({"name": str(k), "region": int(np.bincount(region[m_]).argmax()), "count": int(m_.sum()), "sign": 1})
     for g in groups:
         g["count"] = int(np.sum(group == gid[g["name"]]))
     print(f"  {len(uniq)} populations, {len(groups) - 1} sensory/motor groups:")
@@ -516,6 +575,7 @@ def build_flywire(raw, seed):
         "w_poisson_mv": 68.75,  # Shiu et al.: f_poi = 250 x w_syn
         "populations": pop_meta,
         "lif_overrides": {"delay_ms": 1.8, "reset_g_on_spike": True},
+        "gap_junctions": gap_junctions,
         # body calibration for single identified descending neurons (edit freely)
         "motor": {"fwd_offset_hz": 0.0, "fwd_full_hz": 40.0, "back_full_hz": 30.0,
                   "turn_full_hz": 45.0, "mn9_on_hz": 10.0},

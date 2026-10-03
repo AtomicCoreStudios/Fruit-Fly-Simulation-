@@ -134,6 +134,32 @@ def main():
             for j, i in enumerate(ids):
                 g.loc[i, "sensillum"] = slots[j % len(slots)]
     g.loc[g.organ == "pharynx", "sensillum"] = "pharynx"
+    # ---- leg taste neurons that stay in the nerve cord (BANC, tools/build_vnc.py): receptor-labelled
+    # (BANC 'function', e.g. Gr5a/Gr64f sugar, ppk23/ppk25 pheromone, Ir52 contact pheromone)
+    vp = ROOT / "data/vnc/vnc_neurons.csv"
+    if vp.exists():
+        vn = pd.read_csv(vp)
+        lg = vn[(vn.cell_class == "taste_bristle_gustatory_neuron") & vn.body_part.isin(["front_leg", "middle_leg", "hind_leg"])].copy()
+        def vmod(f):
+            f = str(f).lower()
+            if "bitter" in f or "gr66a" in f or "gr33a" in f: return "bitter"
+            if "low_salt" in f and "sugar" in f: return "sugar/low_salt"
+            if "sugar" in f or "gr5a" in f or "gr64f" in f or "gr61a" in f: return "sugar"
+            if "ppk28" in f: return "water"
+            if "pheromone" in f or "ppk25" in f or "ppk23" in f: return "pheromone"
+            return "unknown"
+        rows = []
+        legch = {"front_leg": "f", "middle_leg": "m", "hind_leg": "h"}
+        for (bp, sd), d in lg.groupby(["body_part", "side"]):
+            slots = [f"leg_{str(sd)[0]}{legch[bp]}_tarsus{k}" for k in (5, 4, 3, 2, 1)]
+            for j, (_, r) in enumerate(d.iterrows()):
+                rows.append({"root_id": int(r.bid), "cell_class": "gustatory", "cell_sub_class": r.sub_class,
+                             "cell_type": r.cell_type, "side": r.side, "nerve": "leg nerve (BANC)", "organ": "leg_vnc",
+                             "modality": vmod(r.function),
+                             "modality_basis": f"measured: BANC receptor annotation '{r.function}'",
+                             "sensillum": slots[j % len(slots)], "index": int(r.model_index)})
+        g = pd.concat([g, pd.DataFrame(rows)], ignore_index=True)
+        print(f"VNC leg taste neurons added: {len(rows)}", pd.DataFrame(rows).modality.value_counts().to_dict())
     g.to_csv(ROOT / "data/taste_neurons.csv", index=False)
     summ = g.groupby(["organ", "modality"]).size()
     print(summ.to_string())

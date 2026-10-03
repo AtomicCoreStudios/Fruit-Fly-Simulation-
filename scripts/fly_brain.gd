@@ -167,7 +167,7 @@ func _init_gpu(pop_b, group_b, rowptr_b, col_b, w_b) -> String:
 		["rates", group_rate_in.to_byte_array()], ["row_ptr", rowptr_b],
 		["col", col_b if e > 0 else zeros_g], ["w", w_b if e > 0 else zeros_g],
 		["activity", zeros_pad], ["gcount", zeros_g], ["rcount", zeros_r],
-		["ext", _ext_cpu.to_byte_array()],
+		["ext", _ext_cpu.to_byte_array()], ["v_kick", zeros_n], ["gap", _gap_bytes()],
 	]
 	var uniforms: Array[RDUniform] = []
 	for b in specs.size():
@@ -182,6 +182,21 @@ func _init_gpu(pop_b, group_b, rowptr_b, col_b, w_b) -> String:
 	_uset = _rd.uniform_set_create(uniforms, _shader, 0)
 	activity_bytes.resize(n_pad * 4)
 	return ""
+
+
+var n_gap := 0
+
+
+func _gap_bytes() -> PackedByteArray:
+	# gap junctions from the connectome metadata: [pre, post, mV] -> ivec4(pre, post, micro-volts, 0)
+	var gj: Array = meta.get("gap_junctions", [])
+	n_gap = gj.size()
+	var a := PackedInt32Array()
+	for g in gj:
+		a.append_array([int(g[0]), int(g[1]), int(round(float(g[2]) * 1000.0)), 0])
+	if a.is_empty():
+		a.append_array([0, 0, 0, 0])
+	return a.to_byte_array()
 
 
 func _push(mode: int) -> PackedByteArray:
@@ -203,6 +218,7 @@ func _push(mode: int) -> PackedByteArray:
 	pc.encode_u32(48, _delay_steps)
 	pc.encode_u32(52, _delay_steps + 1)
 	pc.encode_u32(56, 1 if _lif.get("reset_g_on_spike", false) else 0)
+	pc.encode_u32(60, n_gap)
 	return pc
 
 
@@ -266,10 +282,10 @@ func tick(frame_dt: float) -> bool:
 	for s in steps:
 		if flyvis_enabled and _step % _fv_every == 0:
 			_dispatch_flyvis(cl)
-		for mode in 2:
+		for mode in (3 if n_gap > 0 else 2):
 			var pc := _push(mode)
 			_rd.compute_list_set_push_constant(cl, pc, pc.size())
-			_rd.compute_list_dispatch(cl, groups_x, 1, 1)
+			_rd.compute_list_dispatch(cl, groups_x if mode < 2 else int(ceil(n_gap / 256.0)), 1, 1)
 			_rd.compute_list_add_barrier(cl)
 		_step += 1
 	_rd.compute_list_end()

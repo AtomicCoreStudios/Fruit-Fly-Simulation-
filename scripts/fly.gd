@@ -49,6 +49,7 @@ var _body: Node3D
 var taste: FlyTaste
 var taste_bench_hz := 0.0
 var taste_bench_set := "shiu"
+var opto := {}                 # optogenetic activation: group name -> Poisson rate (Hz), --opto=g:Hz,g2:Hz
 # proboscis extension (PER): MN9 (CB0701, rostrum protractor; McKellar et al. 2020 eLife, Shiu et al.
 # 2024) drives a muscle activation that extends rostrum + haustellum. Joint directions and the
 # full-extension angle come from the body geometry at start-up (labellum reaches the substrate).
@@ -418,6 +419,8 @@ func update_senses(dt: float) -> void:
 		eye.update(dt)
 	if taste != null:
 		taste.update(dt)
+	for gname in opto:
+		b.set_input(gname, opto[gname])
 	if taste_bench_hz > 0.0:
 		# Shiu et al. benchmark protocol: only the stimulated GRNs receive input
 		for gdef in b.meta["groups"]:
@@ -458,19 +461,22 @@ func update_motor(dt: float) -> void:
 	for k in raw:
 		motor[k] = lerpf(motor[k], raw[k], a)
 	motor["gf"] = b.rate("dn_giant_fiber")
+	# escape take-off is executed by the jump muscle (TTM) via its motor neuron TTMn in the nerve
+	# cord (giant fibre -> TTMn gap junction); without the VNC, fall back to the giant fibre itself
+	motor["ttmn"] = b.rate("vnc_jump_ttmn") if b.group_index.has("vnc_jump_ttmn") else motor["gf"]
 
 	# Giant fibre spike -> escape take-off, away from whatever loomed
 	_escape_cooldown -= dt
 	_update_proboscis(dt)
 	if tethered:
-		if motor["gf"] > 0.0 and _escape_cooldown <= 0.0:
-			escapes += 1          # giant-fibre spike = escape command, counted but body held
+		if motor["ttmn"] > 0.0 and _escape_cooldown <= 0.0:
+			escapes += 1          # TTMn spike = jump command, counted but body held
 			_escape_cooldown = 3.0
-			print("ESCAPE (giant fibre) at t=%.2fs" % (brain.sim_time_ms / 1000.0))
+			print("ESCAPE (TTMn jump) at t=%.2fs" % (brain.sim_time_ms / 1000.0))
 		speed = 0.0
 		turn_rate = 0.0
 		return
-	if motor["gf"] > 0.0 and airborne <= 0.0 and _escape_cooldown <= 0.0:
+	if motor["ttmn"] > 0.0 and airborne <= 0.0 and _escape_cooldown <= 0.0:
 		airborne = 1.4
 		_escape_cooldown = 3.0
 		escapes += 1

@@ -436,3 +436,52 @@ The ignition path, at 10 ms resolution:
 3. the whole antennal lobe, lateral horn and mushroom body within 20 ms after that
 
 Real antennal lobes have spike-frequency adaptation, gap junctions and non-spiking local neurons (Seki et al. 2010), and none of these is in the model. That is the next fidelity fix for the central brain.
+
+## Ventral nerve cord (Phase 4): BANC joined to the FlyWire brain
+
+`tools/build_vnc.py` takes the nerve cord from **BANC**, the brain-and-nerve-cord connectome (Bates et al. 2025; female, one animal; Codex release 888, `data/raw/banc/`). It joins it to the FlyWire brain through the neck, as in the real animal.
+
+**How the two datasets are joined:**
+
+| Neuron group | Method | Result |
+|---|---|---|
+| Descending neurons | name + side; within a group, paired by brain-input similarity | 1,125 / 1,299 matched |
+| Ascending neurons | similarity of brain connectivity (partner cell types; BANC uses FlyWire type names for 89% of brain neurons), optimal assignment | 1,139 / 1,736 matched (median cosine 0.65) |
+| Sensory-ascending neurons | same method | 128 / 581 matched |
+
+**Checks on the matching:**
+- Run blind on descending neurons, the similarity matcher picks the right type 81% of the time.
+- **95%** of matched ascending pairs, and 88% of descending pairs, agree on predicted transmitter, consistently across the similarity range.
+
+**Added nerve-cord neurons: 22,832**
+
+| Class | Neurons |
+|---|---|
+| Interneurons | 12,827 |
+| Sensory (leg/wing/haltere/abdomen chordotonal, campaniform, hair-plate, bristle and taste neurons) | 7,436 |
+| Motor (leg, wing, haltere, neck, abdominal) | 699 |
+| Unmatched ascending | 650 |
+
+Only BANC synapses inside nerve-cord neuropils are used (818,000 connections, 7.5 million synapses); the brain stays FlyWire's. Total model size: **161,471 neurons, 15.9 million connections**. Turn the nerve cord off with `FLY_NO_VNC=1`.
+
+**Electrical synapses** (`data/vnc/electrical_synapses.json`):
+- Connectomes record chemical synapses only. The giant fibre's gap junctions onto TTMn (jump motor neuron) and PSI are documented (ShakB; Allen et al. 2006; Tanouye & Wyman 1980). They are modelled as true voltage coupling: one spike → +8 mV on the partner's membrane at the next 0.5 ms step (`lif.glsl` mode 2).
+- With the giant fibre driven at about 100–115 Hz, TTMn follows at 0.73–0.85 of its spikes and PSI at 0.70–0.79. PSI drives the DLM flight-muscle motor neurons through 397 chemical synapses.
+- The escape take-off is now executed when **TTMn** fires (`vnc_jump_ttmn`).
+
+**Leg taste through the nerve cord:**
+- 701 BANC leg taste neurons are placed on the tarsi of their actual leg. Modality comes from BANC receptor labels: 211 sugar (Gr5a/Gr64f), 82 sugar/low-salt, 9 bitter and 398 pheromone (ppk23/25, Ir52).
+- On a sucrose patch, the leg sugar neurons fire at 30 Hz, their ascending targets at 42 Hz, and those neurons' brain targets at 7 Hz. **MN9 stays at 0**, so there is still no proboscis extension from the legs.
+- Anatomically, leg sugar neurons put 8,865 of their nerve-cord synapses onto FlyWire-matched ascending neurons. Those are mostly **GABAergic** in both datasets, and so are their main brain targets (DNg103, VESa1_P02). The route to the feeding circuit appears to be **disinhibitory**.
+- The Shiu et al. model has no spontaneous activity, so silencing an already-silent inhibitory neuron has no effect.
+
+**What's needed next, all central-brain physiology rather than wiring:**
+- spontaneous / resting activity;
+- spike-frequency adaptation;
+- non-spiking neurons.
+
+The antennal-lobe/mushroom-body runaway (above) points to the same missing properties.
+
+Leg motor neurons are annotated by muscle and joint action (for example `flex_femur_tibia_joint`), and so are leg proprioceptors. Connecting these to the body's joints (biomechanics) is the next body step.
+
+Performance with everything on (brain + nerve cord + FlyVis + graded optic lobe + taste): about 25 fps, close to real time.
