@@ -56,6 +56,15 @@ var _eye_dt := 0.0
 var _eye_first := true
 var _ext_cpu := PackedFloat32Array()      # [0,n): Poisson Hz, [n,2n): bias mV
 
+# body-contact receptor neurons (taste etc.): CPU rates -> ext via shaders/sensor.glsl
+const SENSOR_MAX := 8192
+var _sn_shader: RID
+var _sn_pipeline: RID
+var _sn_uset: RID
+var _sn_n := 0
+var _sn_idx := PackedInt32Array()
+var _sn_rate := PackedFloat32Array()
+
 # graded optic lobe (FlyVis), see shaders/flyvis.glsl and tools/flyvis/
 var flyvis_enabled := false
 var flyvis_meta: Dictionary
@@ -219,10 +228,22 @@ func tick(frame_dt: float) -> bool:
 
 	_rd.buffer_update(_bufs["rates"], 0, n_groups * 4, group_rate_in.to_byte_array())
 	var groups_x := int(ceil(n / 256.0))
+	if _sn_n > 0:
+		_rd.buffer_update(_bufs["sn_idx"], 0, _sn_n * 4, _sn_idx.to_byte_array())
+		_rd.buffer_update(_bufs["sn_rate"], 0, _sn_n * 4, _sn_rate.to_byte_array())
 	var eye_now := eye_enabled and _eye_pixels.size() > 0
 	if eye_now:
 		_rd.buffer_update(_bufs["eye_pix"], 0, _eye_pixels.size(), _eye_pixels)
 	var cl := _rd.compute_list_begin()
+	if _sn_n > 0:
+		var spc := PackedByteArray()
+		spc.resize(16)
+		spc.encode_u32(0, _sn_n)
+		_rd.compute_list_bind_compute_pipeline(cl, _sn_pipeline)
+		_rd.compute_list_bind_uniform_set(cl, _sn_uset, 0)
+		_rd.compute_list_set_push_constant(cl, spc, spc.size())
+		_rd.compute_list_dispatch(cl, int(ceil(_sn_n / 64.0)), 1, 1)
+		_rd.compute_list_add_barrier(cl)
 	if eye_now:
 		var epc := PackedByteArray()
 		epc.resize(32)
@@ -468,6 +489,33 @@ func init_flyvis() -> String:
 	return ""
 
 
+## Receptor neurons driven by the body (taste contact etc.): model indices + Poisson rates (Hz).
+## Send the full list every frame; neurons left out keep their last rate.
+func set_sensor_rates(idx: PackedInt32Array, rates: PackedFloat32Array) -> void:
+	if not _sn_shader.is_valid():
+		var src: RDShaderFile = load("res://shaders/sensor.glsl")
+		if src == null:
+			push_error("shaders/sensor.glsl not imported")
+			return
+		_sn_shader = _rd.shader_create_from_spirv(src.get_spirv())
+		_sn_pipeline = _rd.compute_pipeline_create(_sn_shader)
+		var z := PackedByteArray()
+		z.resize(SENSOR_MAX * 4)
+		_bufs["sn_idx"] = _rd.storage_buffer_create(z.size(), z)
+		_bufs["sn_rate"] = _rd.storage_buffer_create(z.size(), z)
+		var uniforms: Array[RDUniform] = []
+		for b in 3:
+			var u := RDUniform.new()
+			u.uniform_type = RenderingDevice.UNIFORM_TYPE_STORAGE_BUFFER
+			u.binding = b
+			u.add_id(_bufs[["sn_idx", "sn_rate", "ext"][b]])
+			uniforms.append(u)
+		_sn_uset = _rd.uniform_set_create(uniforms, _sn_shader, 0)
+	_sn_n = mini(idx.size(), SENSOR_MAX)
+	_sn_idx = idx.slice(0, _sn_n)
+	_sn_rate = rates.slice(0, _sn_n)
+
+
 ## Hand over the latest 6-face cube render (RGBA8, face-major, rows top to bottom).
 func set_eye_pixels(bytes: PackedByteArray, dt: float) -> void:
 	_eye_pixels = bytes
@@ -511,6 +559,8 @@ func free_gpu() -> void:
 		_rd.free_rid(_fv_shader)
 	if _gr_shader.is_valid():
 		_rd.free_rid(_gr_shader)
+	if _sn_shader.is_valid():
+		_rd.free_rid(_sn_shader)
 	for b in _bufs.values():
 		_rd.free_rid(b)
 	_rd.free_rid(_shader)

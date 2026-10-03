@@ -46,6 +46,26 @@ var eye: FlyEye
 var seg := {}                 # body segment name -> Node3D (FlyGym names, e.g. "lf_tibia")
 var _rest := {}               # segment -> rest Basis, for animation on top of the pose
 var _body: Node3D
+var taste: FlyTaste
+var taste_bench_hz := 0.0
+var taste_bench_set := "shiu"
+# proboscis extension (PER): MN9 (CB0701, rostrum protractor; McKellar et al. 2020 eLife, Shiu et al.
+# 2024) drives a muscle activation that extends rostrum + haustellum. Joint directions and the
+# full-extension angle come from the body geometry at start-up (labellum reaches the substrate).
+var _per_axis := Vector3(0, 0, 1)
+var _per_sign_r := 1.0
+var _per_sign_h := 1.0
+var _per_max := 1.2
+# feeding motor neurons (Tastekin et al. 2026 types; muscle roles from McKellar et al. 2020 and
+# Tastekin et al.): muscle activation per type, 0..1
+const FEED_MNS := {"rostrum_ext": "mn9_proboscis", "haustellum_ext": "mn_MN4a", "labellum_ext": "mn_MN6",
+	"labellum_spread": "mn_MN8", "retract": "mn_MN1", "pump_11D": "mn_MN11D", "pump_11V": "mn_MN11V",
+	"pump_12D": "mn_MN12D", "crop": "mn_CEM"}
+var muscle := {}
+var per_rostrum := 0.0
+var per_haustellum := 0.0
+var labellum_spread := 0.0
+var pumping := 0.0
 
 
 func _ready() -> void:
@@ -70,6 +90,17 @@ func _ready() -> void:
 			push_warning("compound eye disabled: " + err)
 			eye.queue_free()
 			eye = null
+	if seg.has("lab_l_L01") and seg.has("c_rostrum"):
+		_calibrate_per()
+		taste = FlyTaste.new()
+		add_child(taste)
+		taste.bench_hz = taste_bench_hz
+		taste.bench_set = taste_bench_set
+		var terr := taste.setup(brain, self, world)
+		if terr != "":
+			push_warning("taste organs disabled: " + terr)
+			taste.queue_free()
+			taste = null
 	for k in ["fwd_L", "fwd_R", "turn_L", "turn_R", "back", "gf", "mn9"]:
 		motor[k] = 0.0
 
@@ -128,6 +159,93 @@ func _load_body() -> void:
 	position.y = 0.06
 
 
+## Mean position of the labellar taste sensors (world space).
+func labellum_position() -> Vector3:
+	var s := Vector3.ZERO
+	var k := 0
+	for side in ["l", "r"]:
+		for c in ["L01", "L06", "S01", "S06", "I01"]:
+			var nd: Node3D = seg.get("lab_%s_%s" % [side, c])
+			if nd:
+				s += nd.global_position
+				k += 1
+	return s / maxf(k, 1)
+
+
+func _set_per(x: float, xh := -1.0) -> void:
+	if xh < 0.0:
+		xh = x
+	seg["c_rostrum"].basis = _rest["c_rostrum"] * Basis(_per_axis, _per_sign_r * x * _per_max)
+	seg["c_haustellum"].basis = _rest["c_haustellum"] * Basis(_per_axis, _per_sign_h * xh * _per_max * 0.6)
+
+
+func _calibrate_per() -> void:
+	# Find the joint directions that lower the labellum, and the extension at which it reaches the
+	# substrate when the fly stands (fly-local height + standing offset). basis: approximate.
+	var stand := 0.06
+	var best := [INF, 1.0, 1.0, Vector3(0, 0, 1)]
+	for ax in [Vector3(1, 0, 0), Vector3(0, 1, 0), Vector3(0, 0, 1)]:
+		for sr in [1.0, -1.0]:
+			for sh in [1.0, -1.0]:
+				_per_axis = ax
+				_per_sign_r = sr
+				_per_sign_h = sh
+				_per_max = 1.6
+				_set_per(1.0)
+				var y := to_local(labellum_position()).y + stand
+				if y < best[0]:
+					best = [y, sr, sh, ax]
+	_per_sign_r = best[1]
+	_per_sign_h = best[2]
+	_per_axis = best[3]
+	_per_max = 1.6
+	var reach := 1.0
+	for i in 33:
+		var x := i / 32.0
+		_set_per(x)
+		if to_local(labellum_position()).y + stand <= FlyTaste.CONTACT_CM * 0.6:
+			reach = x
+			break
+	_per_max *= reach
+	_set_per(0.0)
+	_set_per(1.0)
+	var y_full := to_local(labellum_position()).y + stand
+	_set_per(0.0)
+	var y_rest := to_local(labellum_position()).y + stand
+	print("PER calibration: labellum height rest %.3f cm -> full extension %.3f cm (axis %s, rostrum %.0f deg, haustellum %.0f deg)" % [
+		y_rest, y_full, str(_per_axis), rad_to_deg(_per_max), rad_to_deg(_per_max * 0.6)])
+
+
+func _update_proboscis(dt: float) -> void:
+	# Each feeding motor-neuron type drives its muscle: activation saturating in the type's mean
+	# rate (half-activation 30 Hz), first-order with a 60 ms time constant. basis: approximate
+	# (graded motor control; muscle roles from McKellar et al. 2020 eLife, Tastekin et al. 2026).
+	var k := 1.0 - exp(-dt / 0.06)
+	for m in FEED_MNS:
+		var r: float = brain.rate(FEED_MNS[m])
+		muscle[m] = lerpf(muscle.get(m, 0.0), r / (r + 30.0), k)
+	# agonist (MN9 rostrum protractor, MN4a haustellum extensor) vs antagonist (MN1 retractor)
+	per_rostrum = clampf(muscle["rostrum_ext"] - muscle["retract"], 0.0, 1.0)
+	per_haustellum = clampf(muscle["haustellum_ext"] + 0.5 * muscle["labellum_ext"] - muscle["retract"], 0.0, 1.0)
+	labellum_spread = muscle["labellum_spread"]
+	pumping = clampf(muscle["pump_11D"] + muscle["pump_11V"] + muscle["pump_12D"], 0.0, 1.0)
+	proboscis = minf(per_rostrum, 1.0) * 0.6 + per_haustellum * 0.4
+	if seg.has("c_rostrum"):
+		_set_per(per_rostrum, per_haustellum)
+	elif _prob:
+		_prob.scale = Vector3(1, 1 + proboscis * 1.5, 1)
+		_prob.rotation.x = -0.3 - proboscis * 0.6
+	var touching := taste != null and int(taste.sense.get("contacts", {}).get("labellum", 0)) > 0
+	var chem: Dictionary = world.chemistry_at(labellum_position()) if touching else {}
+	# ingestion needs the labellum on food AND the cibarial pump (MN11/MN12) working
+	feeding = touching and float(chem.get("sucrose", 0.0)) > 0.0 and pumping > 0.15
+	if feeding:
+		hunger = maxf(0.0, hunger - dt * 0.15 * pumping)
+		world.consume(labellum_position(), dt * pumping)
+	else:
+		hunger = minf(1.0, hunger + dt * 0.004)
+
+
 func _animate_body(t_air: float) -> void:
 	# Cosmetic only: leg swing and wing beat are not driven by a motor model (no nerve cord yet).
 	if seg.is_empty():
@@ -142,8 +260,6 @@ func _animate_body(t_air: float) -> void:
 		if seg.has(w):
 			var flap := sin(Time.get_ticks_msec() * 0.9) * 1.0 if t_air > 0.0 else 0.0
 			seg[w].basis = _rest[w] * Basis(Vector3(1, 0, 0), flap * (1 if w == "l_wing" else -1))
-	if seg.has("c_rostrum"):
-		seg["c_rostrum"].basis = _rest["c_rostrum"] * Basis(Vector3(0, 1, 0), proboscis * 0.9)
 
 
 func _build_body() -> void:
@@ -257,7 +373,7 @@ func update_senses(dt: float) -> void:
 			# the fly's own turning suppresses it, as in real saccade suppression
 			var trans := maxf(prev - lum, 0.0) / maxf(dt, 1e-3) / (1.0 + absf(turn_rate) * 0.5)
 			_lum_prev[key] = lum
-			if eye != null:
+			if eye != null or vision_mode == "none":
 				# facet vision drives the real photoreceptors; the old sector groups stay silent
 				b.set_input("eye_%s_tonic_%d" % [side, k], 0.0)
 				b.set_input("eye_%s_transient_%d" % [side, k], 0.0)
@@ -289,12 +405,24 @@ func update_senses(dt: float) -> void:
 		sense["jo_" + side] = jo
 		# taste: tarsal / labellar GRNs touching a patch
 		var patch: String = world.patch_under(global_position) if airborne <= 0.0 else ""
-		b.set_input("grn_%s_sweet" % side, 220.0 if patch == "food" else 0.0)
-		b.set_input("grn_%s_bitter" % side, 220.0 if patch == "aversive" else 0.0)
+		if taste != null:
+			# taste organs drive the real GRNs per neuron (fly_taste.gd); old group inputs off
+			for gname in ["sweet", "bitter", "water"]:
+				b.set_input("grn_%s_%s" % [side, gname], 0.0)
+		else:
+			b.set_input("grn_%s_sweet" % side, 220.0 if patch == "food" else 0.0)
+			b.set_input("grn_%s_bitter" % side, 220.0 if patch == "aversive" else 0.0)
 		sense["taste"] = patch
 	sense["loom"] = loom
 	if eye != null:
 		eye.update(dt)
+	if taste != null:
+		taste.update(dt)
+	if taste_bench_hz > 0.0:
+		# Shiu et al. benchmark protocol: only the stimulated GRNs receive input
+		for gdef in b.meta["groups"]:
+			if gdef.get("role", "") == "input":
+				b.set_input(gdef["name"], 0.0)
 	for k in odour_sum:
 		if not _odour_adapt.has(k):
 			_odour_adapt[k] = maxf(odour_sum[k], 0.03)
@@ -333,6 +461,7 @@ func update_motor(dt: float) -> void:
 
 	# Giant fibre spike -> escape take-off, away from whatever loomed
 	_escape_cooldown -= dt
+	_update_proboscis(dt)
 	if tethered:
 		if motor["gf"] > 0.0 and _escape_cooldown <= 0.0:
 			escapes += 1          # giant-fibre spike = escape command, counted but body held
@@ -372,16 +501,6 @@ func update_motor(dt: float) -> void:
 	speed = (fwd_drive - 0.7 * back_drive) * MAX_SPEED
 	turn_rate = clampf((motor["turn_L"] - motor["turn_R"]) / cal.get("turn_full_hz", 45.0), -1.0, 1.0) * MAX_TURN
 
-	proboscis = lerpf(proboscis, 1.0 if motor["mn9"] > cal.get("mn9_on_hz", 15.0) else 0.0, 1.0 - exp(-dt / 0.1))
-	if _prob:
-		_prob.scale = Vector3(1, 1 + proboscis * 1.5, 1)
-		_prob.rotation.x = -0.3 - proboscis * 0.6
-	feeding = proboscis > 0.5 and sense.get("taste", "") == "food"
-	if feeding:
-		hunger = maxf(0.0, hunger - dt * 0.08)
-		world.consume(global_position, dt)
-	else:
-		hunger = minf(1.0, hunger + dt * 0.004)
 
 	rotation.y += turn_rate * dt
 	global_position += -global_transform.basis.z * speed * dt

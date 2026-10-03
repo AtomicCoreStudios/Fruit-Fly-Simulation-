@@ -1,0 +1,7 @@
+gpu dt=0.5 ms  sugar    20 Hz -> MN9 R/L    0.0/   0.0 Hz (sd 0.0)  [44s]
+gpu dt=0.5 ms  sugar    40 Hz -> MN9 R/L    0.0/   0.0 Hz (sd 0.0)  [43s]
+gpu dt=0.5 ms  sugar    60 Hz -> MN9 R/L    0.7/   1.3 Hz (sd 0.5)  [45s]
+gpu dt=0.5 ms  sugar    80 Hz -> MN9 R/L   10.7/  10.0 Hz (sd 0.5)  [24s]
+gpu dt=0.5 ms  sugar   100 Hz -> MN9 R/L   29.7/  24.3 Hz (sd 4.0)  [23s]
+gpu dt=0.5 ms  sugar   150 Hz -> MN9 R/L   56.7/  47.3 Hz (sd 2.9)  [23s]
+gpu dt=0.5 ms  sugar   200 Hz -> MN9 R/L   74.3/  52.0 Hz (sd 2.5)  [23s]

@@ -1,0 +1,411 @@
+root_id,cell_class,cell_sub_class,cell_type,side,nerve,organ,modality,modality_basis,sensillum,index
+720575940628673474,gustatory,pharyngeal_nerve_sensory_group3,PhG7,left,PhN,pharynx,putative_aversive,literature: aversive cluster (Tastekin et al. 2026),pharynx,89556
+720575940606567125,gustatory,SA_VTV_pro_meso_meta,LgAG2,left,CV,leg,sugar,"literature: Gr61a-GAL4 match, appetitive cluster (Tastekin et al. 2026)",leg_lf_tarsus5,3434
+720575940612446866,gustatory,SA_VTV_pro_meso_meta,LgAG2,left,CV,leg,sugar,"literature: Gr61a-GAL4 match, appetitive cluster (Tastekin et al. 2026)",leg_lm_tarsus5,14123
+720575940618388463,gustatory,SA_VTV_pro_meso_meta,LgAG4,left,CV,leg,putative_aversive,"literature: GNG016-sharing cluster, proposed aversive (Tastekin et al. 2026)",leg_lm_tarsus5,34904
+720575940614190709,gustatory,SA_VTV_pro_meso_meta,LgAG1,left,CV,leg,bitter,"literature: Gr33a-GAL4 match, aversive (Tastekin et al. 2026)",leg_lf_tarsus5,19552
+720575940619696133,gustatory,SA_VTV_pro_meso_meta,LgAG4,left,CV,leg,putative_aversive,"literature: GNG016-sharing cluster, proposed aversive (Tastekin et al. 2026)",leg_lh_tarsus5,40037
+720575940637562469,gustatory,SA_VTV_pro_meso_meta,LgAG1,left,CV,leg,bitter,"literature: Gr33a-GAL4 match, aversive (Tastekin et al. 2026)",leg_lm_tarsus5,122786
+720575940615853851,gustatory,SA_VTV_pro_meso_meta,LgAG1,left,CV,leg,bitter,"literature: Gr33a-GAL4 match, aversive (Tastekin et al. 2026)",leg_lh_tarsus5,25200
+720575940615903259,gustatory,SA_VTV_pro_meso_meta,LgAG8,left,CV,leg,putative_aversive,literature: aversive cluster (Tastekin et al. 2026),leg_lm_tarsus5,25366
+720575940615929373,gustatory,SA_VTV_pro_meso_meta,LgAG8,left,CV,leg,putative_aversive,literature: aversive cluster (Tastekin et al. 2026),leg_lh_tarsus5,25453
+720575940618586862,gustatory,SA_VTV_pro_meso_meta,LgAG1,left,CV,leg,bitter,"literature: Gr33a-GAL4 match, aversive (Tastekin et al. 2026)",leg_lf_tarsus4,35740
+720575940629717097,gustatory,SA_VTV_pro_meso_meta,LgAG8,left,CV,leg,putative_aversive,literature: aversive cluster (Tastekin et al. 2026),leg_lm_tarsus4,94928
+720575940621082623,gustatory,SA_VTV_pro_meso_meta,LgAG1,left,CV,leg,bitter,"literature: Gr33a-GAL4 match, aversive (Tastekin et al. 2026)",leg_lm_tarsus4,47197
+720575940608787413,gustatory,SA_VTV_pro_meso_meta,LgAG3,left,CV,leg,putative_aversive,literature: aversive cluster (Tastekin et al. 2026),leg_lm_tarsus5,6425
+720575940619625792,gustatory,SA_VTV_pro_meso_meta,LgAG1,left,CV,leg,bitter,"literature: Gr33a-GAL4 match, aversive (Tastekin et al. 2026)",leg_lh_tarsus4,39713
+720575940622949820,gustatory,SA_VTV_pro_meso_meta,LgAG6,left,CV,leg,unknown,literature: cluster of unknown relevance (Tastekin et al. 2026),leg_lf_tarsus5,57852
+720575940623626288,gustatory,SA_VTV_pro_meso_meta,LgAG1,left,CV,leg,bitter,"literature: Gr33a-GAL4 match, aversive (Tastekin et al. 2026)",leg_lf_tarsus3,61789
+720575940631454433,gustatory,SA_VTV_pro_meso_meta,LgAG7,left,CV,leg,putative_aversive,"literature: GNG016-sharing cluster, proposed aversive (Tastekin et al. 2026)",leg_lf_tarsus5,104066
+720575940626022218,gustatory,SA_VTV_pro_meso_meta,LgAG1,left,CV,leg,bitter,"literature: Gr33a-GAL4 match, aversive (Tastekin et al. 2026)",leg_lm_tarsus3,74475
+720575940626217744,gustatory,SA_VTV_pro_meso_meta,LgAG5,left,CV,leg,putative_aversive,literature: aversive cluster (Tastekin et al. 2026),leg_lf_tarsus5,75399
+720575940627513210,gustatory,SA_VTV_pro_meso_meta,LgAG7,left,CV,leg,putative_aversive,"literature: GNG016-sharing cluster, proposed aversive (Tastekin et al. 2026)",leg_lf_tarsus4,82901
+720575940628524150,gustatory,SA_VTV_pro_meso_meta,LgAG6,left,CV,leg,unknown,literature: cluster of unknown relevance (Tastekin et al. 2026),leg_lf_tarsus4,88721
+720575940633366242,gustatory,SA_VTV_pro_meso_meta,LgAG3,left,CV,leg,putative_aversive,literature: aversive cluster (Tastekin et al. 2026),leg_lh_tarsus5,112235
+720575940629593401,gustatory,SA_VTV_pro_meso_meta,LgAG1,left,CV,leg,bitter,"literature: Gr33a-GAL4 match, aversive (Tastekin et al. 2026)",leg_lh_tarsus3,94372
+720575940623158154,gustatory,SA_VTV_pro_meso_meta,LgAG7,left,CV,leg,putative_aversive,"literature: GNG016-sharing cluster, proposed aversive (Tastekin et al. 2026)",leg_lf_tarsus3,59140
+720575940632706970,gustatory,SA_VTV_pro_meso_meta,LgAG1,left,CV,leg,bitter,"literature: Gr33a-GAL4 match, aversive (Tastekin et al. 2026)",leg_lf_tarsus2,109648
+720575940633320628,gustatory,SA_VTV_pro_meso_meta,LgAG1,left,CV,leg,bitter,"literature: Gr33a-GAL4 match, aversive (Tastekin et al. 2026)",leg_lm_tarsus2,112070
+720575940634407566,gustatory,SA_VTV_pro_meso_meta,LgAG4,left,CV,leg,putative_aversive,"literature: GNG016-sharing cluster, proposed aversive (Tastekin et al. 2026)",leg_lm_tarsus4,115146
+720575940617597268,gustatory,SA_VTV_pro_meso_meta,LgAG2,left,CV,leg,sugar,"literature: Gr61a-GAL4 match, appetitive cluster (Tastekin et al. 2026)",leg_lh_tarsus5,31488
+720575940645084548,gustatory,SA_VTV_pro_meso_meta,LgAG8,left,CV,leg,putative_aversive,literature: aversive cluster (Tastekin et al. 2026),leg_lh_tarsus4,133883
+720575940645126020,gustatory,SA_VTV_pro_meso_meta,LgAG1,left,CV,leg,bitter,"literature: Gr33a-GAL4 match, aversive (Tastekin et al. 2026)",leg_lh_tarsus2,133944
+720575940657653633,gustatory,SA_VTV_pro_meso_meta,LgAG5,left,CV,leg,putative_aversive,literature: aversive cluster (Tastekin et al. 2026),leg_lf_tarsus4,138057
+720575940608664184,gustatory,SA_VTV_pro_meso_meta,LgAG4,left,CV,leg,putative_aversive,"literature: GNG016-sharing cluster, proposed aversive (Tastekin et al. 2026)",leg_lh_tarsus4,6285
+720575940623804106,gustatory,SA_VTV_pro_meso_meta,LgAG9,left,CV,leg,putative_aversive,"literature: GNG016-sharing cluster, proposed aversive (Tastekin et al. 2026)",leg_lf_tarsus5,62667
+720575940627588218,gustatory,SA_VTV_pro_meso_meta,LgAG2,left,CV,leg,sugar,"literature: Gr61a-GAL4 match, appetitive cluster (Tastekin et al. 2026)",leg_lf_tarsus4,83311
+720575940633366498,gustatory,SA_VTV_pro_meso_meta,LgAG2,left,CV,leg,sugar,"literature: Gr61a-GAL4 match, appetitive cluster (Tastekin et al. 2026)",leg_lm_tarsus4,112237
+720575940625526805,gustatory,SA_VTV_pro_meso_meta,LgAG2,left,CV,leg,sugar,"literature: Gr61a-GAL4 match, appetitive cluster (Tastekin et al. 2026)",leg_lh_tarsus4,71916
+720575940637507645,gustatory,SA_VTV_pro_meso_meta,LgAG3,left,CV,leg,putative_aversive,literature: aversive cluster (Tastekin et al. 2026),leg_lm_tarsus4,122644
+720575940633189624,gustatory,SA_VTV_pro_meso_meta,LgAG2,right,CV,leg,sugar,"literature: Gr61a-GAL4 match, appetitive cluster (Tastekin et al. 2026)",leg_rf_tarsus5,111541
+720575940631092947,gustatory,SA_VTV_pro_meso_meta,LgAG3,right,CV,leg,putative_aversive,literature: aversive cluster (Tastekin et al. 2026),leg_rm_tarsus5,102194
+720575940624813437,gustatory,SA_VTV_pro_meso_meta,LgAG7,right,CV,leg,putative_aversive,"literature: GNG016-sharing cluster, proposed aversive (Tastekin et al. 2026)",leg_rf_tarsus5,68249
+720575940618029733,gustatory,SA_VTV_pro_meso_meta,LgAG5,right,CV,leg,putative_aversive,literature: aversive cluster (Tastekin et al. 2026),leg_rf_tarsus5,33260
+720575940606279179,gustatory,SA_VTV_pro_meso_meta,LgAG1,right,CV,leg,bitter,"literature: Gr33a-GAL4 match, aversive (Tastekin et al. 2026)",leg_rf_tarsus5,3035
+720575940625021573,gustatory,SA_VTV_pro_meso_meta,LgAG1,right,CV,leg,bitter,"literature: Gr33a-GAL4 match, aversive (Tastekin et al. 2026)",leg_rm_tarsus5,69441
+720575940603765937,gustatory,SA_VTV_pro_meso_meta,LgAG1,right,CV,leg,bitter,"literature: Gr33a-GAL4 match, aversive (Tastekin et al. 2026)",leg_rh_tarsus5,313
+720575940606343945,gustatory,SA_VTV_pro_meso_meta,LgAG5,right,CV,leg,putative_aversive,literature: aversive cluster (Tastekin et al. 2026),leg_rf_tarsus4,3109
+720575940606526421,gustatory,SA_VTV_pro_meso_meta,LgAG8,right,CV,leg,putative_aversive,literature: aversive cluster (Tastekin et al. 2026),leg_rm_tarsus5,3371
+720575940624805765,gustatory,SA_VTV_pro_meso_meta,LgAG3,right,CV,leg,putative_aversive,literature: aversive cluster (Tastekin et al. 2026),leg_rh_tarsus5,68202
+720575940615677090,gustatory,SA_VTV_pro_meso_meta,LgAG1,right,CV,leg,bitter,"literature: Gr33a-GAL4 match, aversive (Tastekin et al. 2026)",leg_rf_tarsus4,24612
+720575940638065469,gustatory,SA_VTV_pro_meso_meta,LgAG1,right,CV,leg,bitter,"literature: Gr33a-GAL4 match, aversive (Tastekin et al. 2026)",leg_rm_tarsus4,123942
+720575940627764780,gustatory,SA_VTV_pro_meso_meta,LgAG4,right,CV,leg,putative_aversive,"literature: GNG016-sharing cluster, proposed aversive (Tastekin et al. 2026)",leg_rm_tarsus5,84287
+720575940615134557,gustatory,SA_VTV_pro_meso_meta,LgAG7,right,CV,leg,putative_aversive,"literature: GNG016-sharing cluster, proposed aversive (Tastekin et al. 2026)",leg_rf_tarsus4,22780
+720575940622450924,gustatory,SA_VTV_pro_meso_meta,LgAG2,right,CV,leg,sugar,"literature: Gr61a-GAL4 match, appetitive cluster (Tastekin et al. 2026)",leg_rm_tarsus5,55138
+720575940624967305,gustatory,SA_VTV_pro_meso_meta,LgAG2,right,CV,leg,sugar,"literature: Gr61a-GAL4 match, appetitive cluster (Tastekin et al. 2026)",leg_rh_tarsus5,69115
+720575940622861326,gustatory,SA_VTV_pro_meso_meta,LgAG2,right,CV,leg,sugar,"literature: Gr61a-GAL4 match, appetitive cluster (Tastekin et al. 2026)",leg_rf_tarsus4,57357
+720575940619421823,gustatory,SA_VTV_pro_meso_meta,LgAG3,right,CV,leg,putative_aversive,literature: aversive cluster (Tastekin et al. 2026),leg_rm_tarsus4,39001
+720575940634672610,gustatory,SA_VTV_pro_meso_meta,LgAG4,right,CV,leg,putative_aversive,"literature: GNG016-sharing cluster, proposed aversive (Tastekin et al. 2026)",leg_rh_tarsus5,115754
+720575940620797976,gustatory,SA_VTV_pro_meso_meta,LgAG1,right,CV,leg,bitter,"literature: Gr33a-GAL4 match, aversive (Tastekin et al. 2026)",leg_rh_tarsus4,45568
+720575940640390709,gustatory,SA_VTV_pro_meso_meta,LgAG1,right,CV,leg,bitter,"literature: Gr33a-GAL4 match, aversive (Tastekin et al. 2026)",leg_rf_tarsus3,129266
+720575940630911991,gustatory,SA_VTV_pro_meso_meta,LgAG8,right,CV,leg,putative_aversive,literature: aversive cluster (Tastekin et al. 2026),leg_rh_tarsus5,101209
+720575940636985422,gustatory,SA_VTV_pro_meso_meta,LgAG8,right,CV,leg,putative_aversive,literature: aversive cluster (Tastekin et al. 2026),leg_rm_tarsus4,121509
+720575940624968841,gustatory,SA_VTV_pro_meso_meta,LgAG1,right,CV,leg,bitter,"literature: Gr33a-GAL4 match, aversive (Tastekin et al. 2026)",leg_rm_tarsus3,69123
+720575940625632516,gustatory,SA_VTV_pro_meso_meta,LgAG2,right,CV,leg,sugar,"literature: Gr61a-GAL4 match, appetitive cluster (Tastekin et al. 2026)",leg_rm_tarsus4,72383
+720575940624433027,gustatory,SA_VTV_pro_meso_meta,LgAG6,right,CV,leg,unknown,literature: cluster of unknown relevance (Tastekin et al. 2026),leg_rf_tarsus5,66377
+720575940627902268,gustatory,SA_VTV_pro_meso_meta,LgAG4,right,CV,leg,putative_aversive,"literature: GNG016-sharing cluster, proposed aversive (Tastekin et al. 2026)",leg_rm_tarsus4,85066
+720575940628265467,gustatory,SA_VTV_pro_meso_meta,LgAG4,right,CV,leg,putative_aversive,"literature: GNG016-sharing cluster, proposed aversive (Tastekin et al. 2026)",leg_rh_tarsus4,87201
+720575940625907143,gustatory,SA_VTV_pro_meso_meta,LgAG1,right,CV,leg,bitter,"literature: Gr33a-GAL4 match, aversive (Tastekin et al. 2026)",leg_rh_tarsus3,73852
+720575940644464919,gustatory,SA_VTV_pro_meso_meta,LgAG7,right,CV,leg,putative_aversive,"literature: GNG016-sharing cluster, proposed aversive (Tastekin et al. 2026)",leg_rf_tarsus3,133171
+720575940638631843,gustatory,SA_VTV_pro_meso_meta,LgAG1,right,CV,leg,bitter,"literature: Gr33a-GAL4 match, aversive (Tastekin et al. 2026)",leg_rf_tarsus2,125231
+720575940633303988,gustatory,SA_VTV_pro_meso_meta,LgAG8,right,CV,leg,putative_aversive,literature: aversive cluster (Tastekin et al. 2026),leg_rh_tarsus4,112014
+720575940635630308,gustatory,SA_VTV_pro_meso_meta,LgAG6,right,CV,leg,unknown,literature: cluster of unknown relevance (Tastekin et al. 2026),leg_rf_tarsus4,118370
+720575940637689728,gustatory,SA_VTV_pro_meso_meta,LgAG1,right,CV,leg,bitter,"literature: Gr33a-GAL4 match, aversive (Tastekin et al. 2026)",leg_rm_tarsus2,123137
+720575940626163697,gustatory,SA_VTV_pro_meso_meta,LgAG1,right,CV,leg,bitter,"literature: Gr33a-GAL4 match, aversive (Tastekin et al. 2026)",leg_rh_tarsus2,75159
+720575940627903804,gustatory,SA_VTV_pro_meso_meta,LgAG2,right,CV,leg,sugar,"literature: Gr61a-GAL4 match, appetitive cluster (Tastekin et al. 2026)",leg_rh_tarsus4,85082
+720575940624449881,gustatory,SA_VTV_pro_meso_meta,LgAG1,right,CV,leg,bitter,"literature: Gr33a-GAL4 match, aversive (Tastekin et al. 2026)",leg_rf_tarsus1,66471
+720575940621375231,gustatory,glutamate,LB1e,left,MxLbN,labellum_bristle,glutamate,measured (Tastekin et al. 2026 type),lab_l_S01,48865
+720575940625507870,gustatory,taste peg,claw_tpGRN,left,MxLbN,labellum_peg,unknown,inferred from connectivity (cosine 0.07 to putative_aversive),peg_l_01,71814
+720575940635791167,gustatory,taste peg,claw_tpGRN,left,MxLbN,labellum_peg,unknown,inferred from connectivity (cosine 0.11 to putative_aversive),peg_l_02,118840
+720575940629270339,gustatory,taste peg,claw_tpGRN,left,MxLbN,labellum_peg,unknown,inferred from connectivity (cosine 0.11 to putative_aversive),peg_l_03,92742
+720575940617937543,gustatory,sugar/low_salt,LB3b,left,MxLbN,labellum_bristle,sugar/low_salt,measured (Tastekin et al. 2026 type),lab_l_L01,32863
+720575940615274425,gustatory,glutamate,LB1e,left,MxLbN,labellum_bristle,glutamate,measured (Tastekin et al. 2026 type),lab_l_S02,23293
+720575940619072513,gustatory,bitter,LB1c,left,MxLbN,labellum_bristle,bitter,measured (Tastekin et al. 2026 type),lab_l_I01,37721
+720575940645743412,gustatory,bitter,LB1c,left,MxLbN,labellum_bristle,bitter,measured (Tastekin et al. 2026 type),lab_l_I02,134614
+720575940613061118,gustatory,bitter,LB1c,left,MxLbN,labellum_bristle,bitter,measured (Tastekin et al. 2026 type),lab_l_I03,16201
+720575940624079544,gustatory,glutamate,LB1e,left,MxLbN,labellum_bristle,glutamate,measured (Tastekin et al. 2026 type),lab_l_S03,64253
+720575940612670570,gustatory,sugar,LB3c,left,MxLbN,labellum_bristle,sugar,measured (Tastekin et al. 2026 type),lab_l_L01,14842
+720575940629176663,gustatory,sugar/low_salt,LB3b,left,MxLbN,labellum_bristle,sugar/low_salt,measured (Tastekin et al. 2026 type),lab_l_L02,92298
+720575940632425919,gustatory,high_salt/heavy_metal,LB3d,left,MxLbN,labellum_bristle,high_salt/heavy_metal,measured (Tastekin et al. 2026 type),lab_l_L01,108426
+720575940630233916,gustatory,putative_attractive,LB4b,left,MxLbN,labellum_bristle,putative_attractive,measured (Tastekin et al. 2026 type),lab_l_I08,97602
+720575940622298631,gustatory,bitter,LB1d,left,MxLbN,labellum_bristle,bitter,measured (Tastekin et al. 2026 type),lab_l_I04,54260
+720575940609919897,gustatory,sugar/low_salt,LB3b,left,MxLbN,labellum_bristle,sugar/low_salt,measured (Tastekin et al. 2026 type),lab_l_L03,8255
+720575940621008895,gustatory,bitter,LB1a,left,MxLbN,labellum_bristle,bitter,measured (Tastekin et al. 2026 type),lab_l_I05,46787
+720575940626016017,gustatory,glutamate,LB1e,left,MxLbN,labellum_bristle,glutamate,measured (Tastekin et al. 2026 type),lab_l_S04,74437
+720575940610481370,gustatory,bitter,LB1d,left,MxLbN,labellum_bristle,bitter,measured (Tastekin et al. 2026 type),lab_l_I06,9255
+720575940627578156,gustatory,bitter,LB1d,left,MxLbN,labellum_bristle,bitter,measured (Tastekin et al. 2026 type),lab_l_I07,83255
+720575940602353632,gustatory,bitter,LB1d,left,MxLbN,labellum_bristle,bitter,measured (Tastekin et al. 2026 type),lab_l_I08,55
+720575940614281266,gustatory,bitter,LB1d,left,MxLbN,labellum_bristle,bitter,measured (Tastekin et al. 2026 type),lab_l_I09,19845
+720575940627490663,gustatory,sugar/low_salt,LB3b,left,MxLbN,labellum_bristle,sugar/low_salt,measured (Tastekin et al. 2026 type),lab_l_L04,82774
+720575940621502051,gustatory,sugar,LB3c,left,MxLbN,labellum_bristle,sugar,measured (Tastekin et al. 2026 type),lab_l_L02,49584
+720575940614273292,gustatory,putative_aversive,LB2c,left,MxLbN,labellum_bristle,putative_aversive,measured (Tastekin et al. 2026 type),lab_l_S09,19812
+720575940618025199,gustatory,bitter,LB1b,right,MxLbN,labellum_bristle,bitter,measured (Tastekin et al. 2026 type),lab_r_I01,33238
+720575940629481516,gustatory,bitter,LB1b,right,MxLbN,labellum_bristle,bitter,measured (Tastekin et al. 2026 type),lab_r_I02,93778
+720575940610683315,gustatory,glutamate,LB1e,left,MxLbN,labellum_bristle,glutamate,measured (Tastekin et al. 2026 type),lab_l_S05,9661
+720575940630968335,gustatory,putative_attractive,LB4b,right,MxLbN,labellum_bristle,putative_attractive,measured (Tastekin et al. 2026 type),lab_r_I08,101526
+720575940628329546,gustatory,pharyngeal_nerve_sensory_group3,PhG8,left,PhN,pharynx,unknown,inferred from connectivity (cosine 0.21 to putative_aversive),pharynx,87596
+720575940635392910,gustatory,water,LB3a,left,MxLbN,labellum_bristle,water,measured (Tastekin et al. 2026 type),lab_l_L01,117742
+720575940632293346,gustatory,putative_attractive,LB4a,left,MxLbN,labellum_bristle,putative_attractive,measured (Tastekin et al. 2026 type),lab_l_I09,107752
+720575940638312262,gustatory,bitter,LB1a,right,MxLbN,labellum_bristle,bitter,measured (Tastekin et al. 2026 type),lab_r_I03,124549
+720575940621916952,gustatory,accessory_pharyngeal_nerve_sensory_group1,PhG13,left,aPhN,pharynx,putative_aversive,literature: aversive cluster (Tastekin et al. 2026),pharynx,52045
+720575940640601563,gustatory,accessory_pharyngeal_nerve_sensory_group1,PhG1,right,aPhN,pharynx,sugar,"literature: Gr64e-GAL4 match, attractive cluster (Tastekin et al. 2026)",pharynx,129645
+720575940620856046,gustatory,putative_attractive,LB4a,left,MxLbN,labellum_bristle,putative_attractive,measured (Tastekin et al. 2026 type),lab_l_S05,45863
+720575940622731229,gustatory,sugar,LB3c,right,MxLbN,labellum_bristle,sugar,measured (Tastekin et al. 2026 type),lab_r_L01,56680
+720575940631393484,gustatory,sugar/low_salt,LB3b,left,MxLbN,labellum_bristle,sugar/low_salt,measured (Tastekin et al. 2026 type),lab_l_L05,103757
+720575940629388135,gustatory,sugar,LB3c,right,MxLbN,labellum_bristle,sugar,measured (Tastekin et al. 2026 type),lab_r_L02,93297
+720575940621898665,gustatory,glutamate,LB1e,right,MxLbN,labellum_bristle,glutamate,measured (Tastekin et al. 2026 type),lab_r_S01,51957
+720575940614734186,gustatory,putative_aversive,LB2c,right,MxLbN,labellum_bristle,putative_aversive,measured (Tastekin et al. 2026 type),lab_r_S06,21395
+720575940618788944,gustatory,accessory_pharyngeal_nerve_sensory_group1,PhG10,left,aPhN,pharynx,putative_attractive,literature: attractive cluster (Tastekin et al. 2026),pharynx,36588
+720575940610981362,gustatory,accessory_pharyngeal_nerve_sensory_group1,PhG1,left,aPhN,pharynx,sugar,"literature: Gr64e-GAL4 match, attractive cluster (Tastekin et al. 2026)",pharynx,10273
+720575940623834300,gustatory,accessory_pharyngeal_nerve_sensory_group1,PhG4,left,aPhN,pharynx,water,literature: proposed ppk28+ water GRN (Tastekin et al. 2026),pharynx,62824
+720575940622371037,gustatory,putative_attractive,LB4a,right,MxLbN,labellum_bristle,putative_attractive,measured (Tastekin et al. 2026 type),lab_r_I09,54733
+720575940625032548,gustatory,accessory_pharyngeal_nerve_sensory_group1,PhG15,left,aPhN,pharynx,putative_aversive,literature: aversive cluster (Tastekin et al. 2026),pharynx,69518
+720575940626015242,gustatory,accessory_pharyngeal_nerve_sensory_group1,PhG16,left,aPhN,pharynx,putative_aversive,literature: aversive cluster (Tastekin et al. 2026),pharynx,74434
+720575940639555928,gustatory,taste peg,claw_tpGRN,right,MxLbN,labellum_peg,unknown,inferred from connectivity (cosine 0.09 to putative_aversive),peg_r_01,127352
+720575940619387814,gustatory,putative_aversive,LB2b,left,MxLbN,labellum_bristle,putative_aversive,measured (Tastekin et al. 2026 type),lab_l_S10,38877
+720575940617121819,gustatory,accessory_pharyngeal_nerve_sensory_group1,PhG3,left,aPhN,pharynx,water,literature: proposed ppk28+ water GRN (Tastekin et al. 2026),pharynx,29730
+720575940646212996,gustatory,bitter,LB1b,left,MxLbN,labellum_bristle,bitter,measured (Tastekin et al. 2026 type),lab_l_S01,134999
+720575940624948867,gustatory,accessory_pharyngeal_nerve_sensory_group1,PhG6,right,aPhN,pharynx,putative_aversive,literature: aversive cluster (Tastekin et al. 2026),pharynx,69016
+720575940629009468,gustatory,accessory_pharyngeal_nerve_sensory_group1,PhG14,left,aPhN,pharynx,putative_aversive,literature: aversive cluster (Tastekin et al. 2026),pharynx,91414
+720575940627454569,gustatory,accessory_pharyngeal_nerve_sensory_group1,PhG1,left,aPhN,pharynx,sugar,"literature: Gr64e-GAL4 match, attractive cluster (Tastekin et al. 2026)",pharynx,82549
+720575940609913042,gustatory,accessory_pharyngeal_nerve_sensory_group1,PhG1,left,aPhN,pharynx,sugar,"literature: Gr64e-GAL4 match, attractive cluster (Tastekin et al. 2026)",pharynx,8250
+720575940617828766,gustatory,accessory_pharyngeal_nerve_sensory_group1,PhG14,right,aPhN,pharynx,putative_aversive,literature: aversive cluster (Tastekin et al. 2026),pharynx,32422
+720575940639043280,gustatory,sugar/low_salt,LB3b,left,MxLbN,labellum_bristle,sugar/low_salt,measured (Tastekin et al. 2026 type),lab_l_L06,126187
+720575940632423394,gustatory,pharyngeal_nerve_sensory_group2,PhG8,right,PhN,pharynx,unknown,inferred from connectivity (cosine 0.24 to putative_aversive),pharynx,108410
+720575940633791935,gustatory,accessory_pharyngeal_nerve_sensory_group1,PhG11,right,aPhN,pharynx,putative_aversive,literature: aversive cluster (Tastekin et al. 2026),pharynx,113586
+720575940621870349,gustatory,pharyngeal_nerve_sensory_group2,PhG8,right,PhN,pharynx,unknown,inferred from connectivity (cosine 0.21 to putative_aversive),pharynx,51813
+720575940610259406,gustatory,accessory_pharyngeal_nerve_sensory_group1,PhG12,right,aPhN,pharynx,putative_aversive,literature: aversive cluster (Tastekin et al. 2026),pharynx,8843
+720575940637130985,gustatory,accessory_pharyngeal_nerve_sensory_group1,PhG1,left,aPhN,pharynx,sugar,"literature: Gr64e-GAL4 match, attractive cluster (Tastekin et al. 2026)",pharynx,121822
+720575940633143833,gustatory,high_salt/heavy_metal,LB3d,left,MxLbN,labellum_bristle,high_salt/heavy_metal,measured (Tastekin et al. 2026 type),lab_l_L02,111357
+720575940638419534,gustatory,pharyngeal_nerve_sensory_group2,PhG9,right,PhN,pharynx,putative_aversive,literature: aversive cluster (Tastekin et al. 2026),pharynx,124760
+720575940630195909,gustatory,bitter,LB1a,left,MxLbN,labellum_bristle,bitter,measured (Tastekin et al. 2026 type),lab_l_S02,97406
+720575940622346180,gustatory,accessory_pharyngeal_nerve_sensory_group1,PhG16,right,aPhN,pharynx,putative_aversive,literature: aversive cluster (Tastekin et al. 2026),pharynx,54556
+720575940645332259,gustatory,sugar,LB3c,left,MxLbN,labellum_bristle,sugar,measured (Tastekin et al. 2026 type),lab_l_L03,134167
+720575940625163790,gustatory,accessory_pharyngeal_nerve_sensory_group1,PhG15,right,aPhN,pharynx,putative_aversive,literature: aversive cluster (Tastekin et al. 2026),pharynx,70225
+720575940611018714,gustatory,taste peg,dorsal_tpGRN,left,MxLbN,labellum_peg,unknown,inferred from connectivity (cosine 0.09 to sugar),peg_l_04,10362
+720575940631020079,gustatory,taste peg,claw_tpGRN,left,MxLbN,labellum_peg,unknown,inferred from connectivity (cosine 0.14 to putative_aversive),peg_l_05,101831
+720575940610474610,gustatory,taste peg,claw_tpGRN,left,MxLbN,labellum_peg,unknown,inferred from connectivity (cosine 0.05 to high_salt/heavy_metal),peg_l_06,9241
+720575940604852146,gustatory,taste peg,claw_tpGRN,left,MxLbN,labellum_peg,unknown,inferred from connectivity (cosine 0.18 to putative_aversive),peg_l_07,1020
+720575940623660558,gustatory,pharyngeal_nerve_sensory_group3,PhG9,left,PhN,pharynx,putative_aversive,literature: aversive cluster (Tastekin et al. 2026),pharynx,61970
+720575940630893196,gustatory,pharyngeal_nerve_sensory_group3,PhG9,left,PhN,pharynx,putative_aversive,literature: aversive cluster (Tastekin et al. 2026),pharynx,101096
+720575940611211417,gustatory,pharyngeal_nerve_sensory_group2,PhG9,right,PhN,pharynx,putative_aversive,literature: aversive cluster (Tastekin et al. 2026),pharynx,10795
+720575940619928929,gustatory,accessory_pharyngeal_nerve_sensory_group1,PhG1,right,aPhN,pharynx,sugar,"literature: Gr64e-GAL4 match, attractive cluster (Tastekin et al. 2026)",pharynx,41042
+720575940616616861,gustatory,accessory_pharyngeal_nerve_sensory_group1,PhG11,left,aPhN,pharynx,putative_aversive,literature: aversive cluster (Tastekin et al. 2026),pharynx,27920
+720575940633165980,gustatory,accessory_pharyngeal_nerve_sensory_group1,PhG10,right,aPhN,pharynx,putative_attractive,literature: attractive cluster (Tastekin et al. 2026),pharynx,111439
+720575940626217226,gustatory,accessory_pharyngeal_nerve_sensory_group1,PhG5,right,aPhN,pharynx,putative_aversive,literature: aversive cluster (Tastekin et al. 2026),pharynx,75393
+720575940626983952,gustatory,accessory_pharyngeal_nerve_sensory_group1,PhG4,right,aPhN,pharynx,water,literature: proposed ppk28+ water GRN (Tastekin et al. 2026),pharynx,79559
+720575940616885538,gustatory,sugar,LB3c,left,MxLbN,labellum_bristle,sugar,measured (Tastekin et al. 2026 type),lab_l_L04,28825
+720575940629358807,gustatory,accessory_pharyngeal_nerve_sensory_group1,PhG5,left,aPhN,pharynx,putative_aversive,literature: aversive cluster (Tastekin et al. 2026),pharynx,93135
+720575940628131778,gustatory,accessory_pharyngeal_nerve_sensory_group1,PhG4,right,aPhN,pharynx,water,literature: proposed ppk28+ water GRN (Tastekin et al. 2026),pharynx,86438
+720575940639259967,gustatory,sugar,LB3c,left,MxLbN,labellum_bristle,sugar,measured (Tastekin et al. 2026 type),lab_l_L05,126752
+720575940622405708,gustatory,high_salt/heavy_metal,LB3d,right,MxLbN,labellum_bristle,high_salt/heavy_metal,measured (Tastekin et al. 2026 type),lab_r_L01,54925
+720575940612950568,gustatory,sugar,LB3c,left,MxLbN,labellum_bristle,sugar,measured (Tastekin et al. 2026 type),lab_l_L06,15819
+720575940626014218,gustatory,accessory_pharyngeal_nerve_sensory_group1,PhG12,left,aPhN,pharynx,putative_aversive,literature: aversive cluster (Tastekin et al. 2026),pharynx,74428
+720575940639198653,gustatory,sugar,LB3c,left,MxLbN,labellum_bristle,sugar,measured (Tastekin et al. 2026 type),lab_l_L07,126600
+720575940638218173,gustatory,glutamate,LB1e,left,MxLbN,labellum_bristle,glutamate,measured (Tastekin et al. 2026 type),lab_l_S06,124326
+720575940627821896,gustatory,water,LB3a,left,MxLbN,labellum_bristle,water,measured (Tastekin et al. 2026 type),lab_l_L02,84623
+720575940658442625,gustatory,accessory_pharyngeal_nerve_sensory_group1,PhG1,right,aPhN,pharynx,sugar,"literature: Gr64e-GAL4 match, attractive cluster (Tastekin et al. 2026)",pharynx,138075
+720575940624963786,gustatory,putative_attractive,LB4b,left,MxLbN,labellum_bristle,putative_attractive,measured (Tastekin et al. 2026 type),lab_l_S06,69093
+720575940637580102,gustatory,putative_aversive,LB2c,right,MxLbN,labellum_bristle,putative_aversive,measured (Tastekin et al. 2026 type),lab_r_S06,122825
+720575940612920386,gustatory,glutamate,LB1e,left,MxLbN,labellum_bristle,glutamate,measured (Tastekin et al. 2026 type),lab_l_S07,15688
+720575940610483162,gustatory,bitter,LB1b,left,MxLbN,labellum_bristle,bitter,measured (Tastekin et al. 2026 type),lab_l_S03,9258
+720575940626241636,gustatory,glutamate,LB1e,left,MxLbN,labellum_bristle,glutamate,measured (Tastekin et al. 2026 type),lab_l_S08,75507
+720575940628832256,gustatory,putative_aversive,LB2b,left,MxLbN,labellum_bristle,putative_aversive,measured (Tastekin et al. 2026 type),lab_l_S10,90480
+720575940625750105,gustatory,bitter,LB1b,right,MxLbN,labellum_bristle,bitter,measured (Tastekin et al. 2026 type),lab_r_I04,73006
+720575940628853239,gustatory,sugar,LB3c,left,MxLbN,labellum_bristle,sugar,measured (Tastekin et al. 2026 type),lab_l_L08,90589
+720575940603266592,gustatory,bitter,LB1c,right,MxLbN,labellum_bristle,bitter,measured (Tastekin et al. 2026 type),lab_r_I05,146
+720575940617398502,gustatory,putative_attractive,LB4b,right,MxLbN,labellum_bristle,putative_attractive,measured (Tastekin et al. 2026 type),lab_r_S02,30721
+720575940624604560,gustatory,putative_aversive,LB2a,left,MxLbN,labellum_bristle,putative_aversive,measured (Tastekin et al. 2026 type),lab_l_S11,67205
+720575940617510720,gustatory,water,LB3a,right,MxLbN,labellum_bristle,water,measured (Tastekin et al. 2026 type),lab_r_L01,31161
+720575940631331855,gustatory,putative_aversive,LB2b,right,MxLbN,labellum_bristle,putative_aversive,measured (Tastekin et al. 2026 type),lab_r_S07,103488
+720575940616167218,gustatory,putative_attractive,LB4b,right,MxLbN,labellum_bristle,putative_attractive,measured (Tastekin et al. 2026 type),lab_r_S03,26362
+720575940610259370,gustatory,bitter,LB1a,left,MxLbN,labellum_bristle,bitter,measured (Tastekin et al. 2026 type),lab_l_S04,8842
+720575940638202345,gustatory,putative_attractive,LB4b,left,MxLbN,labellum_bristle,putative_attractive,measured (Tastekin et al. 2026 type),lab_l_S07,124291
+720575940635391845,gustatory,pharyngeal_nerve_sensory_group3,PhG8,left,PhN,pharynx,unknown,inferred from connectivity (cosine 0.22 to putative_aversive),pharynx,117739
+720575940629146711,gustatory,bitter,LB1c,left,MxLbN,labellum_bristle,bitter,measured (Tastekin et al. 2026 type),lab_l_S05,92115
+720575940614211295,gustatory,glutamate,LB1e,left,MxLbN,labellum_bristle,glutamate,measured (Tastekin et al. 2026 type),lab_l_S09,19625
+720575940623172843,gustatory,high_salt/heavy_metal,LB3d,left,MxLbN,labellum_bristle,high_salt/heavy_metal,measured (Tastekin et al. 2026 type),lab_l_L03,59229
+720575940611849178,gustatory,glutamate,LB1e,right,MxLbN,labellum_bristle,glutamate,measured (Tastekin et al. 2026 type),lab_r_S02,12407
+720575940638813016,gustatory,glutamate,LB1e,right,MxLbN,labellum_bristle,glutamate,measured (Tastekin et al. 2026 type),lab_r_S03,125642
+720575940624266061,gustatory,accessory_pharyngeal_nerve_sensory_group1,PhG13,right,aPhN,pharynx,putative_aversive,literature: aversive cluster (Tastekin et al. 2026),pharynx,65380
+720575940624310676,gustatory,taste peg,claw_tpGRN,right,MxLbN,labellum_peg,unknown,inferred from connectivity (cosine 0.16 to putative_aversive),peg_r_02,65663
+720575940630552151,gustatory,high_salt/heavy_metal,LB3d,right,MxLbN,labellum_bristle,high_salt/heavy_metal,measured (Tastekin et al. 2026 type),lab_r_L02,99220
+720575940609306563,gustatory,taste peg,claw_tpGRN,right,MxLbN,labellum_peg,unknown,inferred from connectivity (cosine 0.20 to putative_aversive),peg_r_03,7226
+720575940629416318,gustatory,bitter,LB1a,right,MxLbN,labellum_bristle,bitter,measured (Tastekin et al. 2026 type),lab_r_I06,93434
+720575940614163367,gustatory,water,LB3a,right,MxLbN,labellum_bristle,water,measured (Tastekin et al. 2026 type),lab_r_L02,19469
+720575940609645124,gustatory,high_salt/heavy_metal,LB3d,right,MxLbN,labellum_bristle,high_salt/heavy_metal,measured (Tastekin et al. 2026 type),lab_r_L03,7778
+720575940616163701,gustatory,taste peg,claw_tpGRN,right,MxLbN,labellum_peg,unknown,inferred from connectivity (cosine 0.12 to putative_aversive),peg_r_04,26352
+720575940619793940,gustatory,taste peg,claw_tpGRN,right,MxLbN,labellum_peg,unknown,inferred from connectivity (cosine 0.18 to putative_aversive),peg_r_05,40475
+720575940608295689,gustatory,taste peg,claw_tpGRN,right,MxLbN,labellum_peg,unknown,inferred from connectivity (cosine 0.07 to high_salt/heavy_metal),peg_r_06,5798
+720575940629112887,gustatory,accessory_pharyngeal_nerve_sensory_group2,PhG2,right,aPhN,pharynx,putative_aversive,literature: inhibits feeding via GNG055 (Tastekin et al. 2026),pharynx,91944
+720575940627692048,gustatory,bitter,LB1a,left,MxLbN,labellum_bristle,bitter,measured (Tastekin et al. 2026 type),lab_l_S06,83832
+720575940622236671,gustatory,taste peg,dorsal_tpGRN,left,MxLbN,labellum_peg,unknown,inferred from connectivity (cosine 0.06 to putative_aversive),peg_l_08,53916
+720575940616971035,gustatory,taste peg,dorsal_tpGRN,left,MxLbN,labellum_peg,unknown,inferred from connectivity (cosine 0.06 to sugar),peg_l_09,29167
+720575940626703241,gustatory,taste peg,claw_tpGRN,right,MxLbN,labellum_peg,unknown,inferred from connectivity (cosine 0.03 to water),peg_r_07,77861
+720575940641339611,gustatory,sugar/low_salt,LB3b,right,MxLbN,labellum_bristle,sugar/low_salt,measured (Tastekin et al. 2026 type),lab_r_L01,130646
+720575940621704197,gustatory,high_salt/heavy_metal,LB3d,right,MxLbN,labellum_bristle,high_salt/heavy_metal,measured (Tastekin et al. 2026 type),lab_r_L04,50823
+720575940660292225,gustatory,water,LB3a,left,MxLbN,labellum_bristle,water,measured (Tastekin et al. 2026 type),lab_l_L03,138363
+720575940612422579,gustatory,high_salt/heavy_metal,LB3d,right,MxLbN,labellum_bristle,high_salt/heavy_metal,measured (Tastekin et al. 2026 type),lab_r_L05,14039
+720575940612582514,gustatory,taste peg,claw_tpGRN,right,MxLbN,labellum_peg,unknown,inferred from connectivity (cosine 0.06 to putative_aversive),peg_r_08,14566
+720575940627907883,gustatory,sugar,LB3c,right,MxLbN,labellum_bristle,sugar,measured (Tastekin et al. 2026 type),lab_r_L03,85110
+720575940620289701,gustatory,high_salt/heavy_metal,LB3d,right,MxLbN,labellum_bristle,high_salt/heavy_metal,measured (Tastekin et al. 2026 type),lab_r_L06,42775
+720575940627394376,gustatory,water,LB3a,right,MxLbN,labellum_bristle,water,measured (Tastekin et al. 2026 type),lab_r_L03,82200
+720575940628198503,gustatory,glutamate,LB1e,left,MxLbN,labellum_bristle,glutamate,measured (Tastekin et al. 2026 type),lab_l_S10,86800
+720575940615089369,gustatory,putative_aversive,LB2c,left,MxLbN,labellum_bristle,putative_aversive,measured (Tastekin et al. 2026 type),lab_l_S11,22602
+720575940627402568,gustatory,glutamate,LB1e,right,MxLbN,labellum_bristle,glutamate,measured (Tastekin et al. 2026 type),lab_r_S04,82249
+720575940620589838,gustatory,sugar,LB3c,right,MxLbN,labellum_bristle,sugar,measured (Tastekin et al. 2026 type),lab_r_L04,44287
+720575940609476562,gustatory,high_salt/heavy_metal,LB3d,left,MxLbN,labellum_bristle,high_salt/heavy_metal,measured (Tastekin et al. 2026 type),lab_l_L04,7523
+720575940620185515,gustatory,high_salt/heavy_metal,LB3d,right,MxLbN,labellum_bristle,high_salt/heavy_metal,measured (Tastekin et al. 2026 type),lab_r_L07,42303
+720575940606801282,gustatory,putative_attractive,LB4b,right,MxLbN,labellum_bristle,putative_attractive,measured (Tastekin et al. 2026 type),lab_r_S04,3884
+720575940622486922,gustatory,sugar,LB3c,left,MxLbN,labellum_bristle,sugar,measured (Tastekin et al. 2026 type),lab_l_L09,55345
+720575940623183083,gustatory,bitter,LB1b,right,MxLbN,labellum_bristle,bitter,measured (Tastekin et al. 2026 type),lab_r_I07,59288
+720575940631082124,gustatory,glutamate,LB1e,left,MxLbN,labellum_bristle,glutamate,measured (Tastekin et al. 2026 type),lab_l_S11,102121
+720575940625450498,gustatory,glutamate,LB1e,right,MxLbN,labellum_bristle,glutamate,measured (Tastekin et al. 2026 type),lab_r_S05,71525
+720575940616308921,gustatory,accessory_pharyngeal_nerve_sensory_group1,PhG2,left,aPhN,pharynx,putative_aversive,literature: inhibits feeding via GNG055 (Tastekin et al. 2026),pharynx,26842
+720575940635172191,gustatory,sugar,LB3c,left,MxLbN,labellum_bristle,sugar,measured (Tastekin et al. 2026 type),lab_l_L10,117123
+720575940619287278,gustatory,high_salt/heavy_metal,LB3d,left,MxLbN,labellum_bristle,high_salt/heavy_metal,measured (Tastekin et al. 2026 type),lab_l_L05,38552
+720575940631069255,gustatory,accessory_pharyngeal_nerve_sensory_group1,PhG2,right,aPhN,pharynx,putative_aversive,literature: inhibits feeding via GNG055 (Tastekin et al. 2026),pharynx,102075
+720575940632889389,gustatory,high_salt/heavy_metal,LB3d,left,MxLbN,labellum_bristle,high_salt/heavy_metal,measured (Tastekin et al. 2026 type),lab_l_L06,110469
+720575940615261073,gustatory,high_salt/heavy_metal,LB3d,left,MxLbN,labellum_bristle,high_salt/heavy_metal,measured (Tastekin et al. 2026 type),lab_l_L07,23243
+720575940618887217,gustatory,bitter,LB1c,right,MxLbN,labellum_bristle,bitter,measured (Tastekin et al. 2026 type),lab_r_I08,36953
+720575940636487598,gustatory,water,LB3a,right,MxLbN,labellum_bristle,water,measured (Tastekin et al. 2026 type),lab_r_L04,120383
+720575940644965399,gustatory,water,LB3a,left,MxLbN,labellum_bristle,water,measured (Tastekin et al. 2026 type),lab_l_L04,133759
+720575940625031610,gustatory,accessory_pharyngeal_nerve_sensory_group1,PhG3,right,aPhN,pharynx,water,literature: proposed ppk28+ water GRN (Tastekin et al. 2026),pharynx,69509
+720575940611168921,gustatory,accessory_pharyngeal_nerve_sensory_group2,PhG2,left,aPhN,pharynx,putative_aversive,literature: inhibits feeding via GNG055 (Tastekin et al. 2026),pharynx,10697
+720575940632880173,gustatory,sugar/low_salt,LB3b,right,MxLbN,labellum_bristle,sugar/low_salt,measured (Tastekin et al. 2026 type),lab_r_L02,110438
+720575940622358057,gustatory,taste peg,dorsal_tpGRN,right,MxLbN,labellum_peg,unknown,inferred from connectivity (cosine 0.10 to putative_attractive),peg_r_09,54644
+720575940631423263,gustatory,taste peg,claw_tpGRN,left,MxLbN,labellum_peg,unknown,inferred from connectivity (cosine 0.16 to putative_aversive),peg_l_10,103913
+720575940617857694,gustatory,water,LB3a,left,MxLbN,labellum_bristle,water,measured (Tastekin et al. 2026 type),lab_l_L05,32544
+720575940639332736,gustatory,sugar,LB3c,left,MxLbN,labellum_bristle,sugar,measured (Tastekin et al. 2026 type),lab_l_L11,126873
+720575940623629292,gustatory,sugar,LB3c,left,MxLbN,labellum_bristle,sugar,measured (Tastekin et al. 2026 type),lab_l_S01,61814
+720575940625861168,gustatory,sugar,LB3c,left,MxLbN,labellum_bristle,sugar,measured (Tastekin et al. 2026 type),lab_l_S02,73596
+720575940632510479,gustatory,sugar/low_salt,LB3b,left,MxLbN,labellum_bristle,sugar/low_salt,measured (Tastekin et al. 2026 type),lab_l_L07,108800
+720575940629510338,gustatory,sugar/low_salt,LB3b,right,MxLbN,labellum_bristle,sugar/low_salt,measured (Tastekin et al. 2026 type),lab_r_L03,93959
+720575940613996959,gustatory,water,LB3a,left,MxLbN,labellum_bristle,water,measured (Tastekin et al. 2026 type),lab_l_L06,19025
+720575940612010137,gustatory,sugar,LB3c,right,MxLbN,labellum_bristle,sugar,measured (Tastekin et al. 2026 type),lab_r_L05,12841
+720575940622902535,gustatory,water,LB3a,left,MxLbN,labellum_bristle,water,measured (Tastekin et al. 2026 type),lab_l_L07,57581
+720575940640649691,gustatory,sugar,LB3c,left,MxLbN,labellum_bristle,sugar,measured (Tastekin et al. 2026 type),lab_l_S03,129730
+720575940632634911,gustatory,high_salt/heavy_metal,LB3d,right,MxLbN,labellum_bristle,high_salt/heavy_metal,measured (Tastekin et al. 2026 type),lab_r_L08,109331
+720575940633634199,gustatory,taste peg,claw_tpGRN,left,MxLbN,labellum_peg,unknown,inferred from connectivity (cosine 0.14 to putative_aversive),peg_l_11,113085
+720575940611184819,gustatory,taste peg,claw_tpGRN,left,MxLbN,labellum_peg,unknown,inferred from connectivity (cosine 0.08 to putative_aversive),peg_l_12,10732
+720575940623138485,gustatory,high_salt/heavy_metal,LB3d,right,MxLbN,labellum_bristle,high_salt/heavy_metal,measured (Tastekin et al. 2026 type),lab_r_L09,59003
+720575940635990896,gustatory,taste peg,claw_tpGRN,left,MxLbN,labellum_peg,unknown,inferred from connectivity (cosine 0.10 to putative_aversive),peg_l_13,119344
+720575940635176366,gustatory,taste peg,claw_tpGRN,left,MxLbN,labellum_peg,unknown,inferred from connectivity (cosine 0.18 to putative_aversive),peg_l_14,117143
+720575940613080751,gustatory,taste peg,claw_tpGRN,left,MxLbN,labellum_peg,unknown,inferred from connectivity (cosine 0.09 to putative_aversive),peg_l_15,16267
+720575940621754367,gustatory,sugar,LB3c,left,MxLbN,labellum_bristle,sugar,measured (Tastekin et al. 2026 type),lab_l_S04,51107
+720575940622604109,gustatory,taste peg,claw_tpGRN,left,MxLbN,labellum_peg,unknown,inferred from connectivity (cosine 0.09 to putative_aversive),peg_l_16,55915
+720575940607500297,gustatory,taste peg,claw_tpGRN,left,MxLbN,labellum_peg,unknown,inferred from connectivity (cosine 0.11 to putative_aversive),peg_l_17,4752
+720575940622413508,gustatory,sugar/low_salt,LB3b,left,MxLbN,labellum_bristle,sugar/low_salt,measured (Tastekin et al. 2026 type),lab_l_L08,54958
+720575940616177458,gustatory,water,LB3a,left,MxLbN,labellum_bristle,water,measured (Tastekin et al. 2026 type),lab_l_L08,26395
+720575940616742657,gustatory,sugar,LB3c,right,MxLbN,labellum_bristle,sugar,measured (Tastekin et al. 2026 type),lab_r_L06,28293
+720575940627036746,gustatory,taste peg,claw_tpGRN,left,MxLbN,labellum_peg,unknown,inferred from connectivity (cosine 0.17 to putative_aversive),peg_l_18,79876
+720575940609533230,gustatory,taste peg,claw_tpGRN,left,MxLbN,labellum_peg,unknown,inferred from connectivity (cosine 0.09 to putative_aversive),peg_l_19,7612
+720575940623173470,gustatory,taste peg,claw_tpGRN,left,MxLbN,labellum_peg,unknown,inferred from connectivity (cosine 0.14 to putative_aversive),peg_l_20,59231
+720575940638682787,gustatory,taste peg,claw_tpGRN,left,MxLbN,labellum_peg,unknown,inferred from connectivity (cosine 0.11 to putative_aversive),peg_l_21,125363
+720575940629884119,gustatory,sugar/low_salt,LB3b,right,MxLbN,labellum_bristle,sugar/low_salt,measured (Tastekin et al. 2026 type),lab_r_L04,95780
+720575940615641798,gustatory,bitter,LB1d,right,MxLbN,labellum_bristle,bitter,measured (Tastekin et al. 2026 type),lab_r_I09,24502
+720575940642361485,gustatory,high_salt/heavy_metal,LB3d,left,MxLbN,labellum_bristle,high_salt/heavy_metal,measured (Tastekin et al. 2026 type),lab_l_L08,131490
+720575940620698136,gustatory,taste peg,claw_tpGRN,left,MxLbN,labellum_peg,unknown,inferred from connectivity (cosine 0.14 to sugar),peg_l_22,44972
+720575940620332404,gustatory,taste peg,claw_tpGRN,left,MxLbN,labellum_peg,unknown,inferred from connectivity (cosine 0.06 to putative_aversive),peg_l_23,42973
+720575940624976572,gustatory,glutamate,LB1e,right,MxLbN,labellum_bristle,glutamate,measured (Tastekin et al. 2026 type),lab_r_S06,69165
+720575940618466384,gustatory,taste peg,claw_tpGRN,left,MxLbN,labellum_peg,unknown,inferred from connectivity (cosine 0.14 to sugar),peg_l_24,35235
+720575940604590048,gustatory,high_salt/heavy_metal,LB3d,right,MxLbN,labellum_bristle,high_salt/heavy_metal,measured (Tastekin et al. 2026 type),lab_r_L10,763
+720575940637650522,gustatory,taste peg,claw_tpGRN,right,MxLbN,labellum_peg,unknown,inferred from connectivity (cosine 0.14 to putative_aversive),peg_r_10,123017
+720575940629025324,gustatory,sugar/low_salt,LB3b,left,MxLbN,labellum_bristle,sugar/low_salt,measured (Tastekin et al. 2026 type),lab_l_L09,91526
+720575940622313971,gustatory,taste peg,claw_tpGRN,left,MxLbN,labellum_peg,unknown,inferred from connectivity (cosine 0.07 to putative_aversive),peg_l_25,54357
+720575940630797113,gustatory,high_salt/heavy_metal,LB3d,left,MxLbN,labellum_bristle,high_salt/heavy_metal,measured (Tastekin et al. 2026 type),lab_l_L09,100605
+720575940616811265,gustatory,water,LB3a,left,MxLbN,labellum_bristle,water,measured (Tastekin et al. 2026 type),lab_l_L09,28522
+720575940604027168,gustatory,bitter,LB1a,left,MxLbN,labellum_bristle,bitter,measured (Tastekin et al. 2026 type),lab_l_S07,446
+720575940612208406,gustatory,high_salt/heavy_metal,LB3d,right,MxLbN,labellum_bristle,high_salt/heavy_metal,measured (Tastekin et al. 2026 type),lab_r_L11,13387
+720575940631898285,gustatory,water,LB3a,left,MxLbN,labellum_bristle,water,measured (Tastekin et al. 2026 type),lab_l_L10,105995
+720575940604018208,gustatory,high_salt/heavy_metal,LB3d,left,MxLbN,labellum_bristle,high_salt/heavy_metal,measured (Tastekin et al. 2026 type),lab_l_L10,440
+720575940627110672,gustatory,taste peg,claw_tpGRN,left,MxLbN,labellum_peg,unknown,inferred from connectivity (cosine 0.21 to putative_aversive),peg_l_26,80373
+720575940625741114,gustatory,taste peg,claw_tpGRN,left,MxLbN,labellum_peg,unknown,inferred from connectivity (cosine 0.12 to putative_aversive),peg_l_27,72955
+720575940633733601,gustatory,taste peg,claw_tpGRN,left,MxLbN,labellum_peg,unknown,inferred from connectivity (cosine 0.14 to putative_aversive),peg_l_28,113390
+720575940613601698,gustatory,sugar,LB3c,left,MxLbN,labellum_bristle,sugar,measured (Tastekin et al. 2026 type),lab_l_S05,17904
+720575940626674182,gustatory,water,LB3a,left,MxLbN,labellum_bristle,water,measured (Tastekin et al. 2026 type),lab_l_L11,77700
+720575940616264788,gustatory,taste peg,claw_tpGRN,right,MxLbN,labellum_peg,unknown,inferred from connectivity (cosine 0.13 to putative_aversive),peg_r_11,26678
+720575940624792197,gustatory,taste peg,claw_tpGRN,left,MxLbN,labellum_peg,unknown,inferred from connectivity (cosine 0.15 to sugar),peg_l_29,68128
+720575940631147148,gustatory,sugar,LB3c,right,MxLbN,labellum_bristle,sugar,measured (Tastekin et al. 2026 type),lab_r_L07,102495
+720575940611106453,gustatory,taste peg,claw_tpGRN,right,MxLbN,labellum_peg,unknown,inferred from connectivity (cosine 0.19 to putative_aversive),peg_r_12,10558
+720575940625203504,gustatory,water,LB3a,left,MxLbN,labellum_bristle,water,measured (Tastekin et al. 2026 type),lab_l_I03,70391
+720575940620926234,gustatory,high_salt/heavy_metal,LB3d,left,MxLbN,labellum_bristle,high_salt/heavy_metal,measured (Tastekin et al. 2026 type),lab_l_L11,46293
+720575940624352643,gustatory,taste peg,claw_tpGRN,left,MxLbN,labellum_peg,unknown,inferred from connectivity (cosine 0.14 to sugar),peg_l_30,65925
+720575940632467923,gustatory,taste peg,claw_tpGRN,right,MxLbN,labellum_peg,unknown,inferred from connectivity (cosine 0.12 to putative_aversive),peg_r_13,108629
+720575940610649442,gustatory,taste peg,claw_tpGRN,right,MxLbN,labellum_peg,unknown,inferred from connectivity (cosine 0.08 to putative_aversive),peg_r_14,9584
+720575940635425893,gustatory,taste peg,claw_tpGRN,left,MxLbN,labellum_peg,unknown,inferred from connectivity (cosine 0.07 to putative_aversive),peg_l_31,117807
+720575940626284036,gustatory,taste peg,claw_tpGRN,left,MxLbN,labellum_peg,unknown,inferred from connectivity (cosine 0.12 to sugar),peg_l_32,75707
+720575940607737099,gustatory,sugar/low_salt,LB3b,left,MxLbN,labellum_bristle,sugar/low_salt,measured (Tastekin et al. 2026 type),lab_l_L10,5014
+720575940608296917,gustatory,taste peg,claw_tpGRN,left,MxLbN,labellum_peg,unknown,inferred from connectivity (cosine 0.15 to putative_aversive),peg_l_33,5801
+720575940629852866,gustatory,sugar,LB3c,left,MxLbN,labellum_bristle,sugar,measured (Tastekin et al. 2026 type),lab_l_S06,95606
+720575940612612581,gustatory,sugar,LB3c,right,MxLbN,labellum_bristle,sugar,measured (Tastekin et al. 2026 type),lab_r_L08,14650
+720575940617094208,gustatory,bitter,LB1a,left,MxLbN,labellum_bristle,bitter,measured (Tastekin et al. 2026 type),lab_l_S08,29627
+720575940604714528,gustatory,bitter,LB1c,right,MxLbN,labellum_bristle,bitter,measured (Tastekin et al. 2026 type),lab_r_S01,877
+720575940631204163,gustatory,glutamate,LB1e,right,MxLbN,labellum_bristle,glutamate,measured (Tastekin et al. 2026 type),lab_r_S07,102791
+720575940638183652,gustatory,high_salt/heavy_metal,LB3d,left,MxLbN,labellum_bristle,high_salt/heavy_metal,measured (Tastekin et al. 2026 type),lab_l_S01,124244
+720575940619197093,gustatory,bitter,LB1c,left,MxLbN,labellum_bristle,bitter,measured (Tastekin et al. 2026 type),lab_l_S09,38209
+720575940611875570,gustatory,high_salt/heavy_metal,LB3d,left,MxLbN,labellum_bristle,high_salt/heavy_metal,measured (Tastekin et al. 2026 type),lab_l_S02,12494
+720575940634796536,gustatory,water,LB3a,left,MxLbN,labellum_bristle,water,measured (Tastekin et al. 2026 type),lab_l_I04,116079
+720575940629211607,gustatory,putative_aversive,LB2c,left,MxLbN,labellum_bristle,putative_aversive,measured (Tastekin et al. 2026 type),lab_l_S05,92462
+720575940612579053,gustatory,sugar,LB3c,left,MxLbN,labellum_bristle,sugar,measured (Tastekin et al. 2026 type),lab_l_S07,14555
+720575940620296641,gustatory,sugar,LB3c,right,MxLbN,labellum_bristle,sugar,measured (Tastekin et al. 2026 type),lab_r_L09,42795
+720575940617181725,gustatory,sugar/low_salt,LB3b,left,MxLbN,labellum_bristle,sugar/low_salt,measured (Tastekin et al. 2026 type),lab_l_L11,29911
+720575940645611652,gustatory,taste peg,claw_tpGRN,right,MxLbN,labellum_peg,unknown,inferred from connectivity (cosine 0.09 to putative_aversive),peg_r_15,134456
+720575940624310345,gustatory,bitter,LB1a,right,MxLbN,labellum_bristle,bitter,measured (Tastekin et al. 2026 type),lab_r_S02,65658
+720575940625696601,gustatory,glutamate,LB1e,right,MxLbN,labellum_bristle,glutamate,measured (Tastekin et al. 2026 type),lab_r_S08,72736
+720575940642088333,gustatory,bitter,LB1c,right,MxLbN,labellum_bristle,bitter,measured (Tastekin et al. 2026 type),lab_r_S03,131288
+720575940624311881,gustatory,taste peg,claw_tpGRN,left,MxLbN,labellum_peg,unknown,inferred from connectivity (cosine 0.12 to putative_aversive),peg_l_34,65670
+720575940617433830,gustatory,bitter,LB1a,right,MxLbN,labellum_bristle,bitter,measured (Tastekin et al. 2026 type),lab_r_S04,30855
+720575940613786774,gustatory,water,LB3a,left,MxLbN,labellum_bristle,water,measured (Tastekin et al. 2026 type),lab_l_I05,18488
+720575940634683743,gustatory,putative_aversive,LB2c,right,MxLbN,labellum_bristle,putative_aversive,measured (Tastekin et al. 2026 type),lab_r_S07,115795
+720575940630741701,gustatory,water,LB3a,right,MxLbN,labellum_bristle,water,measured (Tastekin et al. 2026 type),lab_r_L05,100285
+720575940607347634,gustatory,sugar/low_salt,LB3b,left,MxLbN,labellum_bristle,sugar/low_salt,measured (Tastekin et al. 2026 type),lab_l_I01,4573
+720575940608356053,gustatory,taste peg,claw_tpGRN,right,MxLbN,labellum_peg,unknown,inferred from connectivity (cosine 0.14 to putative_aversive),peg_r_16,5899
+720575940628891774,gustatory,accessory_pharyngeal_nerve_sensory_group1,PhG2,right,aPhN,pharynx,putative_aversive,literature: inhibits feeding via GNG055 (Tastekin et al. 2026),pharynx,90785
+720575940617239197,gustatory,bitter,LB1d,right,MxLbN,labellum_bristle,bitter,measured (Tastekin et al. 2026 type),lab_r_S05,30108
+720575940634859188,gustatory,bitter,LB1a,right,MxLbN,labellum_bristle,bitter,measured (Tastekin et al. 2026 type),lab_r_S06,116233
+720575940637742911,gustatory,bitter,LB1c,right,MxLbN,labellum_bristle,bitter,measured (Tastekin et al. 2026 type),lab_r_S07,123244
+720575940614302370,gustatory,sugar/low_salt,LB3b,right,MxLbN,labellum_bristle,sugar/low_salt,measured (Tastekin et al. 2026 type),lab_r_L05,19923
+720575940632341452,gustatory,taste peg,dorsal_tpGRN,right,MxLbN,labellum_peg,unknown,inferred from connectivity (cosine 0.11 to putative_attractive),peg_r_17,107953
+720575940619659861,gustatory,bitter,LB1a,right,MxLbN,labellum_bristle,bitter,measured (Tastekin et al. 2026 type),lab_r_S08,39850
+720575940616851286,gustatory,sugar/low_salt,LB3b,right,MxLbN,labellum_bristle,sugar/low_salt,measured (Tastekin et al. 2026 type),lab_r_L06,28699
+720575940612556402,gustatory,putative_attractive,LB4a,right,MxLbN,labellum_bristle,putative_attractive,measured (Tastekin et al. 2026 type),lab_r_S04,14478
+720575940638011994,gustatory,water,LB3a,right,MxLbN,labellum_bristle,water,measured (Tastekin et al. 2026 type),lab_r_L06,123821
+720575940627810347,gustatory,high_salt/heavy_metal,LB3d,left,MxLbN,labellum_bristle,high_salt/heavy_metal,measured (Tastekin et al. 2026 type),lab_l_S03,84555
+720575940630229007,gustatory,taste peg,dorsal_tpGRN,right,MxLbN,labellum_peg,unknown,inferred from connectivity (cosine 0.11 to putative_attractive),peg_r_18,97585
+720575940627438906,gustatory,glutamate,LB1e,right,MxLbN,labellum_bristle,glutamate,measured (Tastekin et al. 2026 type),lab_r_S09,82478
+720575940630882039,gustatory,putative_attractive,LB4b,right,MxLbN,labellum_bristle,putative_attractive,measured (Tastekin et al. 2026 type),lab_r_S05,101036
+720575940621864060,gustatory,bitter,LB1a,right,MxLbN,labellum_bristle,bitter,measured (Tastekin et al. 2026 type),lab_r_S09,51785
+720575940612445938,gustatory,sugar,LB3c,right,MxLbN,labellum_bristle,sugar,measured (Tastekin et al. 2026 type),lab_r_L10,14120
+720575940646736772,gustatory,taste peg,claw_tpGRN,right,MxLbN,labellum_peg,unknown,inferred from connectivity (cosine 0.04 to putative_aversive),peg_r_19,135406
+720575940627397263,gustatory,taste peg,dorsal_tpGRN,right,MxLbN,labellum_peg,unknown,inferred from connectivity (cosine 0.07 to putative_attractive),peg_r_20,82215
+720575940631106664,gustatory,taste peg,dorsal_tpGRN,right,MxLbN,labellum_peg,unknown,inferred from connectivity (cosine 0.08 to putative_attractive),peg_r_21,102285
+720575940628116476,gustatory,water,LB3a,right,MxLbN,labellum_bristle,water,measured (Tastekin et al. 2026 type),lab_r_L07,86352
+720575940618706811,gustatory,putative_attractive,LB4b,right,MxLbN,labellum_bristle,putative_attractive,measured (Tastekin et al. 2026 type),lab_r_S05,36235
+720575940628616271,gustatory,taste peg,claw_tpGRN,right,MxLbN,labellum_peg,unknown,inferred from connectivity (cosine 0.09 to putative_aversive),peg_r_22,89240
+720575940644157988,gustatory,taste peg,claw_tpGRN,right,MxLbN,labellum_peg,unknown,inferred from connectivity (cosine 0.10 to putative_aversive),peg_r_23,132888
+720575940610773090,gustatory,bitter,LB1c,right,MxLbN,labellum_bristle,bitter,measured (Tastekin et al. 2026 type),lab_r_S10,9864
+720575940606002609,gustatory,sugar,LB3c,left,MxLbN,labellum_bristle,sugar,measured (Tastekin et al. 2026 type),lab_l_S08,2619
+720575940631284511,gustatory,pharyngeal_nerve_sensory_group1,PhG7,right,PhN,pharynx,putative_aversive,literature: aversive cluster (Tastekin et al. 2026),pharynx,103235
+720575940614830239,gustatory,accessory_pharyngeal_nerve_sensory_group1,PhG1,right,aPhN,pharynx,sugar,"literature: Gr64e-GAL4 match, attractive cluster (Tastekin et al. 2026)",pharynx,21757
+720575940634278295,gustatory,putative_aversive,LB2b,right,MxLbN,labellum_bristle,putative_aversive,measured (Tastekin et al. 2026 type),lab_r_S08,114831
+720575940622136022,gustatory,water,LB3a,right,MxLbN,labellum_bristle,water,measured (Tastekin et al. 2026 type),lab_r_L08,53317
+720575940647084164,gustatory,taste peg,claw_tpGRN,right,MxLbN,labellum_peg,unknown,inferred from connectivity (cosine 0.10 to putative_aversive),peg_r_24,135627
+720575940643065032,gustatory,glutamate,LB1e,right,MxLbN,labellum_bristle,glutamate,measured (Tastekin et al. 2026 type),lab_r_S10,132075
+720575940637165028,gustatory,accessory_pharyngeal_nerve_sensory_group1,PhG7,right,aPhN,pharynx,putative_aversive,literature: aversive cluster (Tastekin et al. 2026),pharynx,121879
+720575940638608803,gustatory,pharyngeal_nerve_sensory_group3,PhG7,left,PhN,pharynx,putative_aversive,literature: aversive cluster (Tastekin et al. 2026),pharynx,125180
+720575940622200233,gustatory,sugar/low_salt,LB3b,right,MxLbN,labellum_bristle,sugar/low_salt,measured (Tastekin et al. 2026 type),lab_r_L07,53674
+720575940619155403,gustatory,taste peg,claw_tpGRN,right,MxLbN,labellum_peg,unknown,inferred from connectivity (cosine 0.14 to putative_aversive),peg_r_25,38065
+720575940627265265,gustatory,putative_aversive,LB2a,left,MxLbN,labellum_bristle,putative_aversive,measured (Tastekin et al. 2026 type),lab_l_S07,81394
+720575940620692833,gustatory,glutamate,LB1e,right,MxLbN,labellum_bristle,glutamate,measured (Tastekin et al. 2026 type),lab_r_S11,44936
+720575940618706043,gustatory,high_salt/heavy_metal,LB3d,right,MxLbN,labellum_bristle,high_salt/heavy_metal,measured (Tastekin et al. 2026 type),lab_r_S01,36231
+720575940618682526,gustatory,bitter,LB1a,right,MxLbN,labellum_bristle,bitter,measured (Tastekin et al. 2026 type),lab_r_S11,36126
+720575940630553415,gustatory,water,LB3a,left,MxLbN,labellum_bristle,water,measured (Tastekin et al. 2026 type),lab_l_I06,99224
+720575940628330256,gustatory,,LB3,right,MxLbN,labellum_bristle,,measured (Tastekin et al. 2026 type),,87602
+720575940632146340,gustatory,putative_aversive,LB2c,right,MxLbN,labellum_bristle,putative_aversive,measured (Tastekin et al. 2026 type),lab_r_S08,107161
+720575940623843145,gustatory,taste peg,claw_tpGRN,right,MxLbN,labellum_peg,unknown,inferred from connectivity (cosine 0.08 to putative_aversive),peg_r_26,62862
+720575940622743309,gustatory,taste peg,claw_tpGRN,right,MxLbN,labellum_peg,unknown,inferred from connectivity (cosine 0.06 to putative_aversive),peg_r_27,56755
+720575940630702789,gustatory,taste peg,claw_tpGRN,right,MxLbN,labellum_peg,unknown,inferred from connectivity (cosine 0.09 to putative_aversive),peg_r_28,100054
+720575940622585224,gustatory,taste peg,claw_tpGRN,right,MxLbN,labellum_peg,unknown,inferred from connectivity (cosine 0.12 to putative_aversive),peg_r_29,55817
+720575940637747519,gustatory,glutamate,LB1e,right,MxLbN,labellum_bristle,glutamate,measured (Tastekin et al. 2026 type),lab_r_I07,123258
+720575940625752778,gustatory,taste peg,dorsal_tpGRN,right,MxLbN,labellum_peg,unknown,inferred from connectivity (cosine 0.06 to putative_aversive),peg_r_30,73024
+720575940628962407,gustatory,bitter,LB1d,right,MxLbN,labellum_bristle,bitter,measured (Tastekin et al. 2026 type),lab_r_I06,91171
+720575940610788069,gustatory,high_salt/heavy_metal,LB3d,left,MxLbN,labellum_bristle,high_salt/heavy_metal,measured (Tastekin et al. 2026 type),lab_l_S04,9890
+720575940608305161,gustatory,sugar,LB3c,right,MxLbN,labellum_bristle,sugar,measured (Tastekin et al. 2026 type),lab_r_L11,5811
+720575940617000768,gustatory,sugar,LB3c,left,MxLbN,labellum_bristle,sugar,measured (Tastekin et al. 2026 type),lab_l_S09,29281
+720575940610296622,gustatory,sugar/low_salt,LB3b,right,MxLbN,labellum_bristle,sugar/low_salt,measured (Tastekin et al. 2026 type),lab_r_L08,8905
+720575940637568838,gustatory,putative_attractive,LB4b,left,MxLbN,labellum_bristle,putative_attractive,measured (Tastekin et al. 2026 type),lab_l_S08,122795
+720575940630597839,gustatory,putative_aversive,LB2a,right,MxLbN,labellum_bristle,putative_aversive,measured (Tastekin et al. 2026 type),lab_r_S09,99458
+720575940622853011,gustatory,putative_aversive,LB2a,right,MxLbN,labellum_bristle,putative_aversive,measured (Tastekin et al. 2026 type),lab_r_S09,57316
+720575940606205897,gustatory,high_salt/heavy_metal,LB3d,right,MxLbN,labellum_bristle,high_salt/heavy_metal,measured (Tastekin et al. 2026 type),lab_r_S02,2942
+720575940617674909,gustatory,water,LB3a,right,MxLbN,labellum_bristle,water,measured (Tastekin et al. 2026 type),lab_r_L09,31818
+720575940621509759,gustatory,water,LB3a,right,MxLbN,labellum_bristle,water,measured (Tastekin et al. 2026 type),lab_r_L10,49629
+720575940617801499,gustatory,sugar/low_salt,LB3b,right,MxLbN,labellum_bristle,sugar/low_salt,measured (Tastekin et al. 2026 type),lab_r_L09,32302
+720575940621778381,gustatory,bitter,LB1b,left,MxLbN,labellum_bristle,bitter,measured (Tastekin et al. 2026 type),lab_l_S10,51269
+720575940621689880,gustatory,accessory_pharyngeal_nerve_sensory_group1,PhG4,left,aPhN,pharynx,water,literature: proposed ppk28+ water GRN (Tastekin et al. 2026),pharynx,50742
+720575940616562150,gustatory,pharyngeal_nerve_sensory_group2,PhG7,right,PhN,pharynx,putative_aversive,literature: aversive cluster (Tastekin et al. 2026),pharynx,27720
+720575940625615705,gustatory,taste peg,dorsal_tpGRN,left,MxLbN,labellum_peg,unknown,inferred from connectivity (cosine 0.14 to sugar),peg_l_35,72301
+720575940622825736,gustatory,sugar/low_salt,LB3b,left,MxLbN,labellum_bristle,sugar/low_salt,measured (Tastekin et al. 2026 type),lab_l_I02,57196
+720575940619028208,gustatory,bitter,LB1a,left,MxLbN,labellum_bristle,bitter,measured (Tastekin et al. 2026 type),lab_l_S11,37530
+720575940621506943,gustatory,water,LB3a,right,MxLbN,labellum_bristle,water,measured (Tastekin et al. 2026 type),lab_r_L11,49607
+720575940632302161,gustatory,taste peg,claw_tpGRN,right,MxLbN,labellum_peg,unknown,inferred from connectivity (cosine 0.06 to putative_aversive),peg_r_31,107788
+720575940606254002,gustatory,taste peg,dorsal_tpGRN,left,MxLbN,labellum_peg,unknown,inferred from connectivity (cosine 0.11 to putative_aversive),peg_l_36,3001
+720575940626287336,gustatory,bitter,LB1a,left,MxLbN,labellum_bristle,bitter,measured (Tastekin et al. 2026 type),lab_l_I07,75720
+720575940611678181,gustatory,taste peg,claw_tpGRN,right,MxLbN,labellum_peg,unknown,inferred from connectivity (cosine 0.16 to putative_aversive),peg_r_32,11955
+720575940609314243,gustatory,high_salt/heavy_metal,LB3d,right,MxLbN,labellum_bristle,high_salt/heavy_metal,measured (Tastekin et al. 2026 type),lab_r_S03,7248
+720575940622199593,gustatory,accessory_pharyngeal_nerve_sensory_group1,PhG6,left,aPhN,pharynx,putative_aversive,literature: aversive cluster (Tastekin et al. 2026),pharynx,53667
+720575940620532976,gustatory,taste peg,CB4146,left,MxLbN,labellum_peg,unknown,inferred from connectivity (cosine 0.16 to high_salt/heavy_metal),peg_l_37,43953
+720575940619103435,gustatory,taste peg,claw_tpGRN,right,MxLbN,labellum_peg,unknown,inferred from connectivity (cosine 0.09 to putative_aversive),peg_r_33,37843
+720575940619785131,gustatory,taste peg,CB4146,right,MxLbN,labellum_peg,unknown,inferred from connectivity (cosine 0.06 to sugar),peg_r_34,40442
+720575940633455073,gustatory,taste peg,claw_tpGRN,right,MxLbN,labellum_peg,unknown,inferred from connectivity (cosine 0.10 to putative_aversive),peg_r_35,112513
+720575940614208914,gustatory,taste peg,claw_tpGRN,right,MxLbN,labellum_peg,unknown,inferred from connectivity (cosine 0.08 to putative_aversive),peg_r_36,19616
+720575940618601782,gustatory,water,LB3a,right,MxLbN,labellum_bristle,water,measured (Tastekin et al. 2026 type),lab_r_I02,35804
+720575940634023961,gustatory,sugar/low_salt,LB3b,right,MxLbN,labellum_bristle,sugar/low_salt,measured (Tastekin et al. 2026 type),lab_r_L10,114249
+720575940624373483,gustatory,water,LB3a,right,MxLbN,labellum_bristle,water,measured (Tastekin et al. 2026 type),lab_r_I03,66044
+720575940609369180,gustatory,,LB3,right,MxLbN,labellum_bristle,,measured (Tastekin et al. 2026 type),,7352
+720575940632627660,gustatory,sugar,LB3c,right,MxLbN,labellum_bristle,sugar,measured (Tastekin et al. 2026 type),lab_r_S01,109293
+720575940615516319,gustatory,water,LB3a,right,MxLbN,labellum_bristle,water,measured (Tastekin et al. 2026 type),lab_r_I04,24111
+720575940618709371,gustatory,,LB3,right,MxLbN,labellum_bristle,,measured (Tastekin et al. 2026 type),,36242
+720575940621508479,gustatory,sugar/low_salt,LB3b,right,MxLbN,labellum_bristle,sugar/low_salt,measured (Tastekin et al. 2026 type),lab_r_L11,49622
+720575940629821500,gustatory,water,LB3a,right,MxLbN,labellum_bristle,water,measured (Tastekin et al. 2026 type),lab_r_I05,95433
+720575940631656504,gustatory,sugar/low_salt,LB3b,right,MxLbN,labellum_bristle,sugar/low_salt,measured (Tastekin et al. 2026 type),lab_r_I01,105039

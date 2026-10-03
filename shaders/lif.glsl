@@ -54,33 +54,43 @@ void main() {
 	if (i >= p.n) return;
 
 	if (p.mode == 0u) {
+		// Shiu et al. 2024 semantics (data/raw/model.py, Brian2), checked against
+		// tools/reference_lif.py: exact ('linear') integration of
+		//   dv/dt = (v_0 - v + g + bias)/t_mbr,  dg/dt = -g/tau   (both frozen while refractory)
+		// Poisson input kicks v directly (PoissonInput target_var='v'), stimulated neurons have no
+		// refractory period, and a spike resets v and g.
 		uint slot = (p.step % p.slots) * p.n;
-		float gin = float(atomicExchange(g_in[slot + i], 0)) * 0.001;
+		float gi = g[i] + float(atomicExchange(g_in[slot + i], 0)) * 0.001;
 		int gid = group_id[i];
 		float rate = group_rate[gid] + ext[i];
-		if (rate > 0.0) {
-			float u = float(pcg(i * 9781u ^ pcg(p.step)) & 0xFFFFFFu) / 16777216.0;
-			if (u < rate * p.dt * 0.001) gin += p.w_poisson;
-		}
-		float gi = g[i] * p.syn_decay + gin;
-		g[i] = gi;
-		uint s = 0u;
+		float bias = ext[p.n + i];
 		float vi = v[i];
-		if (refrac[i] > 0.0) {
-			refrac[i] -= p.dt;
+		bool not_refr = refrac[i] <= 0.0;
+		if (not_refr) {
+			float em = exp(-p.dt / p.tau_m);
+			float es = p.syn_decay;
+			float tau_s = -p.dt / log(es);
+			float k = tau_s / (p.tau_m - tau_s);
+			float u = vi - p.v_rest - bias;
+			vi = p.v_rest + bias + u * em + gi * k * (em - es);
+			gi *= es;
+		}
+		if (rate > 0.0) {
+			float r = float(pcg(i * 9781u ^ pcg(p.step)) & 0xFFFFFFu) / 16777216.0;
+			if (r < rate * p.dt * 0.001) vi += p.w_poisson;
+		}
+		refrac[i] -= p.dt;
+		uint s = 0u;
+		if (not_refr && vi > p.v_th) {
+			s = 1u;
 			vi = p.v_reset;
-		} else {
-			vi += p.dt / p.tau_m * (p.v_rest - vi + gi + ext[p.n + i]);
-			if (vi >= p.v_th) {
-				s = 1u;
-				vi = p.v_reset;
-				refrac[i] = p.t_ref;
-				if (p.reset_g == 1u) g[i] = 0.0;
-				atomicAdd(group_count[gid], 1u);
-				atomicAdd(pop_count[pop_id[i]], 1u);
-			}
+			gi = 0.0;
+			refrac[i] = rate > 0.0 ? 0.0 : p.t_ref;   // Poisson-stimulated neurons: no refractory period
+			atomicAdd(group_count[gid], 1u);
+			atomicAdd(pop_count[pop_id[i]], 1u);
 		}
 		v[i] = vi;
+		g[i] = gi;
 		spiked[i] = s;
 		activity[i] = activity[i] * p.act_decay + float(s);
 	} else {

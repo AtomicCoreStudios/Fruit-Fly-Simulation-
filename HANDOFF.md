@@ -198,3 +198,12 @@ one line. Check whether meshes exist for the right-hand side or need mirroring.
   - Default FlyVis model: flow/0000/000.
   - Result: LPLC2 is loom-specific and the wiring is radially correct. LC4 has ON-cell polarity inherited from FlyVis T2. No clean escape. Details in the README.
   - Performance: about 25 fps, roughly 0.85× real time with everything on.
+- **2026-10-03:**
+  - Repository: https://github.com/AtomicCoreStudios/Fruit-Fly-Simulation- (private); `main` holds the initial commit, phase work goes on branches.
+  - Core brain now matches Shiu et al. exactly; the only difference is the 0.5 ms step (README).
+  - Phase 3 taste is done on branch `phase3-taste`.
+  - Open items:
+    1. Right labellar taste neurons are under-reconstructed in v783. Options: symmetry completion (scale or copy from the left), or leave as is.
+    2. Leg sugar can't trigger proboscis extension without the nerve cord.
+    3. Re-run the loom tests with the corrected brain.
+    4. Resume the FlyVis co-tuning screen; results so far are in `recordings/pd_check/`.

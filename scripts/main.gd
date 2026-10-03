@@ -62,7 +62,9 @@ func _ready() -> void:
 	fly.optic_lobe = _args.get("optic_lobe", "flyvis")
 	fly.flyvis_gain = float(_args.get("flyvis_gain", "60"))
 	fly.graded_vpn = _args.get("graded", "1") != "0"
-	fly.graded_c_mv = float(_args.get("vpn_c", "10"))
+	fly.graded_c_mv = float(_args.get("vpn_c", "19"))
+	fly.taste_bench_hz = float(_args.get("taste_bench", "0"))
+	fly.taste_bench_set = _args.get("taste_set", "shiu")
 	add_child(fly)
 	fly.position = Vector3(-2, 0.06, 7)
 	if _args.has("start"):
@@ -327,6 +329,19 @@ func odour_at(p: Vector3, kind: String) -> float:
 	return clampf(c, 0.0, 1.0)
 
 
+var _grn_resp: Dictionary
+
+
+## Chemistry under a point (taste organs): concentrations from data/grn_response.json "patches".
+func chemistry_at(p: Vector3) -> Dictionary:
+	if _grn_resp.is_empty():
+		_grn_resp = JSON.parse_string(FileAccess.get_file_as_string("res://data/grn_response.json"))
+	for pt in patches:
+		if pt["amount"] > 0.0 and Vector2(p.x - pt["pos"].x, p.z - pt["pos"].z).length() < pt["radius"]:
+			return _grn_resp["patches"].get(pt["kind"], {})
+	return {}
+
+
 func patch_under(p: Vector3) -> String:
 	for pt in patches:
 		if pt["amount"] > 0.05 and Vector2(p.x - pt["pos"].x, p.z - pt["pos"].z).length() < pt["radius"]:
@@ -524,6 +539,10 @@ func _print_log() -> void:
 	for i in brain.n_regions:
 		parts.append("%s=%.1f" % [brain.meta["regions"][i]["name"].get_slice(" ", 0) + brain.meta["regions"][i]["name"].right(1), r[i]])
 	s += "\n   Hz: " + " ".join(parts)
+	if fly.taste != null:
+		s += "
+   taste: %s | PER rostrum %.2f haustellum %.2f spread %.2f pump %.2f feeding %s" % [
+			str(fly.taste.sense), fly.per_rostrum, fly.per_haustellum, fly.labellum_spread, fly.pumping, fly.feeding]
 	if fly.eye != null:
 		var el := fly.eye.summary("left")
 		var er := fly.eye.summary("right")
@@ -554,7 +573,7 @@ func _record() -> void:
 		var path := ProjectSettings.globalize_path("res://" + _args["record"])
 		DirAccess.make_dir_recursive_absolute(path.get_base_dir())
 		_rec = FileAccess.open(path, FileAccess.WRITE)
-		var head := ["t_ms", "x", "z", "yaw", "speed", "turn", "airborne", "feeding", "hunger", "opto_p9"]
+		var head := ["t_ms", "x", "z", "yaw", "speed", "turn", "airborne", "feeding", "hunger", "opto_p9", "proboscis", "per_rostrum", "per_haustellum", "labellum_spread", "pumping"]
 		for pdef in brain.meta["populations"]:
 			head.append(pdef["name"])
 		_rec.store_csv_line(PackedStringArray(head))
@@ -563,7 +582,8 @@ func _record() -> void:
 	_rec_t = brain.sim_time_ms
 	var row := PackedStringArray(["%.1f" % brain.sim_time_ms, "%.3f" % fly.position.x, "%.3f" % fly.position.z,
 		"%.3f" % fly.rotation.y, "%.3f" % fly.speed, "%.3f" % fly.turn_rate, str(int(fly.airborne > 0)),
-		str(int(fly.feeding)), "%.3f" % fly.hunger, str(int(fly.opto_p9))])
+		str(int(fly.feeding)), "%.3f" % fly.hunger, str(int(fly.opto_p9)), "%.3f" % fly.proboscis, "%.3f" % fly.per_rostrum, "%.3f" % fly.per_haustellum,
+		"%.3f" % fly.labellum_spread, "%.3f" % fly.pumping])
 	for i in brain.n_pops:
 		row.append("%.2f" % brain.pop_hz[i])
 	_rec.store_csv_line(row)

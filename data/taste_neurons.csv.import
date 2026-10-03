@@ -1,0 +1,19 @@
+[remap]
+
+importer="csv_translation"
+type="Translation"
+uid="uid://b653xvxc4wund"
+
+[deps]
+
+files=["res://data/taste_neurons.cell.translation", "res://data/taste_neurons.cell.translation", "res://data/taste_neurons.cell.translation", "res://data/taste_neurons.side.translation", "res://data/taste_neurons.nerve.translation", "res://data/taste_neurons.organ.translation", "res://data/taste_neurons.modality.translation", "res://data/taste_neurons.modality.translation", "res://data/taste_neurons.sensillum.translation", "res://data/taste_neurons.index.translation"]
+
+source_file="res://data/taste_neurons.csv"
+dest_files=["res://data/taste_neurons.cell.translation", "res://data/taste_neurons.cell.translation", "res://data/taste_neurons.cell.translation", "res://data/taste_neurons.side.translation", "res://data/taste_neurons.nerve.translation", "res://data/taste_neurons.organ.translation", "res://data/taste_neurons.modality.translation", "res://data/taste_neurons.modality.translation", "res://data/taste_neurons.sensillum.translation", "res://data/taste_neurons.index.translation"]
+
+[params]
+
+compress=1
+delimiter=0
+unescape_keys=false
+unescape_translations=true

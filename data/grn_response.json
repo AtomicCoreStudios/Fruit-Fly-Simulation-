@@ -1,0 +1,23 @@
+{
+ "note": "Taste receptor neuron (GRN) firing-rate models, spikes/s, used by scripts/fly_taste.gd. Values are literature RANGES turned into simple saturating curves; basis: approximate (edit freely). Concentrations in mM; osmolarity approximated as sucrose + 2*NaCl + bitter.",
+ "sources": {
+  "sugar": "Labellar L-type sugar GRNs fire tens of spikes/s to 100 mM sucrose, saturating near 1 M (Hiroi et al. 2002 Chem Senses; Dahanukar et al. 2007 Neuron).",
+  "water": "Water GRNs (ppk28) fire ~20-40 spikes/s to pure water and are suppressed by rising osmolarity (Cameron et al. 2010 PNAS; Chen et al. 2010).",
+  "low_salt": "Low NaCl (<=100 mM) excites sugar/low-salt GRNs (Zhang et al. 2013 Science; Jaeger et al. 2018 eLife).",
+  "high_salt": "High NaCl (>=250 mM) excites high-salt GRNs (Zhang et al. 2013; Jaeger et al. 2018).",
+  "bitter": "Bitter GRNs fire tens of spikes/s to mM caffeine / sub-mM denatonium (Weiss et al. 2011 Neuron; Meunier et al. 2003).",
+  "glutamate": "Glutamate-sensing GRNs (LB1e); no glutamate in the arena yet."
+ },
+ "models": {
+  "sugar":                 {"rmax": 40, "ec50": 50,  "n": 1, "drive": "sucrose"},
+  "sugar/low_salt":        {"rmax": 40, "ec50": 50,  "n": 1, "drive": "sucrose", "salt_rmax": 25, "salt_ec50": 50},
+  "water":                 {"rmax": 30, "osm_half": 150, "drive": "water"},
+  "high_salt/heavy_metal": {"rmax": 35, "ec50": 300, "n": 2, "drive": "nacl"},
+  "bitter":                {"rmax": 35, "ec50": 3,   "n": 1, "drive": "bitter"},
+  "glutamate":             {"rmax": 30, "ec50": 30,  "n": 1, "drive": "glutamate"}
+ },
+ "patches": {
+  "food":     {"sucrose": 200, "nacl": 0,  "bitter": 0,  "glutamate": 0, "wet": true},
+  "aversive": {"sucrose": 0,   "nacl": 0,  "bitter": 10, "glutamate": 0, "wet": true}
+ }
+}

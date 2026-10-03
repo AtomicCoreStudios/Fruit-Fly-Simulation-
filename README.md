@@ -325,3 +325,66 @@ Fly tethered, predator from the left (`tools/run_loom_test.py --optic graded --v
 - **Most likely improvements:**
   - an ensemble average of several co-tuned FlyVis models, as Lappalainen et al. recommend for predictions;
   - the newer whole-optic-lobe connectome-constrained models trained on FlyWire or the male CNS (not done here).
+
+## Core brain fidelity: matched to Shiu et al. exactly (2026-10-03)
+
+`tools/reference_lif.py` is an exact re-implementation of the Shiu et al. 2024 Brian2 model (`data/raw/model.py`): 0.1 ms step, exact linear integration, Poisson input into the membrane voltage, no refractory period for stimulated neurons. It revealed that our old GPU scheme under-drove the brain badly. Poisson input went into the synaptic conductance and was Euler-integrated, so at 100 Hz sugar input MN9 reached 30 Hz instead of 75.
+
+`shaders/lif.glsl` now uses Shiu's semantics: exact integration, Poisson kicks to the voltage, stimulated neurons non-refractory, synaptic input reset on spike. The only remaining difference is the 0.5 ms step (needed for real time), which also rounds the 1.8 ms delay to 2.0 ms.
+
+Benchmark (Shiu et al. Fig. 1): Shiu's 20 "sugar" GRNs (v783 IDs) stimulated at f Hz, MN9 rate R/L in Hz.
+
+| f | exact reference (0.1 ms) | Godot GPU (0.5 ms) |
+|---|---|---|
+| 40 | 2.3 / 2.0 | 3 / 4 |
+| 60 | 29 / 23 | 23 / 25 |
+| 80 | 61 / 47 | 56 / 42 |
+| 100 | 75 / 53 | 87 / 56 |
+| 150 | 100 / 65 | 107 / 58 |
+
+The two agree to within about 15%, which is about the size of the trial-to-trial spread.
+
+**Note:** loom and vision results recorded before this date used the old scheme. Re-run them before comparing.
+
+## Taste organs and the feeding motor system (Phase 3)
+
+Data and tools:
+- **Taste neurons:** `tools/build_taste.py` → `data/taste_neurons.csv`, `data/taste_organs.json`. Every FlyWire gustatory neuron (407) is assigned an organ, side, modality and sensor.
+- **Sensor placement:** `tools/blender/place_taste.py` puts the sensors on the body: 62 labellar taste bristles (L/I/S rows), 73 taste pegs, 30 leg-tarsus sensors and 1 pharyngeal sensor.
+- **Physics:** in `scripts/fly_taste.gd`, a sensor reads chemistry only when it physically touches a patch. Each neuron fires by its modality's dose–response, from literature ranges in `data/grn_response.json` (basis: approximate).
+- **GPU input:** rates go straight into the brain through `shaders/sensor.glsl`.
+
+Where each piece comes from:
+
+| Item | Source | Basis |
+|---|---|---|
+| Labellar bristle types and modality | Tastekin et al. 2026 types (flywire_annotations v3.2.0) | measured |
+| Leg neurons LgAG1–9 | LgAG2 = sugar (Gr61a match), LgAG1 = bitter (Gr33a); other types aversive / unknown cluster; leg of origin (fore vs mid/hind) from the male CNS (Tastekin et al. 2026) | literature |
+| Pharyngeal neurons PhG1–16 | PhG1 = sugar-like (Gr64e); PhG3/4 = water; PhG2 and the aversive cluster = putative aversive (Tastekin et al. 2026, Suppl. Table 2 → `data/tastekin2026_flywire_types.tsv`) | literature |
+| Taste pegs | no ligand known → not driven | — |
+| Neuron → individual bristle, positions on the labellum | dealt by co-expression rules | approximate |
+| Feeding motor neurons, 24 types (MN1–13, CEM, MNx) | Tastekin et al. 2026 Suppl. Table 2; muscle roles from McKellar et al. 2020 | measured / literature |
+| Proboscis kinematics | MN9 vs MN1 → rostrum; MN4a (+MN6) vs MN1 → haustellum; MN8 → labellum spreading (exposes pegs); MN11/12 → cibarial pump. Activation = rate/(rate+30 Hz), 60 ms time constant | approximate |
+| Labellum–substrate contact | rostrum ≥ 0.7 and haustellum ≥ 0.5 extended; pegs also need spreading ≥ 0.3. NeuroMechFly's neutral pose stands taller than a feeding fly, and posture isn't simulated | approximate |
+| Ingestion | labellum on sucrose and the pump active | — |
+
+### Findings
+
+1. **Sugar alone evokes a full, coordinated feeding motor program from the wiring.** With Shiu's sugar set at 100 Hz:
+   - MN9 (rostrum protraction) 50–80 Hz
+   - MN4a (haustellum extension) 26 Hz
+   - MN6 (labellar extension) 19–34 Hz
+   - MN8 (labellar spreading) 21–76 Hz
+   - MN11D (cibarial pump) 165–175 Hz
+   - **MN1 (the retractor) silent**
+
+   Nothing about this coordination was programmed.
+2. **Shiu et al.'s 21 "sugar" neurons are mixed, and all on one side.** Re-typed with v3.2.0, they are 9 sugar, 2 sugar/low-salt, 5 high-salt/heavy-metal and 4 putative-attractive neurons, one is missing from v783, and every one is annotated `side = left`. Stimulated alone (`tools/decompose_shiu_sugar.py`), the 9 sugar neurons give MN9 34 Hz at 100 Hz input. The high-salt and putative-attractive subsets also drive MN9 at 200 Hz.
+3. **Left and right labellar taste neurons are not equivalent in FlyWire v783.** Right-annotated labellar neurons have about **half the reconstructed output synapses** (median 127 vs 240, in every type), and their full sugar set drives MN9 to 0 Hz even at 100 Hz. The full left sugar set drives MN9 at 64 Hz at 60 Hz input (`tools/sugar_sides.py`). This points to incomplete reconstruction of one labellar nerve, not real biology.
+4. **No proboscis extension from leg sugar, on the sucrose patch or in the bench test.**
+   - On a 200 mM sucrose patch, all 12 leg sugar neurons (LgAG2) fire at about 32 Hz. MN9 stays at 0.
+   - Even at 200 Hz, LgAG2 gives MN9 only about 2 Hz.
+   - In real flies tarsal sugar reliably triggers extension, mostly via leg taste neurons that stay in the **ventral nerve cord**, which FlyWire doesn't contain. Only the ascending subset reaches the brain.
+   - So in this model the fly cannot start feeding from its legs. That's a missing-data result: the nerve cord (MANC/BANC) is needed to close the loop.
+
+Bench: `tools/run_taste_bench.py --set shiu|sugar|leg_sugar|bitter`.

@@ -369,6 +369,18 @@ def build_flywire(raw, seed):
     def txt(c):
         return a[c].fillna("").astype(str).to_numpy()
     sc, cc, sub, ct, side = txt("super_class"), txt("cell_class"), txt("cell_sub_class"), txt("cell_type"), txt("side")
+    # Feeding motor neurons typed by Tastekin et al. 2026 (MN1-MN13, CEM, MNx; muscle targets in
+    # data/tastekin2026_flywire_types.tsv) replace the morphological CBxxxx names
+    tk_path = os.path.join(os.path.dirname(raw), "tastekin2026_flywire_types.tsv")
+    MN_TYPES = []
+    if os.path.exists(tk_path):
+        tk = pd.read_csv(tk_path, sep="	", comment="#")
+        tk = tk[tk["class"] == "motor"]
+        pos_of = pd.Series(np.arange(n), index=ids)
+        ok = tk.root_id.isin(pos_of.index)
+        ct = ct.copy()
+        ct[pos_of[tk.root_id[ok]].values] = tk.type[ok].values
+        MN_TYPES = sorted(tk.type.unique())
     S = np.where(side == "right", "R", "L")
 
     # Photoreceptors (R1-6, R7, R8) release histamine onto histamine-gated chloride channels
@@ -419,7 +431,7 @@ def build_flywire(raw, seed):
     key = np.array([f"{s}:{c}_{d}" for s, c, d in zip(sc, cls, S)], dtype=object)
     for t in ["DNa02", "DNp09", "MDN", "DNp01", "LPLC2", "EPG", "APL", "CB0701", "R7", "R8", "L1", "L2", "L3",
               "R1-6", "L4", "L5", "Mi1", "Tm3", "Tm1", "Tm2", "Tm9", "T4a", "T4b", "T4c", "T4d",
-              "T5a", "T5b", "T5c", "T5d", "LC4", "LPLC1", "LC6", "DNp02", "DNp11"]:
+              "T5a", "T5b", "T5c", "T5d", "LC4", "LPLC1", "LC6", "DNp02", "DNp11"] + MN_TYPES:
         m = ct == t
         key[m] = np.array([f"type:{t}_{d}" for d in S[m]], dtype=object)
     uniq, popid = np.unique(key.astype(str), return_inverse=True)
@@ -481,7 +493,10 @@ def build_flywire(raw, seed):
     assign((cc == "hygrosensory") & (sub == "dry"), "hygro_dry")
     assign(ct == "MDN", "dn_backward", "output")
     assign(ct == "DNp01", "dn_giant_fiber", "output")
-    assign((ids == MN9_ID) | (ct == "CB0701"), "mn9_proboscis", "output")
+    assign((ids == MN9_ID) | (ct == "CB0701") | (ct == "MN9"), "mn9_proboscis", "output")
+    for t in MN_TYPES:
+        if t != "MN9":
+            assign(ct == t, "mn_" + t, "output")
     assign(ct == "EPG", "epg_all", "output")
     for g in groups:
         g["count"] = int(np.sum(group == gid[g["name"]]))

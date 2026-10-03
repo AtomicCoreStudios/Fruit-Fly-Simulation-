@@ -1,0 +1,66 @@
+{
+ "shiu:putative_attractive @ 100 Hz": [
+  1.5,
+  1.0
+ ],
+ "shiu:putative_attractive @ 200 Hz": [
+  24.5,
+  19.5
+ ],
+ "shiu:sugar @ 100 Hz": [
+  34.0,
+  23.0
+ ],
+ "shiu:sugar @ 200 Hz": [
+  86.0,
+  53.0
+ ],
+ "shiu:high_salt/heavy_metal @ 100 Hz": [
+  1.5,
+  0.0
+ ],
+ "shiu:high_salt/heavy_metal @ 200 Hz": [
+  53.0,
+  43.5
+ ],
+ "shiu:not in v783 GRNs @ 100 Hz": [
+  0.0,
+  0.0
+ ],
+ "shiu:not in v783 GRNs @ 200 Hz": [
+  0.0,
+  0.0
+ ],
+ "shiu:sugar/low_salt @ 100 Hz": [
+  0.5,
+  0.0
+ ],
+ "shiu:sugar/low_salt @ 200 Hz": [
+  7.5,
+  2.0
+ ],
+ "shiu: all 21 @ 100 Hz": [
+  68.0,
+  53.0
+ ],
+ "shiu: all 21 @ 200 Hz": [
+  114.5,
+  70.5
+ ],
+ "corrected: all right sugar + sugar/low_salt @ 100 Hz": [
+  0.0,
+  0.0
+ ],
+ "corrected: all right sugar + sugar/low_salt @ 200 Hz": [
+  1.5,
+  3.0
+ ],
+ "corrected: all right high_salt/heavy_metal @ 100 Hz": [
+  1.5,
+  1.0
+ ],
+ "corrected: all right high_salt/heavy_metal @ 200 Hz": [
+  31.5,
+  30.5
+ ]
+}

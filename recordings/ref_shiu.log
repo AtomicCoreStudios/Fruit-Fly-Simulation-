@@ -1,0 +1,7 @@
+shiu dt=0.1 ms  sugar    20 Hz -> MN9 R/L    0.0/   0.0 Hz (sd 0.0)  [202s]
+shiu dt=0.1 ms  sugar    40 Hz -> MN9 R/L    2.3/   2.0 Hz (sd 1.7)  [119s]
+shiu dt=0.1 ms  sugar    60 Hz -> MN9 R/L   29.0/  22.7 Hz (sd 3.7)  [99s]
+shiu dt=0.1 ms  sugar    80 Hz -> MN9 R/L   60.7/  46.7 Hz (sd 1.7)  [97s]
+shiu dt=0.1 ms  sugar   100 Hz -> MN9 R/L   75.3/  52.7 Hz (sd 1.2)  [96s]
+shiu dt=0.1 ms  sugar   150 Hz -> MN9 R/L   99.7/  64.7 Hz (sd 7.4)  [98s]
+shiu dt=0.1 ms  sugar   200 Hz -> MN9 R/L  115.7/  72.0 Hz (sd 3.4)  [98s]

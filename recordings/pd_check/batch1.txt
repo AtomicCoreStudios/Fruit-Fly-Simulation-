@@ -2,3 +2,8 @@
 [2026-10-03 21:45:21] logging_utils:23 epe not in F:\Fruit Fly Experiment\assets\flyvis\results\flow\0000\001\validation, but 'loss' is. Falling back to 'loss'. You can rerun the ensemble validation to make appropriate recordings of the losses.
 [2026-10-03 21:45:33] network:222 Initialized network with NumberOfParams(free=734, fixed=2959) parameters.
 [2026-10-03 21:45:33] chkpt_utils:36 Recovered network state.
+001: T4a 175 T4b 352 T4c 83 T4d 251 T5a 90 T5b 24 T5c 93 T5d 261 | T4-T5 mismatch {'a': 85, 'b': 32, 'c': 10, 'd': 10} max 85
+[2026-10-03 21:49:18] network_view:122 Initialized network view at F:\Fruit Fly Experiment\assets\flyvis\results\flow\0000\005
+[2026-10-03 21:49:18] logging_utils:23 epe not in F:\Fruit Fly Experiment\assets\flyvis\results\flow\0000\005\validation, but 'loss' is. Falling back to 'loss'. You can rerun the ensemble validation to make appropriate recordings of the losses.
+[2026-10-03 21:49:30] network:222 Initialized network with NumberOfParams(free=734, fixed=2959) parameters.
+[2026-10-03 21:49:30] chkpt_utils:36 Recovered network state.

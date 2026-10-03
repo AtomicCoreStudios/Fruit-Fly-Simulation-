@@ -264,13 +264,13 @@
   {
    "name": "motor:brain_motor_neuron_L",
    "region": 9,
-   "count": 51,
+   "count": 20,
    "sign": 1
   },
   {
    "name": "motor:brain_motor_neuron_R",
    "region": 9,
-   "count": 52,
+   "count": 19,
    "sign": 1
   },
   {
@@ -718,15 +718,15 @@
    "sign": 1
   },
   {
-   "name": "type:CB0701_L",
+   "name": "type:CEM_L",
    "region": 9,
-   "count": 1,
+   "count": 3,
    "sign": 1
   },
   {
-   "name": "type:CB0701_R",
+   "name": "type:CEM_R",
    "region": 9,
-   "count": 1,
+   "count": 3,
    "sign": 1
   },
   {
@@ -919,6 +919,276 @@
    "name": "type:MDN_R",
    "region": 13,
    "count": 2,
+   "sign": 1
+  },
+  {
+   "name": "type:MN10_L",
+   "region": 9,
+   "count": 1,
+   "sign": 1
+  },
+  {
+   "name": "type:MN10_R",
+   "region": 9,
+   "count": 2,
+   "sign": 1
+  },
+  {
+   "name": "type:MN11D_L",
+   "region": 9,
+   "count": 1,
+   "sign": 1
+  },
+  {
+   "name": "type:MN11D_R",
+   "region": 9,
+   "count": 1,
+   "sign": 1
+  },
+  {
+   "name": "type:MN11V_L",
+   "region": 9,
+   "count": 1,
+   "sign": 1
+  },
+  {
+   "name": "type:MN11V_R",
+   "region": 9,
+   "count": 1,
+   "sign": 1
+  },
+  {
+   "name": "type:MN12D_L",
+   "region": 9,
+   "count": 2,
+   "sign": 1
+  },
+  {
+   "name": "type:MN12D_R",
+   "region": 9,
+   "count": 2,
+   "sign": 1
+  },
+  {
+   "name": "type:MN13_L",
+   "region": 9,
+   "count": 1,
+   "sign": 1
+  },
+  {
+   "name": "type:MN13_R",
+   "region": 9,
+   "count": 1,
+   "sign": 1
+  },
+  {
+   "name": "type:MN1_L",
+   "region": 9,
+   "count": 2,
+   "sign": 1
+  },
+  {
+   "name": "type:MN1_R",
+   "region": 9,
+   "count": 2,
+   "sign": 1
+  },
+  {
+   "name": "type:MN2Da_L",
+   "region": 9,
+   "count": 1,
+   "sign": 1
+  },
+  {
+   "name": "type:MN2Da_R",
+   "region": 9,
+   "count": 1,
+   "sign": 1
+  },
+  {
+   "name": "type:MN2Db_L",
+   "region": 9,
+   "count": 1,
+   "sign": 1
+  },
+  {
+   "name": "type:MN2Db_R",
+   "region": 9,
+   "count": 1,
+   "sign": 1
+  },
+  {
+   "name": "type:MN2V_L",
+   "region": 9,
+   "count": 1,
+   "sign": 1
+  },
+  {
+   "name": "type:MN2V_R",
+   "region": 9,
+   "count": 1,
+   "sign": 1
+  },
+  {
+   "name": "type:MN3L_L",
+   "region": 9,
+   "count": 2,
+   "sign": 1
+  },
+  {
+   "name": "type:MN3L_R",
+   "region": 9,
+   "count": 2,
+   "sign": 1
+  },
+  {
+   "name": "type:MN3M_L",
+   "region": 9,
+   "count": 1,
+   "sign": 1
+  },
+  {
+   "name": "type:MN3M_R",
+   "region": 9,
+   "count": 1,
+   "sign": 1
+  },
+  {
+   "name": "type:MN4a_L",
+   "region": 9,
+   "count": 2,
+   "sign": 1
+  },
+  {
+   "name": "type:MN4a_R",
+   "region": 9,
+   "count": 2,
+   "sign": 1
+  },
+  {
+   "name": "type:MN4b_L",
+   "region": 9,
+   "count": 1,
+   "sign": 1
+  },
+  {
+   "name": "type:MN4b_R",
+   "region": 9,
+   "count": 1,
+   "sign": 1
+  },
+  {
+   "name": "type:MN5_L",
+   "region": 9,
+   "count": 1,
+   "sign": 1
+  },
+  {
+   "name": "type:MN5_R",
+   "region": 9,
+   "count": 1,
+   "sign": 1
+  },
+  {
+   "name": "type:MN6_L",
+   "region": 9,
+   "count": 1,
+   "sign": 1
+  },
+  {
+   "name": "type:MN6_R",
+   "region": 9,
+   "count": 1,
+   "sign": 1
+  },
+  {
+   "name": "type:MN7_L",
+   "region": 9,
+   "count": 2,
+   "sign": 1
+  },
+  {
+   "name": "type:MN7_R",
+   "region": 9,
+   "count": 2,
+   "sign": 1
+  },
+  {
+   "name": "type:MN8_L",
+   "region": 9,
+   "count": 1,
+   "sign": 1
+  },
+  {
+   "name": "type:MN8_R",
+   "region": 9,
+   "count": 1,
+   "sign": 1
+  },
+  {
+   "name": "type:MN9_L",
+   "region": 9,
+   "count": 1,
+   "sign": 1
+  },
+  {
+   "name": "type:MN9_R",
+   "region": 9,
+   "count": 1,
+   "sign": 1
+  },
+  {
+   "name": "type:MNx01_R",
+   "region": 9,
+   "count": 3,
+   "sign": 1
+  },
+  {
+   "name": "type:MNx02_L",
+   "region": 9,
+   "count": 1,
+   "sign": 1
+  },
+  {
+   "name": "type:MNx02_R",
+   "region": 9,
+   "count": 1,
+   "sign": 1
+  },
+  {
+   "name": "type:MNx03_L",
+   "region": 9,
+   "count": 3,
+   "sign": 1
+  },
+  {
+   "name": "type:MNx03_R",
+   "region": 9,
+   "count": 1,
+   "sign": 1
+  },
+  {
+   "name": "type:MNx04_L",
+   "region": 9,
+   "count": 1,
+   "sign": 1
+  },
+  {
+   "name": "type:MNx04_R",
+   "region": 9,
+   "count": 1,
+   "sign": 1
+  },
+  {
+   "name": "type:MNx05_L",
+   "region": 9,
+   "count": 1,
+   "sign": 1
+  },
+  {
+   "name": "type:MNx05_R",
+   "region": 9,
+   "count": 1,
    "sign": 1
   },
   {
@@ -1266,7 +1536,7 @@
   {
    "name": "none",
    "role": "none",
-   "count": 129464
+   "count": 129400
   },
   {
    "name": "eye_L_tonic_0",
@@ -1585,6 +1855,121 @@
   },
   {
    "name": "mn9_proboscis",
+   "role": "output",
+   "count": 2
+  },
+  {
+   "name": "mn_CEM",
+   "role": "output",
+   "count": 6
+  },
+  {
+   "name": "mn_MN1",
+   "role": "output",
+   "count": 4
+  },
+  {
+   "name": "mn_MN10",
+   "role": "output",
+   "count": 3
+  },
+  {
+   "name": "mn_MN11D",
+   "role": "output",
+   "count": 2
+  },
+  {
+   "name": "mn_MN11V",
+   "role": "output",
+   "count": 2
+  },
+  {
+   "name": "mn_MN12D",
+   "role": "output",
+   "count": 4
+  },
+  {
+   "name": "mn_MN13",
+   "role": "output",
+   "count": 2
+  },
+  {
+   "name": "mn_MN2Da",
+   "role": "output",
+   "count": 2
+  },
+  {
+   "name": "mn_MN2Db",
+   "role": "output",
+   "count": 2
+  },
+  {
+   "name": "mn_MN2V",
+   "role": "output",
+   "count": 2
+  },
+  {
+   "name": "mn_MN3L",
+   "role": "output",
+   "count": 4
+  },
+  {
+   "name": "mn_MN3M",
+   "role": "output",
+   "count": 2
+  },
+  {
+   "name": "mn_MN4a",
+   "role": "output",
+   "count": 4
+  },
+  {
+   "name": "mn_MN4b",
+   "role": "output",
+   "count": 2
+  },
+  {
+   "name": "mn_MN5",
+   "role": "output",
+   "count": 2
+  },
+  {
+   "name": "mn_MN6",
+   "role": "output",
+   "count": 2
+  },
+  {
+   "name": "mn_MN7",
+   "role": "output",
+   "count": 4
+  },
+  {
+   "name": "mn_MN8",
+   "role": "output",
+   "count": 2
+  },
+  {
+   "name": "mn_MNx01",
+   "role": "output",
+   "count": 3
+  },
+  {
+   "name": "mn_MNx02",
+   "role": "output",
+   "count": 2
+  },
+  {
+   "name": "mn_MNx03",
+   "role": "output",
+   "count": 4
+  },
+  {
+   "name": "mn_MNx04",
+   "role": "output",
+   "count": 2
+  },
+  {
+   "name": "mn_MNx05",
    "role": "output",
    "count": 2
   },
