@@ -622,6 +622,33 @@ With physiology and a fresh homeostatic warm-up:
 - Leg sugar still does not reach MN9: ≤ 1.6 Hz, and in the embodied hungry fly 1.1 Hz.
 - So the large resting drive onto the feeding motor chain is not only a current-synapse artefact. It comes from the network's spontaneous activity converging on MN9: about 1 Hz assumed for every uncharacterised central neuron, with thousands of inputs.
 
+### Where the leg-route gain is lost (2026-10-03)
+
+**Driving each stage directly** (`--drive=indices:Hz`, no other input), MN9 R response:
+
+| Driven stage | Reference (Shiu, no physiology) 30 / 100 Hz | This model 30 / 100 Hz |
+|---|---|---|
+| Roundup (CB0553) | 68 / 148 | 21 / 88 |
+| Bract (DNge173/174) | 19 / 58 | 0.5 / 6.7 |
+| AN01B004 (AN_GNG_162) | 5 / 52 | 4 / 20 |
+| G2N-1 (CB0616) | 0 / 54 | 1 / 9 |
+
+- Bract and G2N-1 are each sufficient for PER in real flies (Shiu, Sterne et al. 2022).
+- In this model the interneuron stages lose 3–8× gain compared with Shiu's model. The cause is the intrinsic-physiology layer, chiefly the large negative homeostatic offsets on the feeding chain (MN9 about −29 mV, Roundup about −10, Bract2 about −6).
+- These neurons are tonically driven at rest by the spontaneous network, and homeostasis holds them at their low set points.
+
+**Variants tested** (each with its own 60 s warm-up):
+
+| Variant | Result |
+|---|---|
+| Default rate 1 → 0.3 → 0.1 Hz (uncharacterised neurons) | MN9 offset −29 → −18 → −12 mV; leg route unchanged (≤ 0.5 Hz) |
+| Homeostasis capped at ±5 mV | AL runs away (local neurons 75 Hz, PNs 26 Hz); Bract → MN9 2× stronger; leg route still ≈ 3 Hz |
+| No default adaptation | Homeostasis re-balances; Bract → MN9 weaker (3.9 Hz); leg route ≈ 0 |
+
+- The main build keeps a 1 Hz default rate, adaptation index 0.6, and the −40/+15 mV homeostasis range.
+
+Summary: the leg route works in Shiu's raw model when its interneurons are driven, but leg GRNs cannot drive them hard enough (AN01B004 reaches 0–44 Hz). In the model with physiology, every stage is also damped. The real fly is quiet at rest but highly excitable along this chain. A noisy point-LIF homeostatically pinned to fixed set points cannot be both.
+
 ## Former limitation: a global antennal-lobe / mushroom-body runaway (fixed, see the next section)
 
 Strong, sustained bilateral sugar input (both labellar sugar sets at 100 Hz) drives the Shiu et al. spiking model into a self-sustaining global state:

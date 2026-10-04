@@ -50,6 +50,7 @@ var taste: FlyTaste
 var taste_bench_hz := 0.0
 var taste_bench_set := "shiu"
 var sugar_release_override := 0.0   # >0: fixed sugar-GRN release gain (test switch)
+var drive_spec := ""                 # diagnostic: "i,j,k:Hz" Poisson drive on model indices
 var clean_air := false          # resting calibration: no odour, wind or taste stimuli (vision unchanged)
 var opto := {}                 # optogenetic activation: group name -> Poisson rate (Hz), --opto=g:Hz,g2:Hz
 # proboscis extension (PER): MN9 (CB0701, rostrum protractor; McKellar et al. 2020 eLife, Shiu et al.
@@ -427,6 +428,11 @@ func update_senses(dt: float) -> void:
 		# Cell; Shiu et al. 2022 eLife: hunger acts on sugar GRNs and on second-order neurons G2N-1/Clavicle,
 		# which are not yet identified in FlyWire v783 here). Gain 1 (fed) .. 2 (starved): basis approximate.
 		# Benchmarks (Shiu et al. protocol) keep gain 1 unless --sugar_release is given.
+		if not drive_spec.is_empty() and taste.drive_idx.is_empty():
+			var kv := drive_spec.split(":")
+			for x in kv[0].split(","):
+				taste.drive_idx.append(int(x))
+			taste.drive_rate = float(kv[1])
 		if sugar_release_override > 0.0:
 			taste.sugar_release = sugar_release_override
 		elif taste_bench_hz <= 0.0:

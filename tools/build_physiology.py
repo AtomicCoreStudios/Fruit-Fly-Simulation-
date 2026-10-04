@@ -11,7 +11,7 @@ Calibration (single neuron, no synaptic input):
 Output per neuron (model order: FlyWire neurons, then nerve-cord neurons): vec4(mu, sigma, b, tau_w);
 neurons excluded by the rules get (0, 0, 0, 1) i.e. unchanged Shiu et al. behaviour.
 """
-import json, pathlib
+import json, os, pathlib
 import numpy as np, pandas as pd
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
@@ -54,6 +54,18 @@ def calibrate(sigma, tau_n, tau_w):
 
 def main():
     rules = json.loads((ROOT / "data/physiology_rules.json").read_text())
+    # FLY_DEFAULT_RATE (calibration experiments): override the rates of the purely approximate rules
+    # (catch-all default and 'descending'), leaving every literature/measured rule untouched
+    if os.environ.get("FLY_DEFAULT_RATE"):
+        dr = float(os.environ["FLY_DEFAULT_RATE"])
+        for r in rules["rules"]:
+            if r["match"] == {} or r["match"] == {"super_class": ["descending"]}:
+                r["rate_hz"] = dr
+    if os.environ.get("FLY_DEFAULT_ADAPT"):
+        da = float(os.environ["FLY_DEFAULT_ADAPT"])
+        for r in rules["rules"]:
+            if r["match"] == {} or r["match"] == {"super_class": ["descending"]}:
+                r["adapt_index"] = da
     sigma = rules["noise"]["sigma_mv"]; tau_n = rules["noise"]["tau_ms"]; tau_w = rules["adaptation"]["tau_w_ms"]
     mus, rate, bs, index, d100 = calibrate(sigma, tau_n, tau_w)
     print(f"calibration: rate at mu=0 {np.interp(0, mus, rate):.2f} Hz; step drive for 100 Hz onset {d100:.1f} mV; "

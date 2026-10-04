@@ -122,6 +122,22 @@ func grn_rate(modality: String, chem: Dictionary) -> float:
 	return 0.0
 
 
+var drive_idx := PackedInt32Array()     # diagnostic Poisson drive on arbitrary neurons (--drive=i,j:Hz)
+var drive_rate := 0.0
+
+
+func _send() -> void:
+	if drive_idx.is_empty():
+		brain.set_sensor_rates(_idx, _rate)
+		return
+	var ii := _idx.duplicate()
+	var rr := _rate.duplicate()
+	for i in drive_idx:
+		ii.append(i)
+		rr.append(drive_rate)
+	brain.set_sensor_rates(ii, rr)
+
+
 ## Call every frame before brain.tick().
 func update(_dt: float) -> void:
 	if sugar_release != _sugar_release_set:
@@ -146,7 +162,7 @@ func update(_dt: float) -> void:
 		_rate.fill(0.0)
 		for k in _bench.get(bench_set, []):
 			_rate[k] = bench_hz
-		brain.set_sensor_rates(_idx, _rate)
+		_send()
 		sense = {"bench": "%s set at %.0f Hz" % [bench_set, bench_hz]}
 		return
 	var cache := {}
@@ -180,7 +196,7 @@ func update(_dt: float) -> void:
 		_rate[k] = r
 		if r > 1.0:
 			counts[_mod[k]] = counts.get(_mod[k], 0) + 1
-	brain.set_sensor_rates(_idx, _rate)
+	_send()
 	var low := INF
 	for nd in _node:
 		if nd.name.begins_with("leg_"):

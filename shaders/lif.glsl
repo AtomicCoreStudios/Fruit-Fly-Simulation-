@@ -36,6 +36,10 @@ const float TAU_NOISE = 5.0;   // ms, data/physiology_rules.json "noise.tau_ms"
 // p.pad == 1), the offset moves the neuron's excitability toward its set point; afterwards it is frozen.
 layout(set = 0, binding = 19, std430) buffer Homeo         { vec2 homeo[]; };
 const float ETA_H = 0.0001;    // mV per ms per Hz of rate error
+// Range of the learned offset. Real intrinsic plasticity is a few mV, but a +-5 mV cap lets the antennal lobe
+// run away in this point-neuron model (README "Leg sugar"), so the wide range is kept: basis approximate.
+const float HOMEO_MIN = -40.0;
+const float HOMEO_MAX = 15.0;
 // Presynaptic release gain (neuromodulation of transmitter release, e.g. dopamine via DopEcR on sugar
 // GRN terminals in hungry flies, Inagaki et al. 2012): multiplies every outgoing synaptic weight; 1 = none.
 layout(set = 0, binding = 20, std430) readonly buffer Release { float release_gain[]; };
@@ -108,7 +112,7 @@ void main() {
 		vec2 hm = homeo[i];
 		if (p.pad == 1u && hm.x >= 0.0) {
 			float r_est = activity[i] / 0.06;   // spikes filtered with 60 ms time constant -> Hz
-			hm.y = clamp(hm.y + ETA_H * p.dt * (hm.x - r_est), -40.0, 15.0);
+			hm.y = clamp(hm.y + ETA_H * p.dt * (hm.x - r_est), HOMEO_MIN, HOMEO_MAX);
 			homeo[i] = hm;
 		}
 		float bias = ext[p.n + i] + ph.x + s2.x - s2.y + hm.y;
