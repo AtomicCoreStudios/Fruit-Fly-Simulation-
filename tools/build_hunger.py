@@ -10,7 +10,7 @@ GAIN_PER_HUNGER = 1.0
 comp = pd.read_csv(ROOT / "data/raw/Completeness_783.csv", index_col=0)
 a = pd.read_csv(ROOT / "data/raw/annot_Supplemental_file1_neuron_annotations.tsv", sep="\t", low_memory=False,
                 usecols=["root_id", "cell_type"]).drop_duplicates("root_id").set_index("root_id").reindex(comp.index)
-named = pd.read_csv(ROOT / "data/named_feeding_neurons.csv", comment="#")
+named = pd.read_csv(ROOT / "data/tables/named_feeding_neurons.csv", comment="#")
 central = {}
 for r in named[named.hunger_modulated.astype(str).str.startswith("yes")].itertuples():
     central[r.name] = [int(i) for i in np.where(a.cell_type.values == r.flywire_type)[0]]

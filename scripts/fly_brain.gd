@@ -169,7 +169,7 @@ func _init_gpu(pop_b, group_b, rowptr_b, col_b, w_b) -> String:
 		["activity", zeros_pad], ["gcount", zeros_g], ["rcount", zeros_r],
 		["ext", _ext_cpu.to_byte_array()], ["v_kick", zeros_n], ["gap", _gap_bytes()],
 		["phys", _phys_bytes()], ["st2", _zeros(n * 8)], ["homeo", _homeo_bytes()],
-		["release", _release_init()],
+		["release", _release_init()], ["g_inh", _zeros(n * 4)], ["g_in_i", zeros_ring.duplicate()],
 	]
 	var uniforms: Array[RDUniform] = []
 	for b in specs.size():
@@ -191,6 +191,11 @@ var n_gap := 0
 
 var physiology := true          # spontaneous activity + adaptation (data/physiology.bin)
 var physiology_loaded := false
+## Conductance-based synapses (default): reversal potentials. basis: E_exc ~0 mV for nicotinic ACh receptors
+## (measured); E_inh -75 mV for Cl- channels (GABA-A/Rdl, GluCl, histamine-gated): approximate.
+var conductance_synapses := true
+const E_EXC := 0.0
+const E_INH := -75.0
 var phys_ablate := []           # ablation switches: "noise", "adapt", "mu", "homeo"
 
 
@@ -234,7 +239,7 @@ func _homeo_bytes() -> PackedByteArray:
 		var t := tf.get_buffer(n * 4).to_float32_array()
 		for i in n:
 			a[2 * i] = t[i]
-	var of := FileAccess.open("res://data/homeostasis_offsets.bin", FileAccess.READ)
+	var of := FileAccess.open(homeo_path(), FileAccess.READ)
 	if physiology and of != null and of.get_length() == n * 4 and not homeostasis_learning and not "homeo" in phys_ablate:
 		var o := of.get_buffer(n * 4).to_float32_array()
 		for i in n:
@@ -263,6 +268,11 @@ func set_release_gain(idx: PackedInt32Array, gain: float) -> void:
 			_release_dirty = true
 
 
+## Homeostatic offsets are specific to the synapse model they were learned with.
+func homeo_path() -> String:
+	return "res://data/homeostasis_offsets%s.bin" % ("" if conductance_synapses else "_current")
+
+
 ## Save the learned homeostatic offsets (call at the end of a --homeostasis warm-up).
 func save_homeostasis() -> void:
 	if _pending_steps > 0:          # GPU work still in flight: finish it before reading buffers
@@ -273,7 +283,7 @@ func save_homeostasis() -> void:
 	o.resize(n)
 	for i in n:
 		o[i] = h[2 * i + 1]
-	var f := FileAccess.open("res://data/homeostasis_offsets.bin", FileAccess.WRITE)
+	var f := FileAccess.open(homeo_path(), FileAccess.WRITE)
 	f.store_buffer(o.to_byte_array())
 	f.close()
 
@@ -292,7 +302,7 @@ func _gap_bytes() -> PackedByteArray:
 
 func _push(mode: int) -> PackedByteArray:
 	var pc := PackedByteArray()
-	pc.resize(64)
+	pc.resize(80)
 	var dt := float(_lif["dt_ms"])
 	pc.encode_u32(0, n)
 	pc.encode_u32(4, mode)
@@ -310,6 +320,9 @@ func _push(mode: int) -> PackedByteArray:
 	pc.encode_u32(52, _delay_steps + 1)
 	pc.encode_u32(56, 1 if _lif.get("reset_g_on_spike", false) else 0)
 	pc.encode_u32(60, n_gap if mode == 2 else (1 if homeostasis_learning else 0))
+	pc.encode_float(64, E_EXC)
+	pc.encode_float(68, E_INH)
+	pc.encode_u32(72, 1 if conductance_synapses else 0)
 	return pc
 
 

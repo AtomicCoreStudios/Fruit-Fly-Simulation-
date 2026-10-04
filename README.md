@@ -510,7 +510,7 @@ The circuit, from the literature:
 - The direct leg-to-brain type **LgAG2** joins the same targets.
 
 New tools and data:
-- **Named feeding neurons in v783** (`data/named_feeding_neurons.csv`):
+- **Named feeding neurons in v783** (`data/tables/named_feeding_neurons.csv`):
   - Source: FlyWire Codex community labels.
   - Cross-checked by soma position against the CATMAID skeletons (`tools/data_named_feeding.py`, which agreed on every neuron both methods resolved).
   - Names → types: G2N-1 = CB0616, Clavicle = AN_GNG_30 (an ascending neuron), Fdg = CB0038, Rattle = CB0499, Roundup = CB0553, Rounddown = DNge080, Bract1/2 = DNge174/DNge173, Sink & Synch = CB0434, Foxglove = CB0890, Bluebell = DNg60, and others.
@@ -588,6 +588,39 @@ Findings:
   - excitatory DNge062 and Roundup at about 4 Hz
 - With current-based synapses, this balanced bombardment produces large voltage fluctuations, so MN9 fires from noise. Homeostasis cancels that with an unphysiologically large hyperpolarization, which buries weak inputs. The strong labellar route still gets through; the 7-hop leg route does not.
 - Real intrinsic plasticity shifts excitability by a few mV, and real synapses are conductance-based: inhibition shunts and excitation saturates near its reversal potential, which shrinks such fluctuations.
+
+## Conductance-based synapses (default since 2026-10-03)
+
+The model:
+- **Driving forces:** each synapse now acts through a conductance with a driving force (`shaders/lif.glsl` `cond`).
+  - E_exc = 0 mV (nicotinic ACh; measured)
+  - E_inh = −75 mV (Cl⁻ channels: GABA-A/Rdl, GluCl, histamine-gated; approximate)
+- **Calibration:** weights keep Shiu et al.'s 0.275 mV per synapse, normalised at mid-subthreshold, v_n = (v_rest + v_th)/2 = −48.5 mV, where his weight was fitted to behaviour. So inside the operating range a synapse has Shiu's effect. Excitation saturates toward 0 mV; inhibition shunts and reverses at −75 mV.
+- **Integration:** exact exponential relaxation with the total conductance, using midpoint conductances over each 0.5 ms step.
+- **Switches:** `--synapses=current` restores Shiu's current-like synapses. Each synapse model has its own homeostasis file (`data/homeostasis_offsets.bin`; `..._current.bin`).
+
+Validation in the pure Shiu setting (no intrinsic physiology), 20 right sugar GRNs → MN9 R/L:
+
+| Input | Exact reference, current | Reference, conductance (`tools/reference_lif.py` `cond`) | GPU, conductance |
+|---|---|---|---|
+| 100 Hz | 75 / 53 | 69.5 / 52 | 69.3 / 50.5 |
+| 200 Hz | 116 / 72 | 121 / 82 | 119 / 78 |
+
+- Normalising at rest (−52 mV) instead gives only 23 / 16 at 100 Hz.
+
+With physiology and a fresh homeostatic warm-up:
+
+| Check | Result |
+|---|---|
+| Resting rates | ORN 12.4, PN 4.8, AL local neurons 5.3, Kenyon cells 0.1, MBON 5.2, APL 0 |
+| Bilateral sugar 30 / 100 / 200 Hz → MN9_R | 3.4 / 23 / 32 Hz |
+| Same, hungry, at 30 Hz | 19 Hz |
+| Giant fibre 100 Hz → TTMn | 51 Hz |
+
+- AN01B004's offsets shrank from up to −30 mV to between +0.1 and −6.6 mV.
+- MN9 still needs −28 to −30 mV, Roundup −9 to −11, Bract2 −6.
+- Leg sugar still does not reach MN9: ≤ 1.6 Hz, and in the embodied hungry fly 1.1 Hz.
+- So the large resting drive onto the feeding motor chain is not only a current-synapse artefact. It comes from the network's spontaneous activity converging on MN9: about 1 Hz assumed for every uncharacterised central neuron, with thousands of inputs.
 
 ## Former limitation: a global antennal-lobe / mushroom-body runaway (fixed, see the next section)
 

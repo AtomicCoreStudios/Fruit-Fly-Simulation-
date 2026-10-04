@@ -1,7 +1,7 @@
-"""(Cross-check; the authoritative table data/named_feeding_neurons.csv now comes from Codex labels.)
+"""(Cross-check; the authoritative table data/tables/named_feeding_neurons.csv now comes from Codex labels.)
 Map the named feeding-circuit neurons of Shiu, Sterne et al. 2022 eLife 11:e79887 (their FlyWire IDs are from an
 older release) to FlyWire v783 by soma position: CATMAID FAFB14 soma coordinates (public VFB server,
-fafb.catmaid.virtualflybrain.org, skeleton IDs from the paper) -> nearest v783 soma; accepted if <= 2 um. Writes data/named_feeding_neurons.csv.
+fafb.catmaid.virtualflybrain.org, skeleton IDs from the paper) -> nearest v783 soma; accepted if <= 2 um. Writes data/tables/named_feeding_neurons.csv.
 Validated on neurons with a known v783 identity (Zorro R = CB0192, MN9 = CB0701)."""
 import pathlib, numpy as np, pandas as pd
 from scipy.spatial import cKDTree

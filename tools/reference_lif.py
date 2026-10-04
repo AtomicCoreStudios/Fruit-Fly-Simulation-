@@ -59,9 +59,12 @@ class LIF:
         targets = np.zeros(n, bool)
         for idx, _ in stim:
             targets[idx] = True
-        if self.scheme in ("shiu", "gpu2"):
+        if self.scheme in ("shiu", "gpu2", "cond"):
             rfc[targets] = 0.0
         ring = np.zeros((self.delay + 1, n))
+        ring_i = np.zeros((self.delay + 1, n)); gh = np.zeros(n)        # "cond": inhibitory channel
+        E_E, E_I, VR = 0.0, -75.0, -52.0
+        VN = float(getattr(self, "v_norm", 0.5 * (VR - 45.0)))           # voltage at which a synapse equals Shiu's effect
         em, es = np.exp(-dt / 20.0), np.exp(-dt / 5.0)
         k = 5.0 / (20.0 - 5.0)                              # tau / (t_mbr - tau)
         counts = np.zeros(n, np.int64)
@@ -71,11 +74,21 @@ class LIF:
         for s in range(steps):
             slot = s % (self.delay + 1)
             g += ring[slot]; ring[slot] = 0.0
+            gh += ring_i[slot]; ring_i[slot] = 0.0
             pois = np.zeros(n)
             for idx, rate in stim:
                 pois[idx] += 68.75 * (rng.random(len(idx)) < rate * dt * 1e-3)
             active = ref <= 0
-            if self.scheme in ("shiu", "gpu2"):
+            if self.scheme == "cond":
+                # conductance-based synapses, as shaders/lif.glsl with cond == 1 (midpoint conductances)
+                sh = np.sqrt(es)
+                a = np.maximum(g, 0) * sh / (E_E - VN); b = np.maximum(gh, 0) * sh / (VN - E_I)
+                gt = 1.0 + a + b
+                vinf = (VR + a * E_E + b * E_I) / gt
+                v = np.where(active, vinf + (v - vinf) * np.exp(-dt * gt / 20.0), v)
+                g = np.where(active, g * es, g); gh = np.where(active, gh * es, gh)
+                v += pois
+            elif self.scheme in ("shiu", "gpu2"):
                 # exact solution of the linear system over dt ('linear' method), frozen while refractory
                 u = v - (-52.0)
                 u_new = u * em + g * k * (em - es)
@@ -86,7 +99,7 @@ class LIF:
                 g = g * es + pois
                 v = np.where(active, v + dt / 20.0 * (-52.0 - v + g), -52.0)
             ref -= dt
-            spk = np.where((v > -45.0) & active)[0] if self.scheme in ("shiu", "gpu2") else np.where((v >= -45.0) & active)[0]
+            spk = np.where((v > -45.0) & active)[0] if self.scheme in ("shiu", "gpu2", "cond") else np.where((v >= -45.0) & active)[0]
             if record and s % bin_steps == bin_steps - 1:
                 for key, ix in record.items():
                     trace[key].append(bin_counts[ix].sum() / len(ix) * 1000.0 / bin_ms)
@@ -94,11 +107,16 @@ class LIF:
             if len(spk):
                 counts[spk] += 1
                 bin_counts[spk] += 1
-                v[spk] = -52.0; g[spk] = 0.0; ref[spk] = rfc[spk]
+                v[spk] = -52.0; g[spk] = 0.0; gh[spk] = 0.0; ref[spk] = rfc[spk]
                 tgt_slot = (s + self.delay) % (self.delay + 1)
                 for i in spk:
                     a, b = self.row[i], self.row[i + 1]
-                    np.add.at(ring[tgt_slot], self.post[a:b], self.w[a:b])
+                    if self.scheme == "cond":
+                        ww = self.w[a:b]; pp = self.post[a:b]
+                        np.add.at(ring[tgt_slot], pp[ww > 0], ww[ww > 0])
+                        np.add.at(ring_i[tgt_slot], pp[ww < 0], -ww[ww < 0])
+                    else:
+                        np.add.at(ring[tgt_slot], self.post[a:b], self.w[a:b])
         if record:
             self.trace = trace
         return counts / (t_ms / 1000.0)

@@ -47,6 +47,7 @@ func _ready() -> void:
 		which = "synthetic"
 	brain.physiology = _args.get("physiology", "1") != "0"
 	brain.homeostasis_learning = _args.has("homeostasis")
+	brain.conductance_synapses = _args.get("synapses", "conductance") != "current"
 	if _args.has("phys_ablate"):
 		brain.phys_ablate = Array(str(_args["phys_ablate"]).split(","))
 	var err := brain.load_connectome("res://data/connectome_%s.bin" % which, "res://data/connectome_%s.json" % which)
@@ -663,7 +664,7 @@ func _maybe_finish() -> void:
 		_rec.close()
 	if brain.homeostasis_learning:
 		brain.save_homeostasis()
-		print("homeostasis: learned offsets saved to data/homeostasis_offsets.bin")
+		print("homeostasis: learned offsets saved to " + brain.homeo_path())
 	if _eye_f:
 		_eye_f.close()
 	if _probe_f:

@@ -31,3 +31,4 @@ recordings/flywire_opto.endocrine
 recordings/flywire_opto.motor
 recordings/flywire_opto.optic
 data/*.csv.import
+data/named_feeding_neurons.*

@@ -39,6 +39,14 @@ const float ETA_H = 0.0001;    // mV per ms per Hz of rate error
 // Presynaptic release gain (neuromodulation of transmitter release, e.g. dopamine via DopEcR on sugar
 // GRN terminals in hungry flies, Inagaki et al. 2012): multiplies every outgoing synaptic weight; 1 = none.
 layout(set = 0, binding = 20, std430) readonly buffer Release { float release_gain[]; };
+// Conductance-based synapses (p.cond == 1): inhibitory input gets its own ring buffer and state. Weights stay in
+// mV units (Shiu et al.'s 0.275 mV per synapse); they are converted to leak-normalised conductances
+// a = g_e / (E_exc - v_n), b = g_i / (v_n - E_inh) with v_n = (v_rest + v_th)/2, so a synapse has exactly
+// Shiu's effect in the middle of the subthreshold range (where his weight was fitted to behaviour) and
+// differs away from it (excitation saturates near E_exc, inhibition shunts and reverses at E_inh). Checked
+// against tools/reference_lif.py scheme "cond": Shiu sugar set 100 Hz -> MN9 69.5/52 Hz (current: 68/53).
+layout(set = 0, binding = 21, std430) buffer GInh  { float g_inh[]; };
+layout(set = 0, binding = 22, std430) buffer GInI  { int g_in_i[]; };
 
 layout(push_constant, std430) uniform Params {
 	uint n;
@@ -57,6 +65,9 @@ layout(push_constant, std430) uniform Params {
 	uint slots;        // ring-buffer slots = delay + 1
 	uint reset_g;      // 1: clear synaptic input on spike (Shiu et al.)
 	uint pad;          // mode 2: number of gap junctions
+	float e_exc;       // mV, excitatory reversal (cond == 1)
+	float e_inh;       // mV, inhibitory reversal
+	uint cond;         // 1: conductance-based synapses; 0: Shiu et al. current-like synapses
 } p;
 
 uint pcg(uint x) {
@@ -103,13 +114,27 @@ void main() {
 		float bias = ext[p.n + i] + ph.x + s2.x - s2.y + hm.y;
 		float vi = v[i] + float(atomicExchange(v_kick[i], 0)) * 0.001;
 		bool not_refr = refrac[i] <= 0.0;
+		float gh = 0.0;
+		if (p.cond == 1u) gh = g_inh[i] + float(atomicExchange(g_in_i[slot + i], 0)) * 0.001;
 		if (not_refr) {
-			float em = exp(-p.dt / p.tau_m);
 			float es = p.syn_decay;
-			float tau_s = -p.dt / log(es);
-			float k = tau_s / (p.tau_m - tau_s);
-			float u = vi - p.v_rest - bias;
-			vi = p.v_rest + bias + u * em + gi * k * (em - es);
+			if (p.cond == 1u) {
+				// conductances at the step midpoint, exact exponential relaxation with total conductance
+				float sh = sqrt(es);
+				float vn = 0.5 * (p.v_rest + p.v_th);
+				float a = max(gi, 0.0) * sh / (p.e_exc - vn);
+				float b = max(gh, 0.0) * sh / (vn - p.e_inh);
+				float gt = 1.0 + a + b;
+				float vinf = (p.v_rest + bias + a * p.e_exc + b * p.e_inh) / gt;
+				vi = vinf + (vi - vinf) * exp(-p.dt * gt / p.tau_m);
+				gh *= es;
+			} else {
+				float em = exp(-p.dt / p.tau_m);
+				float tau_s = -p.dt / log(es);
+				float k = tau_s / (p.tau_m - tau_s);
+				float u = vi - p.v_rest - bias;
+				vi = p.v_rest + bias + u * em + gi * k * (em - es);
+			}
 			gi *= es;
 		}
 		if (rate > 0.0) {
@@ -122,6 +147,7 @@ void main() {
 			s = 1u;
 			vi = p.v_reset;
 			gi = 0.0;
+			gh = 0.0;
 			refrac[i] = rate > 0.0 ? 0.0 : p.t_ref;   // Poisson-stimulated neurons: no refractory period
 			s2.y += ph.z;                              // spike-frequency adaptation
 			atomicAdd(group_count[gid], 1u);
@@ -129,6 +155,7 @@ void main() {
 		}
 		v[i] = vi;
 		g[i] = gi;
+		if (p.cond == 1u) g_inh[i] = gh;
 		st2[i] = s2;
 		spiked[i] = s;
 		activity[i] = activity[i] * p.act_decay + float(s);
@@ -141,7 +168,13 @@ void main() {
 		uint slot = ((p.step + p.delay) % p.slots) * p.n;
 		int e1 = row_ptr[i + 1u];
 		float rg = release_gain[i];
-		if (rg == 1.0) {
+		if (p.cond == 1u) {
+			for (int e = row_ptr[i]; e < e1; e++) {
+				int wv = (rg == 1.0) ? w[e] : int(float(w[e]) * rg);
+				if (wv >= 0) atomicAdd(g_in[slot + uint(col[e])], wv);
+				else atomicAdd(g_in_i[slot + uint(col[e])], -wv);
+			}
+		} else if (rg == 1.0) {
 			for (int e = row_ptr[i]; e < e1; e++) {
 				atomicAdd(g_in[slot + uint(col[e])], w[e]);
 			}
