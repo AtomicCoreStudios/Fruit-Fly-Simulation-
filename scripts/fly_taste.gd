@@ -125,10 +125,19 @@ func grn_rate(modality: String, chem: Dictionary) -> float:
 ## Call every frame before brain.tick().
 func update(_dt: float) -> void:
 	if sugar_release != _sugar_release_set:
+		# hunger-modulated release: sugar GRNs and the central nodes G2N-1 / Clavicle (data/hunger_targets.json)
 		var si := PackedInt32Array()
-		for k in _idx.size():
-			if _mod[k] in ["sugar", "sugar/low_salt"]:
-				si.append(_idx[k])
+		var ht = JSON.parse_string(FileAccess.get_file_as_string("res://data/hunger_targets.json")) if FileAccess.file_exists("res://data/hunger_targets.json") else null
+		if ht != null:
+			for i in ht["sugar_grn"]:
+				si.append(int(i))
+			for k in ht["central"]:
+				for i in ht["central"][k]:
+					si.append(int(i))
+		else:
+			for k in _idx.size():
+				if _mod[k] in ["sugar", "sugar/low_salt"]:
+					si.append(_idx[k])
 		brain.set_release_gain(si, sugar_release)
 		_sugar_release_set = sugar_release
 	var counts := {}

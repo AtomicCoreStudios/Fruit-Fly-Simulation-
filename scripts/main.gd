@@ -71,6 +71,11 @@ func _ready() -> void:
 	fly.taste_bench_set = _args.get("taste_set", "shiu")
 	fly.clean_air = _args.has("clean_air")
 	fly.sugar_release_override = float(_args.get("sugar_release", "0"))
+	if _args.has("silence"):     # diagnostic ablation: model indices whose transmitter release is set to 0
+		var si := PackedInt32Array()
+		for x in str(_args["silence"]).split(","):
+			si.append(int(x))
+		brain.set_release_gain(si, 0.0)
 	if _args.has("opto") and _args["opto"] != "1":
 		for kv in str(_args["opto"]).split(","):
 			var parts := kv.split(":")

@@ -510,18 +510,19 @@ The circuit, from the literature:
 - The direct leg-to-brain type **LgAG2** joins the same targets.
 
 New tools and data:
-- **Named feeding neurons in v783** (`tools/data_named_feeding.py` → `data/named_feeding_neurons.csv`):
-  - Shiu, Sterne et al. 2022 list CATMAID skeleton IDs. Their soma positions (public VFB CATMAID server) were matched to the nearest v783 soma.
-  - Validation: MN9 → CB0701 at 0.3 µm; Zorro → CB0192 at 0.6–0.7 µm.
-  - Accepted (≤ 2 µm): Roundup = CB0553, Rounddown = DNge080, Bract1 = DNge174, Bract2 = DNge173, FMIn = CB0366, Usnea = CB0008, Phantom = CB0062, Billiards = CB0248, Fudog = DNg67, Quasimodo = CB0118, Scapula = CB0219, Sternum = CB0051, Zorro = CB0192.
-  - Not resolved: G2N-1, Clavicle, Fdg, Rattle, Dandelion, Specter. Their skeletons have no traced soma.
-  - Candidate G2N-1 = CB0616, by connectivity: 489 synapses from labellar sugar GRNs and direct output onto Roundup (basis: approximate).
+- **Named feeding neurons in v783** (`data/named_feeding_neurons.csv`):
+  - Source: FlyWire Codex community labels.
+  - Cross-checked by soma position against the CATMAID skeletons (`tools/data_named_feeding.py`, which agreed on every neuron both methods resolved).
+  - Names → types: G2N-1 = CB0616, Clavicle = AN_GNG_30 (an ascending neuron), Fdg = CB0038, Rattle = CB0499, Roundup = CB0553, Rounddown = DNge080, Bract1/2 = DNge174/DNge173, Sink & Synch = CB0434, Foxglove = CB0890, Bluebell = DNg60, and others.
 - **Better brain/nerve-cord joining** (`tools/build_vnc.py`):
   - Cell types come as left/right homolog sets. The FlyWire→BANC type correspondence learned from confident matches is used to pair the remaining members within each type.
   - +127 ascending and +53 sensory ascending neurons are now joined (1,266/1,736 and 181/581), e.g. the left Dandelion (AN_GNG_68 = AN13B002).
 - **Presynaptic release gain** (`lif.glsl` binding 20, `FlyBrain.set_release_gain`): neuromodulation of transmitter release.
-  - Hunger now raises the release of all sugar GRNs, gain = 1 + hunger (×1.8 when hungry). This follows Inagaki et al. 2012, where dopamine via DopEcR on sugar GRN terminals raises sugar-evoked presynaptic calcium.
-  - basis: mechanism from the literature, gain approximate. Benchmarks keep gain 1; `--sugar_release=X` forces it.
+  - Hunger now raises release at the sites the literature identifies (`tools/build_hunger.py` → `data/hunger_targets.json`), with gain = 1 + hunger (×1.8 when hungry):
+    - all 370 sugar GRNs: dopamine via DopEcR (Inagaki et al. 2012)
+    - G2N-1 and Clavicle: the only hunger-modulated central nodes found by Shiu, Sterne et al. 2022 (Fig. 4)
+  - basis: sites from the literature, gain approximate. Benchmarks keep gain 1; `--sugar_release=X` forces it.
+  - `--silence=i,j,...` sets chosen neurons' release to 0, for ablation diagnostics.
 
 Findings:
 
@@ -534,12 +535,15 @@ Findings:
 | Leg sugar also activates | glutamatergic DNxl094 (583 synapses back onto AN01B004) and GABAergic DNg103: negative feedback |
 | Sugar-GRN release ×2 / ×4, labellar (30 Hz bilateral) | MN9 5 → 13 → 20 Hz |
 | Sugar-GRN release ×2 / ×4, leg | ≤ 4 Hz |
-| Embodied, standing on 200 mM sucrose, hungry | MN9 3.4 Hz, no visible extension |
+| Embodied, standing on 200 mM sucrose, hungry (GRNs + G2N-1 + Clavicle ×1.8) | MN9 1–2 Hz, proboscis peaks at 0.28 only briefly |
+| Labellar sugar 30 Hz bilateral, fed → hungry | MN9 5 → 18 Hz (strong hunger effect, as in Shiu et al. 2022) |
+| Leg 100 Hz with DNxl094, DNg103 and IN09A001 silenced | MN9 ≤ 1.4 Hz (feedback is not the block) |
 
 - AN01B004 provides only 2–8% of Bract1/2's inputs (241 and 146 synapses).
 - The leg route needs about 7 hops to reach the feeding motor neurons, 2 more than the labellum (Tastekin et al.).
 - Sensory hunger gain explains the labellar effect of starvation but not tarsal PER. The missing gain is central.
-- Shiu et al. 2022 found hunger also acts on second-order neurons G2N-1 and Clavicle. Their v783 identity and the hunger signal onto the leg arc are still open.
+- Both of Shiu et al.'s hunger nodes are on the labellar route: Clavicle's inputs are labellar LB3 GRNs, not leg GRNs.
+- Conclusion so far: with Shiu-calibrated synapse weights, the connectome's leg arc is too weak in the feed-forward direction to trigger PER on its own, even with the literature hunger mechanisms. This is either a model limitation (point neurons, uniform weight per synapse, glutamate always inhibitory) or a missing hunger mechanism on the leg relay.
 
 ## Former limitation: a global antennal-lobe / mushroom-body runaway (fixed, see the next section)
 
