@@ -30,3 +30,4 @@ recordings/flywire_opto.descending
 recordings/flywire_opto.endocrine
 recordings/flywire_opto.motor
 recordings/flywire_opto.optic
+data/*.csv.import
