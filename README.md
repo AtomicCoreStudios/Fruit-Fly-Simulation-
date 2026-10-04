@@ -545,6 +545,50 @@ Findings:
 - Both of Shiu et al.'s hunger nodes are on the labellar route: Clavicle's inputs are labellar LB3 GRNs, not leg GRNs.
 - Conclusion so far: with Shiu-calibrated synapse weights, the connectome's leg arc is too weak in the feed-forward direction to trigger PER on its own, even with the literature hunger mechanisms. This is either a model limitation (point neurons, uniform weight per synapse, glutamate always inhibitory) or a missing hunger mechanism on the leg relay.
 
+### Testing the model assumptions on the leg route (option 1, 2026-10-03)
+
+**Glutamate sign** (`FLY_GLU_SIGN`, diagnostic). Rest values are without homeostasis:
+
+| Variant | Leg 100 Hz → MN9 | Rest MN9 | Labellar 100 Hz → MN9 |
+|---|---|---|---|
+| −1 (inhibitory, current) | 9 | 6.5 | 51 |
+| 0 (no fast effect) | 21 | 9.8 | 51 |
+| +1 (excitatory) | 7 | 2.4 | 8 |
+| Shiu per-connection signs | 6 | 3.6 | 29 |
+
+- With its own homeostatic warm-up, glutamate-neutral is worse: labellar 30 Hz → MN9 0.9 Hz, leg ≈ 0.
+- Homeostasis lowers the whole network's excitability to compensate for the missing inhibition.
+- Conclusion: the glutamate sign does not explain the leg gap.
+
+**Strength at the leg relay** (`--release_gain` on the 8 AN01B004 / AN_GNG_162, hungry):
+
+| AN01B004 release | Leg 100 Hz → MN9 (R) |
+|---|---|
+| ×1 | 3.7 |
+| ×2 | 3.4 |
+| ×4 | 7.1 |
+| ×8 | 29 |
+
+- Leg PER would need roughly 8× stronger synapses at this one relay, which is implausible as the only cause.
+
+**The actual block is the resting state of the feeding motor chain** (`tools/diag_rest_drive.py`).
+- Homeostatic offsets:
+
+  | Neuron | Offset |
+  |---|---|
+  | MN9 | −26 to −28 mV |
+  | AN01B004 | down to −30 mV |
+  | Roundup | −10 to −12 mV |
+  | Rounddown | −6 to −7 mV |
+  | Bract2 | about −6 mV |
+  | Network median | 0 mV |
+
+- Without homeostasis, MN9 fires about 6 Hz at rest, although its net input is inhibitory:
+  - inhibitory CB0862 and CB0903 at 7–11 Hz
+  - excitatory DNge062 and Roundup at about 4 Hz
+- With current-based synapses, this balanced bombardment produces large voltage fluctuations, so MN9 fires from noise. Homeostasis cancels that with an unphysiologically large hyperpolarization, which buries weak inputs. The strong labellar route still gets through; the 7-hop leg route does not.
+- Real intrinsic plasticity shifts excitability by a few mV, and real synapses are conductance-based: inhibition shunts and excitation saturates near its reversal potential, which shrinks such fluctuations.
+
 ## Former limitation: a global antennal-lobe / mushroom-body runaway (fixed, see the next section)
 
 Strong, sustained bilateral sugar input (both labellar sugar sets at 100 Hz) drives the Shiu et al. spiking model into a self-sustaining global state:

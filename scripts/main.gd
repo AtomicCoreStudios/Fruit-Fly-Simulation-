@@ -76,6 +76,13 @@ func _ready() -> void:
 		for x in str(_args["silence"]).split(","):
 			si.append(int(x))
 		brain.set_release_gain(si, 0.0)
+	if _args.has("release_gain"):   # diagnostic: "i,j,k:gain;l,m:gain" sets presynaptic release gains
+		for part in str(_args["release_gain"]).split(";"):
+			var kv := part.split(":")
+			var ri := PackedInt32Array()
+			for x in kv[0].split(","):
+				ri.append(int(x))
+			brain.set_release_gain(ri, float(kv[1]))
 	if _args.has("opto") and _args["opto"] != "1":
 		for kv in str(_args["opto"]).split(","):
 			var parts := kv.split(":")

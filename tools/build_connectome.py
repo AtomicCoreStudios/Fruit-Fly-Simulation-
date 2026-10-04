@@ -400,13 +400,17 @@ def build_flywire(raw, seed):
     # dopamine/serotonin/octopamine 0 for FAST transmission (they act through metabotropic receptors;
     # their slow modulatory effects are not modelled). basis: literature
     sign_mode = os.environ.get("FLY_SIGNS", "dale")
+    # FLY_GLU_SIGN (diagnostic): glutamate's fast effect. -1 = inhibitory via GluCl (default, as Shiu et al.);
+    # 0 = none; +1 = excitatory (fly central synapses also express NMDA/kainate-type receptors)
+    GLU_SIGN = float(os.environ.get("FLY_GLU_SIGN", "-1"))
     if sign_mode == "dale":
         knt = a["known_nt"].fillna("").astype(str).str.lower().to_numpy() if "known_nt" in a.columns else np.full(n, "")
         tnt = a["top_nt"].fillna("").astype(str).str.lower().to_numpy() if "top_nt" in a.columns else np.full(n, "")
         nt = np.where(knt != "", knt, tnt)
         def nsign(x):
             if "acetylcholine" in x and "negative" not in x: return 1.0
-            if "gaba" in x or "glutamate" in x: return -1.0
+            if "glutamate" in x: return GLU_SIGN
+            if "gaba" in x: return -1.0
             if any(k in x for k in ("dopamine", "serotonin", "octopamine", "tyramine")): return 0.0
             return 1.0 if x == "" else 0.0
         nsg = np.array([nsign(x) for x in nt], np.float32)
@@ -586,6 +590,13 @@ def build_flywire(raw, seed):
         group = np.concatenate([group, np.zeros(nv, np.int32)])
         ids = np.concatenate([ids, vn.bid.to_numpy(np.int64)])
         ve_w = (0.275 * ve["Excitatory x Connectivity"].to_numpy(np.float64)).astype(np.float32)
+        if GLU_SIGN != -1.0:
+            # re-sign glutamatergic presynaptic neurons: resident (BANC code) or bridged FlyWire (Dale nt)
+            pre_v = ve.Presynaptic_Index.to_numpy()
+            glu_res = (vn.nt.astype(str).str.upper().values == "GLUT")
+            is_glu = np.where(pre_v >= n, glu_res[np.clip(pre_v - n, 0, nv - 1)],
+                              np.array(["glutamate" in x for x in nt])[np.clip(pre_v, 0, n - 1)])
+            ve_w = np.where(is_glu, np.abs(ve_w) * GLU_SIGN, ve_w).astype(np.float32)
         if size_gamma > 0:
             if size_mode == "inputs":
                 vin = np.bincount(ve.Postsynaptic_Index.to_numpy() - 0, weights=ve.Connectivity.to_numpy(), minlength=len(area) + nv)

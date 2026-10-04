@@ -21,7 +21,7 @@ def run(f, sset, frames=420, extra=()):
 
 def main():
     ap = argparse.ArgumentParser(); ap.add_argument("--set", default="shiu")
-    ap.add_argument("--extra", nargs="*", default=[], help="extra Godot user args, e.g. --phys_ablate=adapt")
+    ap.add_argument("--extra", action="append", default=[], help="extra Godot user args, e.g. --phys_ablate=adapt")
     ap.add_argument("--freqs", type=float, nargs="+", default=[20, 40, 60, 80, 100, 150, 200])
     a = ap.parse_args()
     ref = {}
