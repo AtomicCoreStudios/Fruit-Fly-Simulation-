@@ -914,3 +914,10 @@ The antennal-lobe/mushroom-body runaway (above) points to the same missing prope
 Leg motor neurons are annotated by muscle and joint action (for example `flex_femur_tibia_joint`), and so are leg proprioceptors. Connecting these to the body's joints (biomechanics) is the next body step.
 
 Performance with everything on (brain + nerve cord + FlyVis + graded optic lobe + taste): about 25 fps, close to real time.
+
+## License
+
+- **Code:** Apache License 2.0 ([LICENSE](LICENSE)).
+- **Documentation, figures, recordings and derived data:** CC BY 4.0 ([LICENSE-DATA.md](LICENSE-DATA.md)).
+- **Third-party datasets, models and assets** keep their own licenses and must be cited: see [THIRD_PARTY.md](THIRD_PARTY.md).
+- **Citation:** see [CITATION.cff](CITATION.cff).

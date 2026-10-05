@@ -1,0 +1,15 @@
+cff-version: 1.2.0
+message: "If you use this software or its derived data, please cite it as below, and cite the underlying datasets and models listed in THIRD_PARTY.md."
+title: "FLY-UI: embodied whole-brain and nerve-cord emulation of Drosophila melanogaster"
+authors:
+  - name: "AtomicCoreStudios and contributors"
+repository-code: "https://github.com/AtomicCoreStudios/Fruit-Fly-Simulation-"
+license: Apache-2.0
+type: software
+keywords:
+  - connectome
+  - Drosophila
+  - whole-brain emulation
+  - neuromechanics
+  - FlyWire
+  - BANC
