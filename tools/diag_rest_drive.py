@@ -34,7 +34,7 @@ if sys.argv[1] == "prep":
     print(len(probe), "probe groups")
 else:
     d = pd.read_csv(ROOT / "recordings/rest_drive_edges.csv"); r = pd.read_csv(sys.argv[2]); r = r[r.t_ms > 2000]
-    rate = {int(k.rsplit("_", 1)[1]): r[k].mean() for k in r.columns if k not in ("t_ms", "threat") and not k.startswith("TARGET")}
+    rate = {int(k.rsplit("_", 1)[1]): r[k].mean() for k in r.columns if k.rsplit("_", 1)[-1].isdigit() and not k.startswith(("TARGET", "joint_", "stance_", "foot_h_"))}
     print("targets:", {k: round(r[k].mean(), 1) for k in r.columns if k.startswith("TARGET")})
     d["rate"] = d.pre.map(rate)
     d = d.dropna(); d["drive"] = d.w * d.rate

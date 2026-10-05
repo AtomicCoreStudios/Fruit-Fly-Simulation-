@@ -14,7 +14,7 @@ The brain and body run in a closed loop in real time.
 | Eyes and vision | 1,709-facet compound eyes → FlyVis + graded optic lobe → VPNs | measured / literature |
 | Taste, smell, wind | per-neuron sense organs on the NeuroMechFly body | measured mapping; approximate response curves |
 | Legs | 391 real leg motor neurons → muscles → joints (torque model); 886 proprioceptors feed back | measured mapping; assumed mechanics (calibration ledger) |
-| Walking | Walking CPG reproduced exactly offline. Offline, the tuned descending mix (DNg100 + DNb08 + DNa02 + DNg97) gives swing/stance anti-phase in 5 of 6 legs at 4.2 Hz. Live: legs are stuck in tonic postures (right legs planted, left middle held up); best free-walking speed 0.27 mm/s (real 10–30). **Not walking yet.** | see "Neuromuscular legs" |
+| Walking | Walking CPG reproduced exactly offline. Offline, the tuned descending mix (DNg100 + DNb08 + DNa02 + DNg97) gives swing/stance anti-phase in 5 of 6 legs at 4.2 Hz. Live: with wiring-derived claw/hook tuning and presynaptic gating, 4 of 6 legs switch stance/swing (1.4–3.8 cycles/s); left front and right middle stay planted; best free-walking speed 0.29 mm/s (real 10–30). **Not walking yet.** | see "Neuromuscular legs" |
 | Escape | giant fibre → TTMn (gap junction) works | literature |
 | Leg sugar → PER | known gap (see Phase 5b) | — |
 
@@ -840,6 +840,27 @@ Live tests:
 - The right legs stay planted (0.96–1.0).
 - So the proprioceptive loop, with approximate tuning and no walking-state gating, locks the left middle leg in swing. The right legs are held in stance by a left/right asymmetry in tonic drive; whether that comes from DN sidedness or from the brain/nerve-cord joining is still to be tested.
 
+### Left/right posture lock and proprioceptor fixes (2026-10-05)
+
+**Posture lock** (`recordings/legpools.csv`, tuned descending mix, proprioception off):
+- The left middle coxa promotors fire at 154 Hz, holding the leg up and forward. They are excited by IN17A052 (128 Hz), right-soma DNg100 and DNa02.
+- The right middle promotors are silent, inhibited by IN21A001 (104 Hz). Instead the right middle retractors fire at 58 Hz.
+- Left and right middle legs are anti-phase in a tripod, so this looks like a frozen tripod: the CPG settles into one phase and stops advancing.
+- Some motor-neuron fragments are present (femur reductors with only 37–78 input synapses and 0.5–0.8 mm of cable). They are tiny and therefore hyper-excitable as rate units.
+
+**Proprioceptor fixes:**
+1. **Claw/hook tuning from wiring** (`tools/build_leg_map.py` → `feco_tuning`). Lee et al. 2025 (Nat Commun): flexion-encoding claw/hook axons excite tibia extensor and inhibit flexor motor neurons; extension-encoding axons do the reverse.
+   - Each BANC claw/hook neuron is classified by its signed 1+2-hop drive: claw 98 flexion / 56 extension; hook 74 / 51.
+   - This replaces the arbitrary alternation. MANC type names (SNpp50/51, SNpp39/41) align only loosely.
+2. **Presynaptic inhibition** (Dallmann et al. 2025 Nature): movement-encoding (hook, club) afferents are suppressed during self-generated movement by GABAergic presynaptic inhibition.
+   - 352 hook/club axons have inhibitory BANC inputs onto their terminals. These synapses are removed from the spiking graph and are now used to scale each axon's release live (mean gain about 0.67 while walking).
+
+**Result, live free walking** (tuned mix):
+- 0.29 mm/s.
+- Left middle no longer locked up (stance 0.79).
+- Left middle, left hind, right front and right hind switch stance/swing at 1.8, 3.8, 1.4 and 2.9 cycles/s.
+- Left front and right middle stay planted.
+
 ## Calibration ledger (motor side): what is data, what is set by hand
 
 Kept so that any walking result can state exactly how much came from the connectome and how much from hand-set values. Basis: **measured** = from data; **literature** = published model or parameter; **assumed** = an approximate value I chose; **tuned** = adjusted while looking at walking. Nothing on the motor side has been tuned to walking yet.
@@ -858,7 +879,9 @@ Kept so that any walking result can state exactly how much came from the connect
 | Joint range and τ_joint 30 ms | NeuroMechFly-like ranges | assumed | yes |
 | Stance rule: foot ≤ rest + 5% of reach | no-slip contact | assumed | yes |
 | LOAD_HZ 40 Hz campaniform ground load | — | assumed | under test |
-| Proprioceptor tuning curves (claw, hook, club, hair plate) | — | assumed | under test |
+| Claw/hook flexion vs extension tuning | per neuron from its wiring: signed 1+2-hop drive to tibia extensor vs flexor MNs (Lee et al. 2025 criterion) | measured wiring + literature | yes |
+| Presynaptic inhibition of hook/club afferents | release × 1/(1 + Σ syn·rate / I_HALF) using BANC inhibitory inputs onto each terminal (Dallmann et al. 2025); I_HALF = 500 syn·Hz | wiring measured; I_HALF assumed | yes |
+| Proprioceptor tuning curve shapes (claw sigmoid width, hook/club gains, hair plate limits) | — | assumed | yes |
 | Descending command (which DNs, how strong) | DNg100 : DNb08 : DNa02 : DNg97 = 4 : 1 : 1 : 1 (offline amplitude 400/100/100/100; live 200 Hz / 50 / 50 / 50 Hz), from a 300-trial random search plus an 81-point refinement (`tools/dn_mix_search.py`, `recordings/dn_mix_search.csv`, `dn_mix_refine.csv`) | **tuned** | yes |
 
 **Free-walking diagnosis (2026-10-05)** (`stance_<leg>` and `foot_h_<leg>` columns in probe CSVs):

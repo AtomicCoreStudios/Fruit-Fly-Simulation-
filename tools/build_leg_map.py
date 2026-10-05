@@ -48,7 +48,45 @@ for r in sn.itertuples():
         continue
     leg = ("l" if r.side == "left" else "r") + LEG[part]
     out["legs"].setdefault(leg, {"motor": {}, "sensory": {}})["sensory"].setdefault(k, []).append(int(r.model_index))
+# FeCO claw/hook tuning from wiring (Lee et al. 2025 Nat Commun): flexion-encoding axons excite tibia EXTENSOR and
+# inhibit tibia flexor motor neurons; extension-encoding axons the reverse. Score = signed 1-hop + 2-hop drive onto
+# the leg's FTi extensor pool minus its FTi flexor pool; > 0 -> "flex", < 0 -> "ext". basis: measured wiring +
+# published criterion
+import numpy as np, scipy.sparse as sp
+e = pd.read_parquet(ROOT / "data/vnc/vnc_edges.parquet")
+ids = np.unique(np.concatenate([e.Presynaptic_Index, e.Postsynaptic_Index])); pos = {x: i for i, x in enumerate(ids)}
+W = sp.csr_matrix((e["Excitatory x Connectivity"].astype(float).values,
+                   ([pos[x] for x in e.Postsynaptic_Index], [pos[x] for x in e.Presynaptic_Index])), shape=(len(ids), len(ids)))
+Wn = W.multiply(1.0 / np.maximum(np.abs(W).sum(axis=1), 1.0)).tocsr()      # row-normalised (fraction of input)
+tuning = {}
+for leg, L in out["legs"].items():
+    m = L["motor"].get("FTi", {}); ext = [pos[x] for x in m.get("neg", []) if x in pos]; flx = [pos[x] for x in m.get("pos", []) if x in pos]
+    for kind in ("FeCO_claw", "FeCO_hook"):
+        for s_ in L["sensory"].get(kind, []):
+            if s_ not in pos:
+                continue
+            v0 = np.zeros(len(ids)); v0[pos[s_]] = 1.0
+            h1 = Wn @ v0; h2 = Wn @ np.maximum(h1, 0.0)            # via excited interneurons (sign kept)
+            sc = (h1[ext].sum() + h2[ext].sum()) - (h1[flx].sum() + h2[flx].sum())
+            tuning[str(s_)] = "flex" if sc > 0 else ("ext" if sc < 0 else "none")
+out["feco_tuning"] = tuning
+# presynaptic inhibition of movement-encoding afferents (hook, club; Dallmann et al. 2025 Nature): the inhibitory
+# (GABA/Glu) VNC neurons that synapse onto each axon terminal, with synapse counts (BANC). These synapses are not
+# in the spiking graph (afferent inputs are removed in build_connectome); fly_legs.gd uses them to scale release.
+pre_inh = {}
+neg = e[(e["Excitatory"] < 0)]
+for leg, L in out["legs"].items():
+    for kind in ("FeCO_hook", "FeCO_club"):
+        for s_ in L["sensory"].get(kind, []):
+            q = neg[neg.Postsynaptic_Index == s_]
+            if len(q):
+                pre_inh[str(s_)] = [[int(a), int(b)] for a, b in zip(q.Presynaptic_Index, q.Connectivity)]
+out["presyn_inhibition"] = pre_inh
 (ROOT / "data/leg_motor_map.json").write_text(json.dumps(out, indent=0))
+from collections import Counter
+print("FeCO tuning from wiring:", Counter(tuning.values()))
+print("movement afferents with presynaptic inhibitory input:", len(pre_inh), "| median synapses",
+      int(np.median([sum(b for _, b in v) for v in pre_inh.values()])) if pre_inh else 0)
 for leg, L in sorted(out["legs"].items()):
     print(leg, " ".join(f"{d}:{len(x['pos'])}/{len(x['neg'])}" for d, x in sorted(L["motor"].items())),
           "| " + " ".join(f"{k}:{len(x)}" for k, x in sorted(L["sensory"].items())))

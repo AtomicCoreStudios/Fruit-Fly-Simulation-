@@ -41,6 +41,9 @@ var sense := {}
 var idx := PackedInt32Array() # proprioceptor neurons driven this frame
 var rate := PackedFloat32Array()
 var _map := {}
+var _full := {}
+var _presyn := {}             # movement afferent -> [[inhibitory presynaptic neuron, synapses], ...]
+const I_HALF := 500.0         # synapse x Hz of presynaptic inhibition halving release (assumed)
 var _axis := {}               # leg -> dof -> [node, local axis]
 var _rest := {}
 var _sens := []               # [leg, kind, neuron index, param]
@@ -51,7 +54,9 @@ func setup(p_brain: FlyBrain, p_fly) -> String:
 	fly = p_fly
 	if not FileAccess.file_exists("res://data/leg_motor_map.json"):
 		return "data/leg_motor_map.json missing (tools/build_leg_map.py)"
-	_map = JSON.parse_string(FileAccess.get_file_as_string("res://data/leg_motor_map.json"))["legs"]
+	_full = JSON.parse_string(FileAccess.get_file_as_string("res://data/leg_motor_map.json"))
+	_map = _full["legs"]
+	_presyn = _full.get("presyn_inhibition", {})
 	for leg in LEGS:
 		var c: Node3D = fly.seg.get(leg + "_coxa")
 		var f: Node3D = fly.seg.get(leg + "_trochanterfemur")
@@ -90,12 +95,15 @@ func setup(p_brain: FlyBrain, p_fly) -> String:
 		for d in DOFS:
 			angle[leg][d] = 0.0
 			omega[leg][d] = 0.0
+		var tun: Dictionary = _full.get("feco_tuning", {})
 		var sn: Dictionary = _map.get(leg, {}).get("sensory", {})
 		for kind in sn:
 			var ids: Array = sn[kind]
 			for k in ids.size():
 				# alternate flexion/extension tuning; preferred claw angles spread over the FTi range
-				_sens.append([leg, kind, int(ids[k]), float(k) / maxf(ids.size() - 1, 1)])
+				# 5th field: flexion/extension tuning of claw/hook neurons from their wiring (Lee et al. 2025 criterion;
+				# tools/build_leg_map.py), "" for other kinds
+				_sens.append([leg, kind, int(ids[k]), float(k) / maxf(ids.size() - 1, 1), str(tun.get(str(int(ids[k])), ""))])
 	enabled = true
 	if "--legs_lift_test" in OS.get_cmdline_user_args():
 		_lift_test()
@@ -243,7 +251,8 @@ func _proprio(load: Dictionary) -> void:
 		var leg: String = _sens[k][0]
 		var kind: String = _sens[k][1]
 		var u: float = _sens[k][3]
-		var flex_tuned := (k % 2) == 0
+		var tlab: String = _sens[k][4]
+		var flex_tuned := (tlab == "flex") if tlab != "" else ((k % 2) == 0)
 		var th: float = angle[leg]["FTi"]
 		var w: float = omega[leg]["FTi"]
 		var r := 0.0
@@ -272,3 +281,26 @@ func _proprio(load: Dictionary) -> void:
 		rate[k] = r
 		hp[kind] = hp.get(kind, 0.0) + r / _sens.size()
 	sense = hp
+	_presyn_gate()
+
+
+func _presyn_gate() -> void:
+	# Dallmann et al. 2025: GABAergic presynaptic inhibition suppresses movement-encoding (hook, club) afferents
+	# during self-generated movement. Release gain = 1 / (1 + sum(syn x rate of inhibitory inputs) / I_HALF).
+	if _presyn.is_empty():
+		return
+	var a := brain.activity_bytes.to_float32_array()
+	var to_hz := 1000.0 / brain.act_tau_ms
+	var gsum := 0.0
+	var gn := 0
+	for key in _presyn:
+		var inh := 0.0
+		for pr in _presyn[key]:
+			var j := int(pr[0])
+			if j < a.size():
+				inh += float(pr[1]) * maxf(a[j] * to_hz, 0.0)
+		var gain := 1.0 / (1.0 + inh / I_HALF)
+		brain.set_release_gain(PackedInt32Array([int(key)]), snappedf(gain, 0.02))
+		gsum += gain
+		gn += 1
+	sense["presyn_gain_mean"] = gsum / maxf(gn, 1)
