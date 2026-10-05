@@ -686,17 +686,40 @@ Results after a fresh warm-up:
 
 Tuning is approximate (Tuthill & Wilson 2016; Mamiya et al. 2018).
 
-**Walking rhythm test** (Pugliese et al. 2025 bioRxiv: DNg100 drives a 3-interneuron CPG, E1 = IN17A001, E2 = INXXX466, I1 = IN16B036, in all four VNC connectomes):
+**Walking rhythm (CPG): reproduced offline, partly live**
 
-| Condition | Result |
-|---|---|
-| Our spiking model, DNg100 driven at 100–300 Hz | No rhythm (score ≈ 0.1, same as no drive). E1 and E2 recruited (15–100 Hz), I1 silent. |
-| Physiology off | No rhythm. I1 is held down by tonically active inhibitory interneurons (IN26X001, IN19A002, IN19A004). |
-| All VNC interneurons graded (`FLY_VNC_GRADED=1`, hypothesis test) | No clear rhythm (≤ 0.2). |
-| Offline reproduction of their rate model on our BANC graph (`tools/vnc_rate_model.py`) | Not yet rhythmic. E1 is out-inhibited (−591 vs +363). |
+Target: Pugliese et al. 2025 bioRxiv. Driving DNg100 produces a leg motor rhythm via E1 = IN17A001 → E2 = INXXX466 → I1/I2 (IN16B036 / IN19A007) → E1.
 
-- Their curated subnetwork list and morphology-based neuron sizes are on Zenodo. Our BANC export has empty morphology columns.
-- Result so far: legs follow their motor neurons, but the nerve cord does not yet generate stepping.
+1. **Exact reproduction of their model** (`tools/pugliese_repro.py`):
+   - Inputs: their BANC front-leg subnetwork, weights and surface areas (`data/raw/pugliese`: Zenodo 22260924 and github smpuglie/Pugliese_2026 @10e7661, CC-BY-4.0).
+   - Result: leg motor neuron rhythm 0.5–0.66 at 12.5–17.5 Hz.
+   - With our weights and signs swapped in on their neurons: 0.65 at 13.8 Hz. Our synapse data are fine.
+2. **Their rate model on our whole BANC nerve cord** (`tools/vnc_rate_model.py`, 25,227 neurons, stimulating the right-soma DNg100 135733, whose axon targets the left legs):
+
+   | Size normalisation | Result |
+   |---|---|
+   | Measured surface area | E1/E2/I2 and motor neurons rhythmic, 0.96–0.98 at 14 Hz |
+   | (synapses/median)^0.60 | rhythmic, 1.0 at 16 Hz |
+   | None | runaway, no rhythm |
+
+   - Size normalisation (larger neurons less excitable) is required.
+3. **Ported to the live GPU brain:**
+   - The 12,827 nerve-cord interneurons are now rate units, parameters mapped from the paper:
+     - gain 21.82 Hz/mV ÷ size; threshold 0.344 mV × size above rest; r_max 200 Hz
+     - size = surface area where measured, else synapses^0.60 (fit r = 0.90)
+     - no noise, offset, adaptation or homeostasis
+   - Transmission is smooth: quanta of weight/20 (`RATE_Q`).
+   - Motor neurons, ANs, DNs and sensory neurons stay spiking.
+   - Result: the CPG interneurons E1/E2/E3 now oscillate together, but weakly (0.25–0.37 at 3–5 Hz). Frequency does not yet rise with drive, and the leg motor neurons do not yet follow.
+   - Remaining differences from the offline model: spiking motor neurons with homeostasis, the 5 ms synaptic filter and 1.8 ms delay, conductance synapses, and tonic input from brain, ascending and sensory neurons.
+   - Validation with rate units:
+
+     | Check | Result |
+     |---|---|
+     | Resting rates | unchanged |
+     | Bilateral sugar 100 Hz → MN9 | 20 / 12 Hz |
+     | Giant fibre → TTMn | 52 Hz |
+     | Speed | 50 fps |
 
 ## Former limitation: a global antennal-lobe / mushroom-body runaway (fixed, see the next section)
 

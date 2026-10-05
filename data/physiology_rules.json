@@ -51,6 +51,19 @@
   {
    "match": {
     "super_class": [
+     "vnc_intrinsic"
+    ]
+   },
+   "rate_unit": {
+    "fcap_hz": 200.0,
+    "gain_hz_per_mv": 21.82,
+    "threshold_mv": 0.3437
+   },
+   "basis": "literature model: VNC interneurons as rate units, Pugliese et al. 2025 bioRxiv (dR/dt = (max(0, fcap tanh(a(x-theta)/fcap)) - R)/tau; tau 20 ms, a 1, theta 7.5, fcap 200, W = 0.03 x synapses, a/size and theta*size by surface area). x = 21.82 x our steady depolarisation (0.03 / (0.275 mV x 5 ms)), so gain 21.82 Hz/mV and threshold 0.3437 mV above rest; many insect VNC premotor interneurons are non-spiking. Reproduced offline on our BANC graph (tools/vnc_rate_model.py): DNg100 -> 14 Hz CPG rhythm"
+  },
+  {
+   "match": {
+    "super_class": [
      "optic",
      "visual_projection",
      "visual_centrifugal"

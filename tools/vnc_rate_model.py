@@ -28,9 +28,20 @@ W = sp.csr_matrix((0.03 * e["Excitatory x Connectivity"].astype(float).values, (
 cnt = np.bincount(pre, weights=e.Connectivity.values, minlength=n) + np.bincount(post, weights=e.Connectivity.values, minlength=n)
 size = cnt.astype(float); size[size <= 0] = np.median(size[size > 0]); size /= np.median(size)
 size = np.ones(n) if SIZE == "none" else (np.sqrt(size) if SIZE == "sqrt" else size)
+if SIZE == "measured":
+    # BANC surface areas from Pugliese et al.'s table (data/raw/pugliese) where available, median elsewhere
+    pt = pd.read_csv(ROOT / "data/raw/pugliese/wTable_20260217_fullData_consistentColumns.csv")
+    sa = dict(zip(pt.pt_root_id.astype("int64"), pt.surf_area_um2))
+    comp = pd.read_csv(ROOT / "data/raw/Completeness_783.csv", index_col=0)
+    fwp = pd.Series(np.arange(len(comp)), index=comp.index)
+    bid_of = dict(zip(v.model_index, v.bid))
+    bid_of.update({int(fwp[f]): bb for f, bb in zip(b.flywire_id, b.banc_id) if f in fwp.index})
+    size = np.array([sa.get(bid_of.get(x, -1), np.nan) for x in ids], float)
+    print("neurons with measured surface area:", int(np.isfinite(size).sum()), "of", n)
+    med = np.nanmedian(size); size[~np.isfinite(size)] = med; size /= med
 a = 1.0 / size; theta = 7.5 * size; fcap, tau = 200.0, 0.020
 stim = [int(x) for x in sys.argv[1:]] or [130297]
-I = np.zeros(n); I[[pos[s] for s in stim]] = 250.0
+I = np.zeros(n); I[[pos[s] for s in stim]] = float(os.environ.get("RM_STIM_I", "400"))
 dt, T = 0.00025, 2.0; R = np.zeros(n)
 # record: CPG cells and front-left leg motor pools
 rec = {}

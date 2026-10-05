@@ -51,11 +51,14 @@ layout(set = 0, binding = 20, std430) readonly buffer Release { float release_ga
 // against tools/reference_lif.py scheme "cond": Shiu sugar set 100 Hz -> MN9 69.5/52 Hz (current: 68/53).
 layout(set = 0, binding = 21, std430) buffer GInh  { float g_inh[]; };
 layout(set = 0, binding = 22, std430) buffer GInI  { int g_in_i[]; };
-// Non-spiking (graded) neurons: maximal release rate in Hz, 0 = ordinary spiking neuron. Graded neurons never
-// spike, reset or go refractory; they release transmitter stochastically at f(v) = r_max / (1 + exp(-(v-V_HALF)/K)).
-// basis: APL (Papadopoulou et al. 2011 Science) and patchy AL LNs lLN2P (Schenk & Gaudry 2023 eNeuro) are
-// non-spiking; f(v) parameters approximate.
-layout(set = 0, binding = 23, std430) readonly buffer Graded { float graded_rmax[]; };
+// Non-spiking (graded) neurons, per neuron vec4 (r_max Hz, gain Hz/mV, threshold mV above rest, 0); r_max 0 =
+// ordinary spiking neuron. Graded neurons never spike, reset or go refractory.
+//  gain == 0: sigmoid release f(v) = r_max / (1 + exp(-(v - V_HALF)/K)), stochastic events (APL, Papadopoulou et
+//             al. 2011; patchy AL LNs lLN2P, Schenk & Gaudry 2023)
+//  gain  > 0: rate unit of Pugliese et al. 2025 (VNC CPG model): f = max(0, r_max tanh(gain (v - v_rest - thr)
+//             / r_max)), released deterministically (accumulator in st2.y), no membrane noise
+layout(set = 0, binding = 23, std430) readonly buffer Graded { vec4 graded[]; };
+const float RATE_Q = 20.0;     // rate units release in quanta of weight/RATE_Q (smooth, rate-like transmission)
 const float GRADED_V_HALF = -45.0;
 const float GRADED_K = 2.0;
 
@@ -115,14 +118,15 @@ void main() {
 			float en = exp(-p.dt / TAU_NOISE);
 			s2.x = s2.x * en + ph.y * sqrt(1.0 - en * en) * gauss(i, p.step);
 		}
-		s2.y *= exp(-p.dt / max(ph.w, 1.0));
+		bool rate_unit = graded[i].y > 0.0;           // st2.y is then the release accumulator
+		if (!rate_unit) s2.y *= exp(-p.dt / max(ph.w, 1.0));
 		vec2 hm = homeo[i];
 		if (p.pad == 1u && hm.x >= 0.0) {
 			float r_est = activity[i] / 0.06;   // spikes filtered with 60 ms time constant -> Hz
 			hm.y = clamp(hm.y + ETA_H * p.dt * (hm.x - r_est), HOMEO_MIN, HOMEO_MAX);
 			homeo[i] = hm;
 		}
-		float bias = ext[p.n + i] + ph.x + s2.x - s2.y + hm.y;
+		float bias = ext[p.n + i] + ph.x + s2.x - (rate_unit ? 0.0 : s2.y) + hm.y;
 		float vi = v[i] + float(atomicExchange(v_kick[i], 0)) * 0.001;
 		bool not_refr = refrac[i] <= 0.0;
 		float gh = 0.0;
@@ -154,13 +158,23 @@ void main() {
 		}
 		refrac[i] -= p.dt;
 		uint s = 0u;
-		float rmax = graded_rmax[i];
-		if (rmax > 0.0) {
+		vec4 gp = graded[i];
+		if (gp.x > 0.0) {
 			// graded release event (counted as a "spike" for propagation and readout; no reset)
-			float f = rmax / (1.0 + exp(-(vi - GRADED_V_HALF) / GRADED_K));
-			float r = float(pcg(i * 7919u ^ pcg(p.step + 104729u)) & 0xFFFFFFu) / 16777216.0;
-			if (r < f * p.dt * 0.001) {
-				s = 1u;
+			if (gp.y > 0.0) {
+				float f = max(0.0, gp.x * tanh(gp.y * (vi - p.v_rest - gp.z) / gp.x));
+				s2.y += f * p.dt * 0.001 * RATE_Q;
+				float nq = floor(s2.y);
+				if (nq >= 1.0) {
+					s2.y -= nq;
+					s = uint(min(nq, 255.0));   // number of quanta this step
+				}
+			} else {
+				float f = gp.x / (1.0 + exp(-(vi - GRADED_V_HALF) / GRADED_K));
+				float r = float(pcg(i * 7919u ^ pcg(p.step + 104729u)) & 0xFFFFFFu) / 16777216.0;
+				if (r < f * p.dt * 0.001) s = 1u;
+			}
+			if (s >= 1u) {
 				atomicAdd(group_count[gid], 1u);
 				atomicAdd(pop_count[pop_id[i]], 1u);
 			}
@@ -180,7 +194,7 @@ void main() {
 		if (p.cond == 1u) g_inh[i] = gh;
 		st2[i] = s2;
 		spiked[i] = s;
-		activity[i] = activity[i] * p.act_decay + float(s);
+		activity[i] = activity[i] * p.act_decay + ((gp.y > 0.0) ? float(s) / RATE_Q : float(s));
 	} else if (p.mode == 2u) {
 		if (i >= p.pad) return;                 // pad = number of gap junctions
 		ivec4 gj = gap[i];
@@ -190,6 +204,7 @@ void main() {
 		uint slot = ((p.step + p.delay) % p.slots) * p.n;
 		int e1 = row_ptr[i + 1u];
 		float rg = release_gain[i];
+		if (graded[i].y > 0.0) rg *= float(spiked[i]) / RATE_Q;   // rate unit: quanta of weight/RATE_Q
 		if (p.cond == 1u) {
 			for (int e = row_ptr[i]; e < e1; e++) {
 				int wv = (rg == 1.0) ? w[e] : int(float(w[e]) * rg);

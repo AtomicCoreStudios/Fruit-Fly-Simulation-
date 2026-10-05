@@ -52,6 +52,27 @@ def calibrate(sigma, tau_n, tau_w):
     return mus, rate, bs, index, d100
 
 
+def _vnc_sizes(n_model):
+    """Relative neuron size for the VNC rate units (Pugliese et al.: a /= size, theta *= size): BANC surface area
+    from their table where measured, else (synapses / median)^0.60 (fit log area vs log synapse count over 3151
+    measured VNC neurons, r = 0.90), both divided by the median."""
+    size = np.ones(n_model)
+    vp = ROOT / "data/vnc/vnc_neurons.csv"; pp = ROOT / "data/raw/pugliese/wTable_20260217_fullData_consistentColumns.csv"
+    if not vp.exists():
+        return size
+    v = pd.read_csv(vp); e = pd.read_parquet(ROOT / "data/vnc/vnc_edges.parquet")
+    cnt = e.groupby("Postsynaptic_Index").Connectivity.sum().add(e.groupby("Presynaptic_Index").Connectivity.sum(), fill_value=0)
+    sa = {}
+    if pp.exists():
+        pt = pd.read_csv(pp); sa = dict(zip(pt.pt_root_id.astype("int64"), pt.surf_area_um2))
+    k, c = 0.60, 4.64                                       # log(area um2) = 0.60 log(synapses) + 4.64
+    area = np.array([sa.get(b_, np.nan) for b_ in v.bid], float)
+    est = np.exp(c + k * np.log(np.maximum(cnt.reindex(v.model_index).fillna(1).values, 1)))
+    area = np.where(np.isfinite(area) & (area > 0), area, est)
+    size[v.model_index.values] = area / np.median(area)
+    return size
+
+
 def main():
     rules = json.loads((ROOT / "data/physiology_rules.json").read_text())
     # FLY_DEFAULT_RATE (calibration experiments): override the rates of the purely approximate rules
@@ -100,7 +121,8 @@ def main():
     print(f"DoOR: {len(glo_rate)} glomeruli with measured ORN spontaneous rates (median {orn_median:.1f} Hz)")
     out = np.zeros((len(tab), 4), np.float32); out[:, 3] = 1.0
     target_rate = np.full(len(tab), -1.0, np.float32)     # homeostatic set point (Hz); -1 = none
-    graded = np.zeros(len(tab), np.float32)                 # non-spiking neurons: max release rate (Hz)
+    graded = np.zeros((len(tab), 4), np.float32)            # non-spiking: (r_max Hz, gain Hz/mV, thr mV, 0)
+    vnc_size = _vnc_sizes(len(tab)) if any("rate_unit" in r for r in rules["rules"]) else None
     used = {}
     ct = tab.cell_type.fillna("").astype(str).values; cc = tab.cell_class.fillna("").astype(str).values
     sc = tab.super_class.fillna("").astype(str).values
@@ -116,10 +138,18 @@ def main():
                 continue
             elif "super_class" in m and sc[i] not in m["super_class"]:
                 continue
+            if "rate_unit" in r:
+                # Pugliese et al. 2025 VNC rate unit: no noise/offset/adaptation/homeostasis; size-normalised
+                # gain and threshold mapped to mV (see _vnc_sizes / data/physiology_rules.json)
+                ru = r["rate_unit"]; sz = float(vnc_size[i])
+                out[i] = (0.0, 0.0, 0.0, 1.0)
+                graded[i] = (ru["fcap_hz"], ru["gain_hz_per_mv"] / sz, ru["threshold_mv"] * sz, 0.0)
+                used[k] = used.get(k, 0) + 1
+                break
             if "graded" in r:
                 # non-spiking neuron: membrane noise, no resting offset/adaptation/homeostasis, graded release
                 out[i] = (0.0, sigma, 0.0, tau_w)
-                graded[i] = r["graded"]["r_max_hz"]
+                graded[i] = (r["graded"]["r_max_hz"], 0.0, 0.0, 0.0)
                 used[k] = used.get(k, 0) + 1
                 break
             target = r["rate_hz"]
@@ -136,7 +166,7 @@ def main():
             break
     out.tofile(ROOT / "data/physiology.bin")
     target_rate.tofile(ROOT / "data/physiology_targets.bin")
-    graded.tofile(ROOT / "data/graded_release.bin")
+    graded.astype(np.float32).tofile(ROOT / "data/graded_release.bin")
     meta = {"n": len(tab), "sigma_mv": sigma, "tau_noise_ms": tau_n, "tau_w_ms": tau_w,
             "rules_used": {rules["rules"][k]["basis"][:60]: v for k, v in sorted(used.items())},
             "calibration": {"mu_mv": mus[::40].round(2).tolist(), "rate_hz": rate[::40].round(2).tolist()}}

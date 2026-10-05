@@ -254,16 +254,17 @@ var graded_loaded := 0
 
 
 func _graded_bytes() -> PackedByteArray:
-	# per neuron maximal graded release rate (Hz), 0 = spiking; data/graded_release.bin from build_physiology
+	# per neuron vec4 (r_max Hz, gain Hz/mV, threshold mV, 0); r_max 0 = spiking (data/graded_release.bin,
+	# tools/build_physiology.py)
 	var f := FileAccess.open("res://data/graded_release.bin", FileAccess.READ)
-	if physiology and f != null and f.get_length() == n * 4:
-		var b := f.get_buffer(n * 4)
+	if physiology and f != null and f.get_length() == n * 16:
+		var b := f.get_buffer(n * 16)
 		var a := b.to_float32_array()
-		for x in a:
-			if x > 0.0:
+		for k in n:
+			if a[4 * k] > 0.0:
 				graded_loaded += 1
 		return b
-	return _zeros(n * 4)
+	return _zeros(n * 16)
 
 
 var _release := PackedFloat32Array()

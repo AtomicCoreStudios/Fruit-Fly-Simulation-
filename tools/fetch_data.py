@@ -74,3 +74,16 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+# Pugliese et al. 2025/2026 VNC CPG model data (CC-BY-4.0), fetched 2026-10-05 (user approved the 157 MB file):
+#   data/raw/pugliese/DNg100_Stim_Prune_BANC_vncOnly.zip  Zenodo 22260924, md5 b73648ba5bfce8e28739816d4c28fc0b,
+#     sha256 5f509a46a385e4b56c36142622ae828f985ee85c80bc2d3cb10d235f3474ee55
+#   from github.com/smpuglie/Pugliese_2026 @10e7661, data/banc t1 premotor/:
+#     W_20260217.npz                                   sha256 83197529fa336b5f9ce400cf689f299fa3e8f6f5379947ae7df5ec004869141f
+#     wTable_20260217_fullData_consistentColumns.csv   sha256 6f87bf62227e160754523418bfbac35fc8971a90e4ed54574bf769b08332e285
+#     wTable_20260217_surfAreas.csv                    sha256 07c71780f861f807a620330e35bc2a57176dce76110894b6082ea1aca7b545b0
+PUGLIESE = {
+    "zenodo_record": "https://zenodo.org/records/22260924",
+    "github": "https://github.com/smpuglie/Pugliese_2026/tree/10e7661",
+}
