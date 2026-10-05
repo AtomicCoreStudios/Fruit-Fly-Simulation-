@@ -19,7 +19,7 @@ Rules for fidelity:
 - **Never present synthetic or approximate data as real.** A true 1:1 is limited by the available data.
   Say where it breaks: see section 7.
 
-## 2. Machine rules (also in `C:\Users\artez\.claude\CLAUDE.md`, which is enforced by hooks)
+## 2. Machine rules (also in the user-level `~/.claude/CLAUDE.md`, enforced by hooks)
 
 - **Where you may write:** only inside `F:\Fruit Fly Experiment`, the scratchpad and `~/.claude`. No
   registry edits, system settings, admin rights or installers. Ask before anything destructive or
