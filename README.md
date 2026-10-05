@@ -729,10 +729,16 @@ Live tests:
 - **Conductance synapses on the rate units halve the rhythm.** So rate units now take linear, current-based input (excitation minus inhibition) as in the published model, while the spiking brain keeps conductance synapses (`shaders/lif.glsl`). With this, the live CPG is strong: E1/E2/I1/I2 at 0.57–0.61, 6.3 Hz.
 - **Spiking leg motor neurons do not follow the rhythm** (≤ 0.25). Leg motor neurons are now firing-rate units too, as in Pugliese et al.; this is an abstraction, since real MNs spike. TTMn keeps its spiking escape rule.
 - **The legs do not step yet.** Joint excursions under DNg100 drive are 0.003–0.09 rad, at 2–3 Hz, with no tripod phase pattern (`tools/analyze_gait.py`).
-- **Next suspects:**
-  - motor-neuron modulation depth, with flexor and extensor pools co-active
-  - the muscle model's R_HALF (30 Hz) and range
-  - the rhythm frequency (6 Hz; real stepping 7–15 Hz)
+- **Per motor neuron, left front leg, DNg100 300 Hz** (`recordings/mn_lf.csv`):
+  - Only 7 of 69 motor neurons are active, consistent with Pugliese et al. ("DNg100 typically recruited 2–10 leg MNs").
+  - The active ones are strongly modulated (s.d. ≈ mean).
+  - They are all one in-phase stance-like synergy (coxa retraction, trochanter extension, tibia flexion); the antagonists stay silent.
+  - The muscle model averages activation over the whole pool, so 2 of 6 active neurons barely move the joint.
+  - The gap has therefore moved to the biomechanics. Small insect legs moving in air need little force, and passive joint torques dominate (Hooper et al. 2009 J Neurosci). The "fraction recruited → fraction of range" muscle model is too crude.
+- **Next:**
+  - a torque-based muscle and joint model with passive stiffness, using MN/muscle force data (e.g. Azevedo et al. 2020 eLife)
+  - stepping frequency (6 Hz; real 7–15 Hz)
+  - proprioceptive feedback during stepping
 
 ## Former limitation: a global antennal-lobe / mushroom-body runaway (fixed, see the next section)
 
