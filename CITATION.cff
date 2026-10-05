@@ -13,3 +13,68 @@ keywords:
   - neuromechanics
   - FlyWire
   - BANC
+references:
+  - type: article
+    title: "Neuronal wiring diagram of an adult brain"
+    authors:
+      - family-names: "Dorkenwald"
+        given-names: "Sven"
+    journal: "Nature"
+    year: 2024
+    doi: "10.1038/s41586-024-07558-y"
+  - type: article
+    title: "Whole-brain annotation and multi-connectome cell typing of Drosophila"
+    authors:
+      - family-names: "Schlegel"
+        given-names: "Philipp"
+    journal: "Nature"
+    year: 2024
+    doi: "10.1038/s41586-024-07686-5"
+  - type: article
+    title: "A Drosophila computational brain model reveals sensorimotor processing"
+    authors:
+      - family-names: "Shiu"
+        given-names: "Philip K."
+    journal: "Nature"
+    year: 2024
+    doi: "10.1038/s41586-024-07763-9"
+  - type: article
+    title: "Distributed control circuits across a brain-and-cord connectome"
+    authors:
+      - family-names: "Bates"
+        given-names: "Alexander Shakeel"
+    journal: "bioRxiv"
+    year: 2025
+    doi: "10.1101/2025.07.31.667571"
+  - type: dataset
+    title: "Preprint version: Distributed control circuits across a brain-and-cord connectome"
+    authors:
+      - family-names: "Bates"
+        given-names: "Alexander Shakeel"
+    journal: "Harvard Dataverse"
+    year: 2025
+    doi: "10.7910/DVN/8TFGGB"
+  - type: article
+    title: "Connectome simulations identify a central pattern generator circuit for fly walking"
+    authors:
+      - family-names: "Pugliese"
+        given-names: "Sarah M."
+    journal: "bioRxiv"
+    year: 2025
+    doi: "10.1101/2025.09.12.675944"
+  - type: dataset
+    title: "Pugliese et al. 2026 data"
+    authors:
+      - family-names: "Pugliese"
+        given-names: "Sarah"
+    journal: "Zenodo"
+    year: 2026
+    doi: "10.5281/zenodo.22260924"
+  - type: article
+    title: "NeuroMechFly v2: simulating embodied sensorimotor control in adult Drosophila"
+    authors:
+      - family-names: "Wang-Chen"
+        given-names: "Sibo"
+    journal: "Nature Methods"
+    year: 2024
+    doi: "10.1038/s41592-024-02497-y"

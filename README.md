@@ -977,7 +977,7 @@ Performance with everything on (brain + nerve cord + FlyVis + graded optic lobe 
 ## License
 
 - **Code:** Apache License 2.0 ([LICENSE](LICENSE)).
-- **Documentation, figures, recordings and derived data:** CC BY 4.0 ([LICENSE-DATA.md](LICENSE-DATA.md)).
+- **Documentation and figures:** CC BY 4.0. **Data derived from FlyWire:** CC BY-NC 4.0 (non-commercial), as FlyWire's public release requires. **Eye-map-derived files:** GPL-3.0. Details: [LICENSE-DATA.md](LICENSE-DATA.md).
 - **Third-party datasets, models and assets** keep their own licenses and must be cited: see [THIRD_PARTY.md](THIRD_PARTY.md).
-- **All sources and publications, with links:** [REFERENCES.md](REFERENCES.md).
+- **All sources and publications, with links, and each provider's citation rules:** [REFERENCES.md](REFERENCES.md) ("How to cite").
 - **Citation:** see [CITATION.cff](CITATION.cff).
