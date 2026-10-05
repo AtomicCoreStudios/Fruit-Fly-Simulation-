@@ -649,6 +649,24 @@ With physiology and a fresh homeostatic warm-up:
 
 Summary: the leg route works in Shiu's raw model when its interneurons are driven, but leg GRNs cannot drive them hard enough (AN01B004 reaches 0–44 Hz). In the model with physiology, every stage is also damped. The real fly is quiet at rest but highly excitable along this chain. A noisy point-LIF homeostatically pinned to fixed set points cannot be both.
 
+## Non-spiking (graded) neurons (2026-10-04, on by default)
+
+- **Which neurons:** APL (2; Papadopoulou et al. 2011; Amin et al. 2020) and the patchy antennal-lobe local neurons lLN2P_a/b/c (34; Schenk & Gaudry 2023 eNeuro; R32F10 patchy LNs, Sizemore et al. 2022). Both are non-spiking in recordings.
+- **Dynamics:**
+  - These neurons never spike, reset or go refractory; their membrane integrates continuously, with membrane noise.
+  - They release transmitter stochastically at f(v) = r_max / (1 + exp(−(v + 45)/2)), with r_max = 100 Hz. The release curve is approximate.
+  - Implementation: `shaders/lif.glsl` binding 23, `data/graded_release.bin`, rule `graded` in `data/physiology_rules.json`.
+- **Excluded:** graded neurons have no resting-rate target, adaptation or homeostasis.
+
+Results after a fresh warm-up:
+- **lLN2P:** release about 57 events/s at rest (near the top of the curve; they integrate ORN/PN input without spike resets).
+- **APL:** tonic graded inhibition at about 5 events/s (previously forced silent). Kenyon cells 0.2 Hz; PNs 3.4 Hz (was 4.8).
+- **Unchanged:** sugar → MN9 (bilateral 100 Hz → 23/11 Hz) and giant fibre → TTMn (52 Hz).
+- **Not fixed:**
+  - The spiking AL hubs il3LN6 and lLN2F_b still sit at the −40 mV homeostasis clamp.
+  - They are spiking types (Seki et al. 2010 type I), so making lLN2P graded could not tame them.
+  - The leg route is unchanged.
+
 ## Former limitation: a global antennal-lobe / mushroom-body runaway (fixed, see the next section)
 
 Strong, sustained bilateral sugar input (both labellar sugar sets at 100 Hz) drives the Shiu et al. spiking model into a self-sustaining global state:

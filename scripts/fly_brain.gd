@@ -170,6 +170,7 @@ func _init_gpu(pop_b, group_b, rowptr_b, col_b, w_b) -> String:
 		["ext", _ext_cpu.to_byte_array()], ["v_kick", zeros_n], ["gap", _gap_bytes()],
 		["phys", _phys_bytes()], ["st2", _zeros(n * 8)], ["homeo", _homeo_bytes()],
 		["release", _release_init()], ["g_inh", _zeros(n * 4)], ["g_in_i", zeros_ring.duplicate()],
+		["graded", _graded_bytes()],
 	]
 	var uniforms: Array[RDUniform] = []
 	for b in specs.size():
@@ -246,6 +247,22 @@ func _homeo_bytes() -> PackedByteArray:
 			a[2 * i + 1] = o[i]
 		homeostasis_loaded = true
 	return a.to_byte_array()
+
+
+var graded_loaded := 0
+
+
+func _graded_bytes() -> PackedByteArray:
+	# per neuron maximal graded release rate (Hz), 0 = spiking; data/graded_release.bin from build_physiology
+	var f := FileAccess.open("res://data/graded_release.bin", FileAccess.READ)
+	if physiology and f != null and f.get_length() == n * 4:
+		var b := f.get_buffer(n * 4)
+		var a := b.to_float32_array()
+		for x in a:
+			if x > 0.0:
+				graded_loaded += 1
+		return b
+	return _zeros(n * 4)
 
 
 var _release := PackedFloat32Array()

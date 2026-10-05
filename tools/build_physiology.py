@@ -95,6 +95,7 @@ def main():
     print(f"DoOR: {len(glo_rate)} glomeruli with measured ORN spontaneous rates (median {orn_median:.1f} Hz)")
     out = np.zeros((len(tab), 4), np.float32); out[:, 3] = 1.0
     target_rate = np.full(len(tab), -1.0, np.float32)     # homeostatic set point (Hz); -1 = none
+    graded = np.zeros(len(tab), np.float32)                 # non-spiking neurons: max release rate (Hz)
     used = {}
     ct = tab.cell_type.fillna("").astype(str).values; cc = tab.cell_class.fillna("").astype(str).values
     sc = tab.super_class.fillna("").astype(str).values
@@ -110,6 +111,12 @@ def main():
                 continue
             elif "super_class" in m and sc[i] not in m["super_class"]:
                 continue
+            if "graded" in r:
+                # non-spiking neuron: membrane noise, no resting offset/adaptation/homeostasis, graded release
+                out[i] = (0.0, sigma, 0.0, tau_w)
+                graded[i] = r["graded"]["r_max_hz"]
+                used[k] = used.get(k, 0) + 1
+                break
             target = r["rate_hz"]
             if target is None:
                 break
@@ -124,13 +131,14 @@ def main():
             break
     out.tofile(ROOT / "data/physiology.bin")
     target_rate.tofile(ROOT / "data/physiology_targets.bin")
+    graded.tofile(ROOT / "data/graded_release.bin")
     meta = {"n": len(tab), "sigma_mv": sigma, "tau_noise_ms": tau_n, "tau_w_ms": tau_w,
             "rules_used": {rules["rules"][k]["basis"][:60]: v for k, v in sorted(used.items())},
             "calibration": {"mu_mv": mus[::40].round(2).tolist(), "rate_hz": rate[::40].round(2).tolist()}}
     (ROOT / "data/physiology.json").write_text(json.dumps(meta, indent=1))
     for k, v in sorted(used.items()):
         r = rules["rules"][k]
-        print(f"  {v:7d} neurons  rate {r['rate_hz']}  adapt {r.get('adapt_index')}  <- {r['basis'][:70]}")
+        print(f"  {v:7d} neurons  rate {r.get('rate_hz', 'graded')}  adapt {r.get('adapt_index')}  <- {r['basis'][:70]}")
     print(f"wrote data/physiology.bin ({len(tab)} neurons)")
 
 

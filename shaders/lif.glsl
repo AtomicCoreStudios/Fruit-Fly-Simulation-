@@ -51,6 +51,13 @@ layout(set = 0, binding = 20, std430) readonly buffer Release { float release_ga
 // against tools/reference_lif.py scheme "cond": Shiu sugar set 100 Hz -> MN9 69.5/52 Hz (current: 68/53).
 layout(set = 0, binding = 21, std430) buffer GInh  { float g_inh[]; };
 layout(set = 0, binding = 22, std430) buffer GInI  { int g_in_i[]; };
+// Non-spiking (graded) neurons: maximal release rate in Hz, 0 = ordinary spiking neuron. Graded neurons never
+// spike, reset or go refractory; they release transmitter stochastically at f(v) = r_max / (1 + exp(-(v-V_HALF)/K)).
+// basis: APL (Papadopoulou et al. 2011 Science) and patchy AL LNs lLN2P (Schenk & Gaudry 2023 eNeuro) are
+// non-spiking; f(v) parameters approximate.
+layout(set = 0, binding = 23, std430) readonly buffer Graded { float graded_rmax[]; };
+const float GRADED_V_HALF = -45.0;
+const float GRADED_K = 2.0;
 
 layout(push_constant, std430) uniform Params {
 	uint n;
@@ -147,7 +154,18 @@ void main() {
 		}
 		refrac[i] -= p.dt;
 		uint s = 0u;
-		if (not_refr && vi > p.v_th) {
+		float rmax = graded_rmax[i];
+		if (rmax > 0.0) {
+			// graded release event (counted as a "spike" for propagation and readout; no reset)
+			float f = rmax / (1.0 + exp(-(vi - GRADED_V_HALF) / GRADED_K));
+			float r = float(pcg(i * 7919u ^ pcg(p.step + 104729u)) & 0xFFFFFFu) / 16777216.0;
+			if (r < f * p.dt * 0.001) {
+				s = 1u;
+				atomicAdd(group_count[gid], 1u);
+				atomicAdd(pop_count[pop_id[i]], 1u);
+			}
+			refrac[i] = 0.0;
+		} else if (not_refr && vi > p.v_th) {
 			s = 1u;
 			vi = p.v_reset;
 			gi = 0.0;

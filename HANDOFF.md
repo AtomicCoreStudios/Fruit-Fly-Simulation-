@@ -223,4 +223,11 @@ one line. Check whether meshes exist for the right-hand side or need mirroring.
 - **Phase 5b, leg sugar → PER (2026-10-03, branch `phase5b-leg-per`, in progress):**
   - Added: type-consistent AN matching, presynaptic release-gain buffer, hunger → sugar-GRN release, named feeding neurons mapped to v783, and the diagnostics `tools/diag_leg_per.py` and `tools/diag_sugar_path.py`.
   - The leg arc LgLG4 → AN01B004 → Bract → MN9 is present but too weak. The missing gain is central (see README).
+- **Leg sugar → PER: known gap (2026-10-04).**
+  - The arc (LgLG4 → AN01B004 → Bract / Sink & Synch → Roundup → MN9; Tastekin et al. 2026) is wired in the model, but leg sugar alone does not trigger PER.
+  - Ruled out as single causes: glutamate sign, the relay synapse strength (would need ~8×), current vs conductance synapses, lower default resting rates, a ±5 mV homeostasis cap, and default adaptation.
+  - Root cause: Shiu's raw model passes signal through these interneurons. The physiology layer (tonic network drive plus homeostasis to fixed set points) costs the feeding chain 3–8× gain, and leg GRNs drive AN01B004 only to 0–44 Hz.
+  - Tools: `tools/diag_leg_per.py`, `tools/diag_rest_drive.py`, `--drive`, `--silence`, `--release_gain`, `FLY_GLU_SIGN`, `FLY_DEFAULT_RATE`, `FLY_DEFAULT_ADAPT`.
+  - Leading idea: a resting-state mechanism that keeps neurons quiet yet excitable, instead of fixed-set-point homeostasis.
+- **Graded (non-spiking) neurons (2026-10-04):** APL and the patchy AL local neurons lLN2P_a/b/c (36 neurons) release transmitter as a graded function of voltage (`shaders/lif.glsl` binding 23, `data/graded_release.bin`).
 
