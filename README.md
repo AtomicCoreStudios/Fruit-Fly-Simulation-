@@ -16,9 +16,10 @@ The brain and body run in a closed loop in real time.
 | Legs | 391 real leg motor neurons → muscles → joints (torque model); 886 proprioceptors feed back | measured mapping; assumed mechanics (calibration ledger) |
 | Walking | Walking CPG reproduced exactly offline. Offline, the tuned descending mix (DNg100 + DNb08 + DNa02 + DNg97) gives swing/stance anti-phase in 5 of 6 legs at 4.2 Hz. Live: with wiring-derived claw/hook tuning and presynaptic gating, 4 of 6 legs switch stance/swing (1.4–3.8 cycles/s); left front and right middle stay planted; best free-walking speed 0.29 mm/s (real 10–30). **Not walking yet.** | see "Neuromuscular legs" |
 | Escape | giant fibre → TTMn (gap junction) works | literature |
+| Physics | MuJoCo installed; musculoskeletal front-leg model validates the motor map; full-body contact physics (NeuroMechFly/FlyGym) not yet ported | literature model |
 | Leg sugar → PER | known gap (see Phase 5b) | — |
 
-Everything below is in chronological order. Dated sections describe the state at that date; this table is the current summary.
+Sources and papers with DOI links: [REFERENCES.md](REFERENCES.md). Everything below is in chronological order. Dated sections describe the state at that date; this table is the current summary.
 
 ## Run
 
@@ -393,7 +394,7 @@ Where each piece comes from:
 | Pharyngeal neurons PhG1–16 | PhG1 = sugar-like (Gr64e); PhG3/4 = water; PhG2 and the aversive cluster = putative aversive (Tastekin et al. 2026, Suppl. Table 2 → `data/tastekin2026_flywire_types.tsv`) | literature |
 | Taste pegs | no ligand known → not driven | — |
 | Neuron → individual bristle, positions on the labellum | dealt by co-expression rules | approximate |
-| Feeding motor neurons, 24 types (MN1–13, CEM, MNx) | Tastekin et al. 2026 Suppl. Table 2; muscle roles from McKellar et al. 2020 | measured / literature |
+| Feeding motor neurons, 24 types (MN1–13, CEM, MNx) | Tastekin et al. 2026 Suppl. Table 2; muscle roles from McKellar et al. 2016 | measured / literature |
 | Proboscis kinematics | MN9 vs MN1 → rostrum; MN4a (+MN6) vs MN1 → haustellum; MN8 → labellum spreading (exposes pegs); MN11/12 → cibarial pump. Activation = rate/(rate+30 Hz), 60 ms time constant | approximate |
 | Labellum–substrate contact | rostrum ≥ 0.7 and haustellum ≥ 0.5 extended; pegs also need spreading ≥ 0.3. NeuroMechFly's neutral pose stands taller than a feeding fly, and posture isn't simulated | approximate |
 | Ingestion | labellum on sucrose and the pump active | — |
@@ -677,7 +678,7 @@ Summary: the leg route works in Shiu's raw model when its interneurons are drive
 
 ## Non-spiking (graded) neurons (2026-10-04, on by default)
 
-- **Which neurons:** APL (2; Papadopoulou et al. 2011; Amin et al. 2020) and the patchy antennal-lobe local neurons lLN2P_a/b/c (34; Schenk & Gaudry 2023 eNeuro; R32F10 patchy LNs, Sizemore et al. 2022). Both are non-spiking in recordings.
+- **Which neurons:** APL (2; Papadopoulou et al. 2011; Amin et al. 2020) and the patchy antennal-lobe local neurons lLN2P_a/b/c (34; Schenk & Gaudry 2023 eNeuro; R32F10 patchy LNs, Sizemore et al. 2023). Both are non-spiking in recordings.
 - **Dynamics:**
   - These neurons never spike, reset or go refractory; their membrane integrates continuously, with membrane noise.
   - They release transmitter stochastically at f(v) = r_max / (1 + exp(−(v + 45)/2)), with r_max = 100 Hz. The release curve is approximate.
@@ -861,6 +862,22 @@ Live tests:
 - Left middle, left hind, right front and right hind switch stance/swing at 1.8, 3.8, 1.4 and 2.9 cycles/s.
 - Left front and right middle stay planted.
 
+### Musculoskeletal validation of the motor map (2026-10-05, MuJoCo)
+
+`tools/msk_muscle_test.py` → `data/tables/msk_muscle_effects.csv`:
+- **Model:** the Hill-type musculoskeletal front-leg model in the FlyGym assets (`assets/flygym/model/musculoskeletal`, converted from OpenSim with MyoConverter, Apache-2.0). It has 15 named muscles that match BANC motor-neuron types one-to-one, with fitted joint stiffness 0.4 and damping 0.02. It runs in MuJoCo 3.14 (`pip install mujoco` in `.venv`).
+- **Method:** its STL meshes are not shipped, so mesh geometry is stripped (explicit inertials keep the mass). Each muscle is fully activated alone for 0.5 s, and the change of every joint is measured against the passive (unactivated) state.
+- **Confirms our joint and direction mapping:**
+
+  | Joint | Agonists | Antagonists |
+  |---|---|---|
+  | Trochanter | flexors −0.38 to −0.73 rad | extensors +0.48 to +1.31 |
+  | Tibia | flexor +0.71 | extensor −0.98 |
+  | Coxa | promotors −0.22 / −0.74 (pitch) | remotor/abductor +0.65 |
+
+- **Simplification in our model:** the coxa rotators act mainly about coxa yaw and roll, which our single protraction DoF lumps together.
+- **Scale:** full-muscle excursions of 0.5–1.3 rad agree in magnitude with `DTHETA_MN` = 0.4 rad per motor neuron (2–6 motor neurons per muscle).
+
 ## Calibration ledger (motor side): what is data, what is set by hand
 
 Kept so that any walking result can state exactly how much came from the connectome and how much from hand-set values. Basis: **measured** = from data; **literature** = published model or parameter; **assumed** = an approximate value I chose; **tuned** = adjusted while looking at walking. Nothing on the motor side has been tuned to walking yet.
@@ -962,4 +979,5 @@ Performance with everything on (brain + nerve cord + FlyVis + graded optic lobe 
 - **Code:** Apache License 2.0 ([LICENSE](LICENSE)).
 - **Documentation, figures, recordings and derived data:** CC BY 4.0 ([LICENSE-DATA.md](LICENSE-DATA.md)).
 - **Third-party datasets, models and assets** keep their own licenses and must be cited: see [THIRD_PARTY.md](THIRD_PARTY.md).
+- **All sources and publications, with links:** [REFERENCES.md](REFERENCES.md).
 - **Citation:** see [CITATION.cff](CITATION.cff).

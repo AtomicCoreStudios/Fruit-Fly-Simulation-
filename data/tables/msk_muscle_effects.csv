@@ -1,0 +1,16 @@
+muscle,Coxa_yaw,Coxa_pitch,Coxa_roll,Trochanter_yaw,Trochanter_pitch,Trochanter_roll,Tibia_pitch
+LFC_tergopleural_promotor_a,-0.12,-0.215,0.118,-0.024,-0.016,-0.022,0.002
+LFC_tergopleural_promotor_b,-0.062,-0.744,0.021,-0.073,-0.083,-0.071,0.008
+LFC_pleural_remotor_and_abductor,0.173,0.648,0.108,0.081,-0.004,0.06,-0.012
+LFC_pleural_promotor,-0.417,-0.125,-0.308,-0.066,-0.066,-0.062,-0.004
+LFC_sternal_anterior_rotator,-0.267,-0.039,0.042,-0.023,-0.019,-0.022,-0.004
+LFC_sternal_posterior_rotator,-1.332,-0.008,0.23,-0.039,-0.123,-0.061,-0.027
+LFC_sternal_adductor,-0.257,0.268,-0.171,-0.015,-0.023,-0.017,-0.009
+LFF_trochanter_flexor_b,0.012,-0.041,-0.002,-0.09,-0.734,0.396,0.013
+LFF_sterno-tergo-trochanter_extensor_a,0.065,-0.054,0.011,0.091,1.057,0.078,-0.026
+LFF_sterno-tergo-trochanter_extensor_b,0.116,-0.077,0.022,0.053,1.31,0.581,-0.031
+LFF_accesory_trochanter_flexor,-0.018,-0.032,-0.01,-0.403,-0.381,0.175,0.003
+LFF_trochanter_extensor,0.008,0.0,0.002,0.511,0.478,-0.289,-0.012
+LFF_trochanter_flexor_a,-0.002,-0.034,-0.005,-0.106,-0.577,0.193,0.011
+LFTibia_flex_93434,0.021,-0.035,0.002,-0.003,-0.034,0.004,0.709
+LFTibia_extensor_93932,-0.026,0.026,-0.005,-0.013,0.027,0.007,-0.975

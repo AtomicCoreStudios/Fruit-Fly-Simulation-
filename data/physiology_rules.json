@@ -32,7 +32,7 @@
    "graded": {
     "r_max_hz": 100.0
    },
-   "basis": "literature: non-spiking, graded release - APL (Papadopoulou et al. 2011 Science; Amin et al. 2020 eLife) and patchy AL local neurons lLN2P (Schenk & Gaudry 2023 eNeuro; R32F10 patchy LNs, Sizemore et al. 2022). Release curve (r_max, V_half -45 mV, k 2 mV) approximate"
+   "basis": "literature: non-spiking, graded release - APL (Papadopoulou et al. 2011 Science; Amin et al. 2020 eLife) and patchy AL local neurons lLN2P (Schenk & Gaudry 2023 eNeuro; R32F10 patchy LNs, Sizemore et al. 2023). Release curve (r_max, V_half -45 mV, k 2 mV) approximate"
   },
   {
    "match": {

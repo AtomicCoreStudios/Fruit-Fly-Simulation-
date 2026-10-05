@@ -55,14 +55,14 @@ var sugar_release_override := 0.0   # >0: fixed sugar-GRN release gain (test swi
 var drive_spec := ""                 # diagnostic: "i,j,k:Hz" Poisson drive on model indices
 var clean_air := false          # resting calibration: no odour, wind or taste stimuli (vision unchanged)
 var opto := {}                 # optogenetic activation: group name -> Poisson rate (Hz), --opto=g:Hz,g2:Hz
-# proboscis extension (PER): MN9 (CB0701, rostrum protractor; McKellar et al. 2020 eLife, Shiu et al.
+# proboscis extension (PER): MN9 (CB0701, rostrum protractor; McKellar et al. 2016 eLife, Shiu et al.
 # 2024) drives a muscle activation that extends rostrum + haustellum. Joint directions and the
 # full-extension angle come from the body geometry at start-up (labellum reaches the substrate).
 var _per_axis := Vector3(0, 0, 1)
 var _per_sign_r := 1.0
 var _per_sign_h := 1.0
 var _per_max := 1.2
-# feeding motor neurons (Tastekin et al. 2026 types; muscle roles from McKellar et al. 2020 and
+# feeding motor neurons (Tastekin et al. 2026 types; muscle roles from McKellar et al. 2016 and
 # Tastekin et al.): muscle activation per type, 0..1
 const FEED_MNS := {"rostrum_ext": "mn9_proboscis", "haustellum_ext": "mn_MN4a", "labellum_ext": "mn_MN6",
 	"labellum_spread": "mn_MN8", "retract": "mn_MN1", "pump_11D": "mn_MN11D", "pump_11V": "mn_MN11V",
@@ -235,7 +235,7 @@ func _calibrate_per() -> void:
 func _update_proboscis(dt: float) -> void:
 	# Each feeding motor-neuron type drives its muscle: activation saturating in the type's mean
 	# rate (half-activation 30 Hz), first-order with a 60 ms time constant. basis: approximate
-	# (graded motor control; muscle roles from McKellar et al. 2020 eLife, Tastekin et al. 2026).
+	# (graded motor control; muscle roles from McKellar et al. 2016 eLife, Tastekin et al. 2026).
 	var k := 1.0 - exp(-dt / 0.06)
 	for m in FEED_MNS:
 		var r: float = brain.rate(FEED_MNS[m])
