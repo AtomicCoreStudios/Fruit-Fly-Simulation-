@@ -54,8 +54,8 @@ def calibrate(sigma, tau_n, tau_w):
 
 def _vnc_sizes(n_model):
     """Relative neuron size for the VNC rate units (Pugliese et al.: a /= size, theta *= size): BANC surface area
-    from their table where measured, else (synapses / median)^0.60 (fit log area vs log synapse count over 3151
-    measured VNC neurons, r = 0.90), both divided by the median."""
+    from their table where measured, else exp(4.64) x synapses^0.60 um2 (fit log area vs log synapse count over
+    3151 measured VNC neurons, r = 0.90), divided by the median area of their measured subnetwork."""
     size = np.ones(n_model)
     vp = ROOT / "data/vnc/vnc_neurons.csv"; pp = ROOT / "data/raw/pugliese/wTable_20260217_fullData_consistentColumns.csv"
     if not vp.exists():
@@ -69,7 +69,9 @@ def _vnc_sizes(n_model):
     area = np.array([sa.get(b_, np.nan) for b_ in v.bid], float)
     est = np.exp(c + k * np.log(np.maximum(cnt.reindex(v.model_index).fillna(1).values, 1)))
     area = np.where(np.isfinite(area) & (area > 0), area, est)
-    size[v.model_index.values] = area / np.median(area)
+    # normaliser: median area of Pugliese et al.'s measured subnetwork (their a/size, theta*size convention)
+    med = float(np.nanmedian(pt.surf_area_um2)) if pp.exists() else float(np.median(area))
+    size[v.model_index.values] = area / med
     return size
 
 

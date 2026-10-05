@@ -100,6 +100,48 @@ func setup(p_brain: FlyBrain, p_fly) -> String:
 	return ""
 
 
+## Leg-driven locomotion (no-slip stance): feet whose height in the body frame is below their rest height
+## (plus STANCE_TOL of the leg's reach) grip the ground; the body moves by minus the summed stance-foot
+## motion (translation in the horizontal body plane and yaw about the body centre). Returns
+## [forward cm, lateral cm, yaw rad] for this frame. basis: kinematic contact model (approximate; no physics
+## engine forces, no slipping or body pitch).
+const STANCE_TOL := 0.05
+const LOAD_HZ := 40.0         # campaniform rate for a leg carrying a third of body weight (tripod), approximate
+var _foot_prev := {}
+var _foot_rest := {}
+var stance := {}
+
+
+func odometry() -> Array:
+	var inv: Transform3D = fly.global_transform.affine_inverse()
+	var dp := Vector3.ZERO
+	var dyaw := 0.0
+	var ns := 0
+	for leg in LEGS:
+		var tip: Node3D = fly.seg.get(leg + "_tarsus5")
+		var p: Vector3 = inv * tip.global_position
+		if not _foot_rest.has(leg):
+			_foot_rest[leg] = p
+			_foot_prev[leg] = p
+		var reach: float = (_foot_rest[leg] as Vector3).length()
+		var on: bool = p.y <= (_foot_rest[leg] as Vector3).y + STANCE_TOL * reach
+		stance[leg] = on
+		if on:
+			var d: Vector3 = p - _foot_prev[leg]
+			d.y = 0.0
+			dp += d
+			var r := Vector3(p.x, 0, p.z)
+			if r.length() > 1e-5:
+				dyaw += r.cross(d).y / r.length_squared()
+			ns += 1
+		_foot_prev[leg] = p
+	if ns == 0:
+		return [0.0, 0.0, 0.0]
+	dp /= float(ns)
+	# feet moving backward (+z in body frame) push the body forward (-z)
+	return [dp.z, -dp.x, -dyaw / float(ns)]
+
+
 func _local_axis(node: Node3D, world_axis: Vector3) -> Vector3:
 	return (node.get_parent() as Node3D).global_transform.basis.inverse() * world_axis
 
@@ -196,7 +238,13 @@ func _proprio(load: Dictionary) -> void:
 				var x: float = absf(angle[leg][d]) / RANGE[d][0]
 				r = 80.0 / (1.0 + exp(-(x - 0.6) / 0.08))
 			"campaniform":
-				r = clampf(load.get(leg, 0.0) * 25.0, 0.0, 100.0)
+				# cuticular strain: own muscle force + ground load while the foot is in stance (body weight shared
+				# by the stance legs; Zill et al. 2004 review: campaniform sensilla encode leg load). approximate
+				var ns := 0
+				for l2 in stance:
+					ns += 1 if stance[l2] else 0
+				var ground := (LOAD_HZ / float(maxi(ns, 1))) * 3.0 if stance.get(leg, false) else 0.0
+				r = clampf(load.get(leg, 0.0) * 25.0 + ground, 0.0, 150.0)
 		idx[k] = _sens[k][2]
 		rate[k] = r
 		hp[kind] = hp.get(kind, 0.0) + r / _sens.size()

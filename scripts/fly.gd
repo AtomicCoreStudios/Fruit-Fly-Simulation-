@@ -48,6 +48,7 @@ var _rest := {}               # segment -> rest Basis, for animation on top of t
 var _body: Node3D
 var taste: FlyTaste
 var legs: FlyLegs                    # neuromuscular legs (real leg motor neurons and proprioceptors)
+var leg_locomotion := false          # --locomotion=legs: body moved by stance feet instead of DN-rate kinematics
 var taste_bench_hz := 0.0
 var taste_bench_set := "shiu"
 var sugar_release_override := 0.0   # >0: fixed sugar-GRN release gain (test switch)
@@ -445,10 +446,11 @@ func update_senses(dt: float) -> void:
 		# which are not yet identified in FlyWire v783 here). Gain 1 (fed) .. 2 (starved): basis approximate.
 		# Benchmarks (Shiu et al. protocol) keep gain 1 unless --sugar_release is given.
 		if not drive_spec.is_empty() and taste.drive_idx.is_empty():
-			var kv := drive_spec.split(":")
-			for x in kv[0].split(","):
-				taste.drive_idx.append(int(x))
-			taste.drive_rate = float(kv[1])
+			for part in drive_spec.split(";"):
+				var kv := part.split(":")
+				for x in kv[0].split(","):
+					taste.drive_idx.append(int(x))
+					taste.drive_rates.append(float(kv[1]))
 		if sugar_release_override > 0.0:
 			taste.sugar_release = sugar_release_override
 		elif taste_bench_hz <= 0.0:
@@ -537,6 +539,15 @@ func update_motor(dt: float) -> void:
 		wgt.rotation.z = 0.0
 	position.y = 0.06
 
+	if legs != null and leg_locomotion:
+		# body moved by the legs themselves (fly_legs.odometry: no-slip stance feet)
+		var od: Array = legs.odometry()
+		rotation.y += float(od[2])
+		global_position += -global_transform.basis.z * float(od[0]) + global_transform.basis.x * float(od[1])
+		speed = float(od[0]) / maxf(dt, 1e-4)
+		turn_rate = float(od[2]) / maxf(dt, 1e-4)
+		_clamp_to_arena()
+		return
 	# descending-neuron rate -> body command; calibration comes from the connectome metadata
 	var cal: Dictionary = b.meta.get("motor", {})
 	var fwd_drive := clampf(((motor["fwd_L"] + motor["fwd_R"]) * 0.5 - cal.get("fwd_offset_hz", 4.0)) / cal.get("fwd_full_hz", 50.0), 0.0, 1.0)

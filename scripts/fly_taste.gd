@@ -122,8 +122,8 @@ func grn_rate(modality: String, chem: Dictionary) -> float:
 	return 0.0
 
 
-var drive_idx := PackedInt32Array()     # diagnostic Poisson drive on arbitrary neurons (--drive=i,j:Hz)
-var drive_rate := 0.0
+var drive_idx := PackedInt32Array()     # diagnostic Poisson drive on arbitrary neurons (--drive=i,j:Hz;k:Hz)
+var drive_rates := PackedFloat32Array()
 
 
 func _send() -> void:
@@ -136,9 +136,9 @@ func _send() -> void:
 	if lg != null and bench_hz <= 0.0:          # leg proprioceptors (fly_legs.gd), not in taste benchmarks
 		ii.append_array(lg.idx)
 		rr.append_array(lg.rate)
-	for i in drive_idx:
-		ii.append(i)
-		rr.append(drive_rate)
+	for k in drive_idx.size():
+		ii.append(drive_idx[k])
+		rr.append(drive_rates[k])
 	brain.set_sensor_rates(ii, rr)
 
 

@@ -38,7 +38,11 @@ if SIZE == "measured":
     bid_of.update({int(fwp[f]): bb for f, bb in zip(b.flywire_id, b.banc_id) if f in fwp.index})
     size = np.array([sa.get(bid_of.get(x, -1), np.nan) for x in ids], float)
     print("neurons with measured surface area:", int(np.isfinite(size).sum()), "of", n)
-    med = np.nanmedian(size); size[~np.isfinite(size)] = med; size /= med
+    if os.environ.get("RM_UNMEASURED", "syn060") == "syn060":   # (synapses)^0.60 area estimate, as live
+        est = np.exp(4.64 + 0.60 * np.log(np.maximum(cnt, 1)))
+        size = np.where(np.isfinite(size) & (size > 0), size, est)
+    med = float(np.nanmedian(pt.surf_area_um2))        # normaliser = median of the paper's (measured) subnetwork
+    size[~np.isfinite(size)] = med; size /= med
 a = 1.0 / size; theta = 7.5 * size; fcap, tau = 200.0, 0.020
 stim = [int(x) for x in sys.argv[1:]] or [130297]
 I = np.zeros(n); I[[pos[s] for s in stim]] = float(os.environ.get("RM_STIM_I", "400"))
@@ -51,6 +55,10 @@ for name, t in [("E1", "IN17A001"), ("E2", "INXXX466"), ("I1", "IN16B036"), ("I2
 lm = v[v.cell_class.astype(str).str.contains("leg_motor") & (v.sub_class == "front_leg_motor_neuron") & (v.side == "left")]
 for act, g in lm.groupby(lm.function.astype(str).str.replace("leg_motor", "").str.strip(",")):
     rec["MN_" + act] = [pos[x] for x in g.model_index if x in pos]
+if os.environ.get("RM_PER_MN") == "1":       # every front-left leg motor neuron separately
+    for r_ in lm.itertuples():
+        if r_.model_index in pos:
+            rec[f"mn|{r_.cell_type}|{str(r_.function).replace('leg_motor','').strip(',')}|{r_.model_index}"] = [pos[r_.model_index]]
 tr = {k: [] for k in rec}; ts = []
 TAU_S = float(os.environ.get("RM_TAU_SYN", "0"))      # ms; live LIF: 5 ms synaptic filter
 DELAY = int(round(float(os.environ.get("RM_DELAY", "0")) / (dt * 1000)))   # ms; live: 1.8 ms

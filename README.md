@@ -745,6 +745,28 @@ Live tests:
   - Real stepping is about 1–1.5 rad at 7–15 Hz with a tripod pattern. Not yet reached: amplitude is about a sixth of real, the rhythm is slower and irregular, and there is no inter-leg tripod coordination.
 - **Next:** antagonist (swing-phase) recruitment, inter-leg coupling, and proprioceptive feedback while stepping.
 
+### Swing/stance, coordination and free walking (2026-10-05)
+
+1. **Free walking** (`--locomotion=legs`, `FlyLegs.odometry`):
+   - Model: stance feet (foot height ≤ rest + 5% of reach, body frame) grip the ground without slipping, and the body moves by minus their mean motion (translation and yaw). It is a kinematic contact model without physics forces.
+   - Result: with DNg100 driven, the legs move the body (4.9 mm path in 6.8 s, 5× rest) but the net displacement stays ≈ 0 (≤ 0.06 mm/s; real flies walk 10–30 mm/s). Feet push back and forth without a clean swing phase.
+2. **Swing/stance recruitment:**
+   - Offline, their model with our synaptic kinetics recruits 20 front-left motor neurons in two clusters about 180° apart: swing (promotors, trochanter and tibia flexors, tarsus depressors) and stance (remotors, trochanter extensors).
+   - The stance cluster appears only if unmeasured neurons are given the median size. With the data-based size estimate (area ∝ synapses^0.60, r = 0.90; normalised by the median of the paper's measured subnetwork) only the swing cluster remains, at 7.1 Hz offline and 8 Hz live. Live and offline therefore agree.
+   - Live, the right-soma DNg100 (which drives the left legs) gives swing-cluster rhythm at 8 Hz, in the real 7–15 Hz range. Any substantial left-soma DNg100 drive switches the left front leg to a slow, stance-dominated pattern.
+   - In insects, stance is reinforced by load feedback from campaniform sensilla (Zill et al. 2004). BANC wiring from leg campaniform sensilla to the motor pools is mixed: direct excitation of retractors and trochanter motor neurons, but net inhibitory 2-hop pathways.
+   - Ground load now drives the campaniform neurons in stance (`LOAD_HZ`, approximate). It does not yet produce propulsive stepping.
+3. **Inter-leg coordination** (tethered, bilateral DNg100 150 Hz; CTr phase in the 4–9 Hz band):
+
+   | Leg pair | Phase difference | Consistency |
+   |---|---|---|
+   | Left front vs left middle | −160° | 0.52 |
+   | Left middle vs left hind | 178° | 0.51 |
+   | Left front vs right front | −153° | 0.5 |
+   | Left front vs right middle | none consistent | 0.03 |
+
+   - Ipsilateral neighbours and the front legs alternate, as in a tripod gait. The cross-body tripod partner is not yet locked in phase.
+
 ## Former limitation: a global antennal-lobe / mushroom-body runaway (fixed, see the next section)
 
 Strong, sustained bilateral sugar input (both labellar sugar sets at 100 Hz) drives the Shiu et al. spiking model into a self-sustaining global state:
