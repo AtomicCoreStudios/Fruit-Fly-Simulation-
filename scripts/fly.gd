@@ -47,6 +47,7 @@ var seg := {}                 # body segment name -> Node3D (FlyGym names, e.g. 
 var _rest := {}               # segment -> rest Basis, for animation on top of the pose
 var _body: Node3D
 var taste: FlyTaste
+var legs: FlyLegs                    # neuromuscular legs (real leg motor neurons and proprioceptors)
 var taste_bench_hz := 0.0
 var taste_bench_set := "shiu"
 var sugar_release_override := 0.0   # >0: fixed sugar-GRN release gain (test switch)
@@ -96,6 +97,16 @@ func _ready() -> void:
 			eye = null
 	if seg.has("lab_l_L01") and seg.has("c_rostrum"):
 		_calibrate_per()
+		if not _args_no_legs():
+			legs = FlyLegs.new()
+			add_child(legs)
+			var lerr := legs.setup(brain, self)
+			if lerr != "":
+				push_warning("neuromuscular legs disabled: " + lerr)
+				legs.queue_free()
+				legs = null
+			else:
+				print("legs: neuromuscular model on (%d proprioceptors)" % legs._sens.size())
 		taste = FlyTaste.new()
 		add_child(taste)
 		taste.bench_hz = taste_bench_hz
@@ -250,11 +261,16 @@ func _update_proboscis(dt: float) -> void:
 		hunger = minf(1.0, hunger + dt * 0.004)
 
 
+func _args_no_legs() -> bool:
+	return "--legs=0" in OS.get_cmdline_user_args()
+
+
 func _animate_body(t_air: float) -> void:
-	# Cosmetic only: leg swing and wing beat are not driven by a motor model (no nerve cord yet).
+	# Legs: driven by the neuromuscular model (fly_legs.gd) when it is on; otherwise a cosmetic swing.
+	# Wing beat is still cosmetic.
 	if seg.is_empty():
 		return
-	for leg in ["lf", "lm", "lh", "rf", "rm", "rh"]:
+	for leg in ([] if legs != null else ["lf", "lm", "lh", "rf", "rm", "rh"]):
 		var node: Node3D = seg.get(leg + "_coxa")
 		if node == null:
 			continue
@@ -487,6 +503,8 @@ func update_motor(dt: float) -> void:
 	# Giant fibre spike -> escape take-off, away from whatever loomed
 	_escape_cooldown -= dt
 	_update_proboscis(dt)
+	if legs != null:
+		legs.update(dt)
 	if tethered:
 		if motor["ttmn"] > 0.0 and _escape_cooldown <= 0.0:
 			escapes += 1          # TTMn spike = jump command, counted but body held

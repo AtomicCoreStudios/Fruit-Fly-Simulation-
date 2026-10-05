@@ -48,6 +48,7 @@ func _ready() -> void:
 	brain.physiology = _args.get("physiology", "1") != "0"
 	brain.homeostasis_learning = _args.has("homeostasis")
 	brain.conductance_synapses = _args.get("synapses", "conductance") != "current"
+	brain.act_tau_ms = float(_args.get("act_tau", "60"))
 	if _args.has("phys_ablate"):
 		brain.phys_ablate = Array(str(_args["phys_ablate"]).split(","))
 	var err := brain.load_connectome("res://data/connectome_%s.bin" % which, "res://data/connectome_%s.json" % which)
@@ -553,6 +554,9 @@ func _auto_script() -> void:
 
 func _print_log() -> void:
 	var r := brain.region_hz
+	if fly.legs != null and _args.has("legs_log"):
+		var lf: Dictionary = fly.legs.angle["lf"]
+		print("legs_dbg lf ThC %.2f CTr %.2f FTi %.2f TiTa %.2f | proprio %s" % [lf["ThC_pro"], lf["CTr"], lf["FTi"], lf["TiTa"], str(fly.legs.sense)])
 	var s := "t=%.1fs spikes/s=%d gpu=%.1fms fps=%d | pos=(%.1f,%.1f) spd=%.2f turn=%.2f air=%s feed=%s esc=%d hunger=%.2f" % [
 		brain.sim_time_ms / 1000.0, brain.total_spikes_per_s, brain.gpu_ms, Engine.get_frames_per_second(),
 		fly.position.x, fly.position.z, fly.speed, fly.turn_rate, fly.airborne > 0, fly.feeding, fly.escapes, fly.hunger]
@@ -636,7 +640,7 @@ func _probe() -> void:
 		var s := 0.0
 		for i in ids:
 			s += act[int(i)]
-		row.append("%.3f" % (s / maxf(ids.size(), 1) * 1000.0 / 60.0))
+		row.append("%.3f" % (s / maxf(ids.size(), 1) * 1000.0 / brain.act_tau_ms))
 	_probe_f.store_csv_line(row)
 
 

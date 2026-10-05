@@ -195,6 +195,7 @@ var physiology_loaded := false
 ## Conductance-based synapses (default): reversal potentials. basis: E_exc ~0 mV for nicotinic ACh receptors
 ## (measured); E_inh -75 mV for Cl- channels (GABA-A/Rdl, GluCl, histamine-gated): approximate.
 var conductance_synapses := true
+var act_tau_ms := 60.0          # time constant of the per-neuron activity trace (readout/probe/homeostasis)
 const E_EXC := 0.0
 const E_INH := -75.0
 var phys_ablate := []           # ablation switches: "noise", "adapt", "mu", "homeo"
@@ -332,7 +333,7 @@ func _push(mode: int) -> PackedByteArray:
 	pc.encode_float(32, float(_lif["v_th"]))
 	pc.encode_float(36, float(_lif["refractory_ms"]))
 	pc.encode_float(40, float(meta["w_poisson_mv"]))
-	pc.encode_float(44, exp(-dt / 60.0))
+	pc.encode_float(44, exp(-dt / act_tau_ms))
 	pc.encode_u32(48, _delay_steps)
 	pc.encode_u32(52, _delay_steps + 1)
 	pc.encode_u32(56, 1 if _lif.get("reset_g_on_spike", false) else 0)

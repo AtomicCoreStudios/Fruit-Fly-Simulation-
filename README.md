@@ -667,6 +667,37 @@ Results after a fresh warm-up:
   - They are spiking types (Seki et al. 2010 type I), so making lLN2P graded could not tame them.
   - The leg route is unchanged.
 
+## Neuromuscular legs (Phase 6, in progress, 2026-10-05)
+
+**Motor side** (`tools/build_leg_map.py` → `data/leg_motor_map.json`):
+- All 391 BANC leg motor neurons are assigned, from their muscle-target annotations, to six joint degrees of freedom per leg: coxa protraction and adduction, trochanter, femur rotation, tibia, tarsus.
+- `scripts/fly_legs.gd`:
+  - Firing rate → muscle activation: a = r/(r + 30 Hz), filtered with 30 ms.
+  - The agonist and antagonist pools set a joint equilibrium angle, and the NeuroMechFly skeleton joints relax to it with a 30 ms time constant.
+  - Ranges and time constants are approximate.
+- These replace the cosmetic leg swing (`--legs=0` restores it).
+
+**Sensory side:** 886 proprioceptors drive their real BANC neurons every frame:
+- femoral chordotonal organ claw (tibia position, flexion- and extension-tuned)
+- hook (movement direction)
+- club (movement or vibration)
+- hair plates (coxa and trochanter angle near the joint limits)
+- campaniform sensilla (muscle-force strain proxy)
+
+Tuning is approximate (Tuthill & Wilson 2016; Mamiya et al. 2018).
+
+**Walking rhythm test** (Pugliese et al. 2025 bioRxiv: DNg100 drives a 3-interneuron CPG, E1 = IN17A001, E2 = INXXX466, I1 = IN16B036, in all four VNC connectomes):
+
+| Condition | Result |
+|---|---|
+| Our spiking model, DNg100 driven at 100–300 Hz | No rhythm (score ≈ 0.1, same as no drive). E1 and E2 recruited (15–100 Hz), I1 silent. |
+| Physiology off | No rhythm. I1 is held down by tonically active inhibitory interneurons (IN26X001, IN19A002, IN19A004). |
+| All VNC interneurons graded (`FLY_VNC_GRADED=1`, hypothesis test) | No clear rhythm (≤ 0.2). |
+| Offline reproduction of their rate model on our BANC graph (`tools/vnc_rate_model.py`) | Not yet rhythmic. E1 is out-inhibited (−591 vs +363). |
+
+- Their curated subnetwork list and morphology-based neuron sizes are on Zenodo. Our BANC export has empty morphology columns.
+- Result so far: legs follow their motor neurons, but the nerve cord does not yet generate stepping.
+
 ## Former limitation: a global antennal-lobe / mushroom-body runaway (fixed, see the next section)
 
 Strong, sustained bilateral sugar input (both labellar sugar sets at 100 Hz) drives the Shiu et al. spiking model into a self-sustaining global state:

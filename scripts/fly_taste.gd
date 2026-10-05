@@ -127,11 +127,15 @@ var drive_rate := 0.0
 
 
 func _send() -> void:
-	if drive_idx.is_empty():
+	var lg = fly.legs if fly != null else null
+	if drive_idx.is_empty() and (lg == null or lg.idx.is_empty()):
 		brain.set_sensor_rates(_idx, _rate)
 		return
 	var ii := _idx.duplicate()
 	var rr := _rate.duplicate()
+	if lg != null and bench_hz <= 0.0:          # leg proprioceptors (fly_legs.gd), not in taste benchmarks
+		ii.append_array(lg.idx)
+		rr.append_array(lg.rate)
 	for i in drive_idx:
 		ii.append(i)
 		rr.append(drive_rate)

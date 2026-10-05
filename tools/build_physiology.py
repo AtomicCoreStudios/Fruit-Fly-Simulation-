@@ -61,6 +61,11 @@ def main():
         for r in rules["rules"]:
             if r["match"] == {} or r["match"] == {"super_class": ["descending"]}:
                 r["rate_hz"] = dr
+    if os.environ.get("FLY_VNC_GRADED") == "1":
+        # hypothesis test (Pugliese et al. 2025 rate model; graded premotor interneurons in insects): all
+        # VNC-intrinsic interneurons non-spiking with graded release
+        rules["rules"].insert(0, {"match": {"super_class": ["vnc_intrinsic"]}, "graded": {"r_max_hz": 100.0},
+                                  "basis": "hypothesis: VNC interneurons graded (FLY_VNC_GRADED=1)"})
     if os.environ.get("FLY_DEFAULT_ADAPT"):
         da = float(os.environ["FLY_DEFAULT_ADAPT"])
         for r in rules["rules"]:
