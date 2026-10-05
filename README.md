@@ -4,6 +4,21 @@ Research aim: a small-scale test of the *Pantheon* "Uploaded Intelligence" idea.
 The pipeline is scan (connectome) → emulate (spiking brain) → embody (virtual body and world).
 The brain and body run in a closed loop in real time.
 
+## Current status (2026-10-05)
+
+| Part | State | Basis |
+|---|---|---|
+| Brain | FlyWire v783 (139,255 neurons) as Shiu et al. LIF, with conductance synapses, spontaneous activity, adaptation, homeostasis, hunger neuromodulation, and graded APL / patchy AL LNs. Sugar → MN9 and other Shiu benchmarks reproduced. | measured wiring; literature and assumed physiology (see sections below) |
+| Nerve cord | BANC VNC (22,681 resident neurons) joined to the brain: 161,320 neurons and ~15.7M edges in total. VNC interneurons and leg motor neurons are rate units (Pugliese et al. 2025 model). | measured wiring; literature model |
+| Eyes and vision | 1,709-facet compound eyes → FlyVis + graded optic lobe → VPNs | measured / literature |
+| Taste, smell, wind | per-neuron sense organs on the NeuroMechFly body | measured mapping; approximate response curves |
+| Legs | 391 real leg motor neurons → muscles → joints (torque model); 886 proprioceptors feed back | measured mapping; assumed mechanics (calibration ledger) |
+| Walking | Walking CPG reproduced exactly offline. Live: DNg100 drives a 5–8 Hz leg rhythm; swing/stance alternation and tripod are partial; free-walking speed 0.08–0.21 mm/s (real 10–30). **Not walking yet.** | see "Neuromuscular legs" |
+| Escape | giant fibre → TTMn (gap junction) works | literature |
+| Leg sugar → PER | known gap (see Phase 5b) | — |
+
+Everything below is in chronological order. Dated sections describe the state at that date; this table is the current summary.
+
 ## Run
 
 1. Both connectomes are already built in `data/`. To rebuild, use the project's own Python environment:
@@ -45,6 +60,14 @@ Test harness (arguments go after `--`):
 - `--clean_air` no odour, wind or taste stimuli
 - `--opto` start with P9 optogenetics on
 - `--record=recordings/run.csv` write body state plus every population's firing rate every 100 ms of emulated time
+- `--probe=groups.json --probe_out=out.csv` per-frame activity of chosen neurons (plus leg joint angles, stance and foot height when the legs are on)
+- `--act_tau=5` time constant (ms) of the activity readout (default 60; use 5 at `--fixed-fps 120` for rhythms)
+- `--synapses=current` Shiu et al.'s current-like synapses instead of the default conductance synapses
+- `--drive=i,j:Hz;k:Hz` Poisson drive on chosen model neurons (e.g. descending neurons)
+- `--silence=i,j` and `--release_gain=i,j:g` set chosen neurons' transmitter release (diagnostics)
+- `--sugar_release=x` force the sugar-GRN release gain (otherwise set by hunger)
+- `--legs=0` cosmetic legs instead of the neuromuscular model; `--legs_log`, `--legs_lift_test` leg diagnostics
+- `--locomotion=legs` the body moves only by its stance feet (default: descending-neuron rate kinematics)
 
 Always add Godot's `--quit-after` as a watchdog.
 
@@ -53,7 +76,9 @@ Always add Godot's `--quit-after` as a watchdog.
 | Layer | File | Notes |
 |---|---|---|
 | Connectome builder | `tools/build_connectome.py` | Synthetic stand-in, or the real FlyWire v783 connectome |
-| Brain emulator | `shaders/lif.glsl`, `scripts/fly_brain.gd` | Leaky integrate-and-fire neurons with Shiu et al. 2024 parameters. Integration step 0.5 ms; synapses stored in sparse row format with fixed-point atomic adds. About 15 ms of GPU time per frame for 139,255 neurons on an RTX 2080. |
+| Brain emulator | `shaders/lif.glsl`, `scripts/fly_brain.gd` | Leaky integrate-and-fire neurons with Shiu et al. 2024 parameters (plus conductance synapses, intrinsic physiology, graded and rate units: see later sections). Integration step 0.5 ms; synapses stored in sparse row format with fixed-point atomic adds. About 17 ms of GPU time per frame for 161,320 neurons on an RTX 2080 (50 fps). |
+| Legs | `scripts/fly_legs.gd`, `tools/build_leg_map.py` | Neuromuscular legs and proprioceptors (Phase 6) |
+| Taste | `scripts/fly_taste.gd` | Per-neuron taste organs (Phase 3) |
 | Body, senses, motor | `scripts/fly.gd` | See the sensory and motor lists below |
 | World, HUD, brain view | `scripts/main.gd`, `shaders/neuron_view.gdshader` | Every neuron is drawn as a point at its position, coloured by neuropil and brightened by recent spiking |
 
@@ -64,7 +89,7 @@ Senses in `scripts/fly.gd`:
 - **Taste:** sweet and bitter taste receptor neurons.
 - **Sun compass.**
 
-Motor outputs (descending neurons → behaviour):
+Motor outputs (descending neurons → behaviour; walking is still driven this way by default, the neuromuscular legs are opt-in for locomotion via `--locomotion=legs`):
 - P9 → walk forward
 - DNa02 → turn
 - MDN → walk backward
@@ -107,12 +132,12 @@ Odour-guided approach works only partly. The fly stays in the plume and circles 
 - **Model fidelity:** matches Shiu et al. 2024 — leaky integrate-and-fire neurons, 0.275 mV per synapse, 1.8 ms synaptic delay, synaptic input reset on spike, Poisson sensory drive of 68.75 mV. One difference: the time step is 0.5 ms instead of their 0.1 ms, so it can run in real time.
 - **Body calibration:** how descending-neuron rates map to body movement is in the `motor` block of `data/connectome_flywire.json`. Edit it freely.
 
-## First findings with the real brain
+## First findings with the real brain (2026-09-30; historical, several since addressed)
 
 - **No spontaneous walking.** Nothing in the wiring activates DNp09 without an internal-state drive. With P9 optogenetics the fly walks.
 - **Left turn bias.** DNa02_L fires at about 60–120 Hz while DNa02_R stays silent, even with no odour present. The fly circles left.
-- **No looming escape.** LPLC2 and the giant fibre stay silent to the looming predator. The simplified lamina drive probably doesn't produce the direction-selective motion signals (T4/T5 cells) that loom detection needs.
-- **APL runs at 300+ Hz.** In reality APL is a non-spiking, graded neuron, which a leaky integrate-and-fire model can't represent.
+- **No looming escape.** LPLC2 and the giant fibre stay silent to the looming predator. The simplified lamina drive probably doesn't produce the direction-selective motion signals (T4/T5 cells) that loom detection needs. (Addressed in part later by the FlyVis and graded optic lobe; see those sections.)
+- **APL runs at 300+ Hz.** In reality APL is a non-spiking, graded neuron. (Fixed 2026-10-04: APL is now a graded neuron.)
 - **EPG (compass) neurons are silent.** Nothing drives the ring-neuron and sun-compass pathway yet.
 
 ## Important honesty notes
@@ -120,12 +145,12 @@ Odour-guided approach works only partly. The fly stays in the plume and circles 
 - **The synthetic connectome** (`--connectome=synthetic`) It uses FlyWire's neuron count and the real neuropils and pathways, but the synapse-level wiring was written by hand to produce these behaviours. It is **not** an upload of a real fly.
 - **The real brain** is the actual FlyWire wiring. It still runs a simplified neuron model and uses a hand-built body.
 - **What no connectome contains.** A UI in the Pantheon sense would need all of the following, and none of them is in a wiring diagram:
-  - learning and synaptic plasticity
-  - neuromodulators (dopamine, octopamine)
-  - gap junctions and synaptic delays
-  - dendritic nonlinearities
-  - the ventral nerve cord (the fly's "spinal cord": FlyWire covers the head brain only)
-  - the brain's current state (what makes it a particular individual)
+  - learning and synaptic plasticity (still missing)
+  - neuromodulators (dopamine, octopamine): only hunger → sugar-pathway release is modelled so far
+  - gap junctions and synaptic delays: delays modelled; gap junctions only for the documented giant-fibre ones
+  - dendritic nonlinearities (still missing; graded and conductance neurons are a partial step)
+  - the ventral nerve cord (the fly's "spinal cord"): now added from BANC, a different fly than FlyWire's brain
+  - the brain's current state (what makes it a particular individual): still missing
 
 ## Anatomical body and compound eyes (Blender, in progress)
 
@@ -823,7 +848,7 @@ Kept so that any walking result can state exactly how much came from the connect
 - Foot-lift test (`--legs_lift_test`): trochanter flexion lifts the foot (+0.23 to +0.28 of reach per 0.3 rad), so the swing group can lift. Coxa protraction is horizontal only, and tibia flexion lowers the foot slightly.
 - Conclusion: each leg's tonic bias exceeds its rhythmic modulation. Next to check: proprioceptive phase-transition mechanisms.
 
-## Former limitation: a global antennal-lobe / mushroom-body runaway (fixed, see the next section)
+## Former limitation: a global antennal-lobe / mushroom-body runaway (fixed 2026-10-03, see "Spontaneous activity, adaptation and homeostasis")
 
 Strong, sustained bilateral sugar input (both labellar sugar sets at 100 Hz) drives the Shiu et al. spiking model into a self-sustaining global state:
 - APL about 435 Hz
