@@ -52,8 +52,16 @@ lm = v[v.cell_class.astype(str).str.contains("leg_motor") & (v.sub_class == "fro
 for act, g in lm.groupby(lm.function.astype(str).str.replace("leg_motor", "").str.strip(",")):
     rec["MN_" + act] = [pos[x] for x in g.model_index if x in pos]
 tr = {k: [] for k in rec}; ts = []
+TAU_S = float(os.environ.get("RM_TAU_SYN", "0"))      # ms; live LIF: 5 ms synaptic filter
+DELAY = int(round(float(os.environ.get("RM_DELAY", "0")) / (dt * 1000)))   # ms; live: 1.8 ms
+syn = np.zeros(n); hist = [np.zeros(n)] * (DELAY + 1)
 for s in range(int(T / dt)):
-    x = I + W @ R - theta
+    hist.append(R.copy()); Rd = hist.pop(0) if DELAY > 0 else R
+    drive = W @ Rd
+    if TAU_S > 0:
+        syn += dt * 1000 * (drive - syn) / TAU_S
+        drive = syn
+    x = I + drive - theta
     act = np.maximum(fcap * np.tanh((a / fcap) * x), 0.0)
     R += dt * (act - R) / tau
     if s % 4 == 0:
@@ -61,5 +69,5 @@ for s in range(int(T / dt)):
         for k, ix in rec.items():
             tr[k].append(R[ix].mean() if ix else 0.0)
 d = pd.DataFrame(tr); d.insert(0, "t_ms", np.array(ts) * 1000); d.insert(1, "threat", 0)
-out = ROOT / f"recordings/vnc_rate_model_{SUB}_{SIZE}.csv"; d.to_csv(out, index=False)
+out = ROOT / f"recordings/vnc_rate_model_{SUB}_{SIZE}{os.environ.get('RM_TAG', '')}.csv"; d.to_csv(out, index=False)
 print(f"{n} neurons, {W.nnz} edges; active (>1 Hz) at end: {(R > 1).sum()}; saved {out.name}")

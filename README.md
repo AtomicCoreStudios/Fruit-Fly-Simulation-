@@ -721,6 +721,19 @@ Target: Pugliese et al. 2025 bioRxiv. Driving DNg100 produces a leg motor rhythm
      | Giant fibre → TTMn | 52 Hz |
      | Speed | 50 fps |
 
+### CPG tuning steps (2026-10-05)
+
+Offline, adding the live model's synaptic kinetics to their rate model (`RM_TAU_SYN=5`, `RM_DELAY=1.8`) slows the rhythm from 14 to about 4 Hz but keeps it (0.83). The slow live rhythm therefore comes from synaptic timing.
+
+Live tests:
+- **Conductance synapses on the rate units halve the rhythm.** So rate units now take linear, current-based input (excitation minus inhibition) as in the published model, while the spiking brain keeps conductance synapses (`shaders/lif.glsl`). With this, the live CPG is strong: E1/E2/I1/I2 at 0.57–0.61, 6.3 Hz.
+- **Spiking leg motor neurons do not follow the rhythm** (≤ 0.25). Leg motor neurons are now firing-rate units too, as in Pugliese et al.; this is an abstraction, since real MNs spike. TTMn keeps its spiking escape rule.
+- **The legs do not step yet.** Joint excursions under DNg100 drive are 0.003–0.09 rad, at 2–3 Hz, with no tripod phase pattern (`tools/analyze_gait.py`).
+- **Next suspects:**
+  - motor-neuron modulation depth, with flexor and extensor pools co-active
+  - the muscle model's R_HALF (30 Hz) and range
+  - the rhythm frequency (6 Hz; real stepping 7–15 Hz)
+
 ## Former limitation: a global antennal-lobe / mushroom-body runaway (fixed, see the next section)
 
 Strong, sustained bilateral sugar input (both labellar sugar sets at 100 Hz) drives the Shiu et al. spiking model into a self-sustaining global state:

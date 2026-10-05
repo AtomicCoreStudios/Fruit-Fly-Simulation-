@@ -632,6 +632,10 @@ func _probe() -> void:
 		_probe_f = FileAccess.open(path, FileAccess.WRITE)
 		var head := PackedStringArray(["t_ms", "threat"])
 		head.append_array(PackedStringArray(_probe_groups.keys()))
+		if fly.legs != null:
+			for leg in FlyLegs.LEGS:
+				for d in ["ThC_pro", "CTr", "FTi", "TiTa"]:
+					head.append("joint_%s_%s" % [leg, d])
 		_probe_f.store_csv_line(head)
 	var act := brain.activity_bytes.to_float32_array()
 	var row := PackedStringArray(["%.1f" % brain.sim_time_ms, str(int(threat.visible))])
@@ -641,6 +645,10 @@ func _probe() -> void:
 		for i in ids:
 			s += act[int(i)]
 		row.append("%.3f" % (s / maxf(ids.size(), 1) * 1000.0 / brain.act_tau_ms))
+	if fly.legs != null:
+		for leg in FlyLegs.LEGS:
+			for d in ["ThC_pro", "CTr", "FTi", "TiTa"]:
+				row.append("%.4f" % fly.legs.angle[leg][d])
 	_probe_f.store_csv_line(row)
 
 

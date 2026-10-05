@@ -63,6 +63,19 @@
   },
   {
    "match": {
+    "cell_class": [
+     "leg_motor_neuron"
+    ]
+   },
+   "rate_unit": {
+    "fcap_hz": 200.0,
+    "gain_hz_per_mv": 21.82,
+    "threshold_mv": 0.3437
+   },
+   "basis": "model abstraction: leg motor neurons as firing-rate units (as in Pugliese et al. 2025, whose model reproduces fly stepping); real MNs spike, the muscle model uses their rate"
+  },
+  {
+   "match": {
     "super_class": [
      "optic",
      "visual_projection",

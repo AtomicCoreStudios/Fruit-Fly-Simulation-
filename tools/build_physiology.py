@@ -87,6 +87,11 @@ def main():
         # VNC-intrinsic interneurons non-spiking with graded release
         rules["rules"].insert(0, {"match": {"super_class": ["vnc_intrinsic"]}, "graded": {"r_max_hz": 100.0},
                                   "basis": "hypothesis: VNC interneurons graded (FLY_VNC_GRADED=1)"})
+    if os.environ.get("FLY_MN_RATE") == "1":
+        # experiment: leg motor neurons as rate units too (as in Pugliese et al.'s model)
+        ru = next(r for r in rules["rules"] if "rate_unit" in r)
+        rules["rules"].insert(rules["rules"].index(ru) + 1, {"match": {"cell_class": ["leg_motor_neuron"]}, "rate_unit": ru["rate_unit"],
+                                  "basis": "experiment: leg MNs as rate units (FLY_MN_RATE=1)"})
     if os.environ.get("FLY_DEFAULT_ADAPT"):
         da = float(os.environ["FLY_DEFAULT_ADAPT"])
         for r in rules["rules"]:

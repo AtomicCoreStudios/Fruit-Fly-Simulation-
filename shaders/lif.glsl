@@ -133,7 +133,15 @@ void main() {
 		if (p.cond == 1u) gh = g_inh[i] + float(atomicExchange(g_in_i[slot + i], 0)) * 0.001;
 		if (not_refr) {
 			float es = p.syn_decay;
-			if (p.cond == 1u) {
+			if (p.cond == 1u && rate_unit) {
+				// rate units (Pugliese et al. model): linear current-based input, excitation minus inhibition
+				float em = exp(-p.dt / p.tau_m);
+				float tau_s = -p.dt / log(es);
+				float k = tau_s / (p.tau_m - tau_s);
+				float u = vi - p.v_rest - bias;
+				vi = p.v_rest + bias + u * em + (gi - gh) * k * (em - es);
+				gh *= es;
+			} else if (p.cond == 1u) {
 				// conductances at the step midpoint, exact exponential relaxation with total conductance
 				float sh = sqrt(es);
 				float vn = 0.5 * (p.v_rest + p.v_th);
