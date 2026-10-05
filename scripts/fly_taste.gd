@@ -133,7 +133,7 @@ func _send() -> void:
 		return
 	var ii := _idx.duplicate()
 	var rr := _rate.duplicate()
-	if lg != null and bench_hz <= 0.0:          # leg proprioceptors (fly_legs.gd), not in taste benchmarks
+	if lg != null and bench_hz <= 0.0 and not ("--proprio=0" in OS.get_cmdline_user_args()):   # leg proprioceptors (fly_legs.gd); --proprio=0 cuts them off
 		ii.append_array(lg.idx)
 		rr.append_array(lg.rate)
 	for k in drive_idx.size():

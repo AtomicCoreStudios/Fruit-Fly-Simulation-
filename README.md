@@ -14,7 +14,7 @@ The brain and body run in a closed loop in real time.
 | Eyes and vision | 1,709-facet compound eyes → FlyVis + graded optic lobe → VPNs | measured / literature |
 | Taste, smell, wind | per-neuron sense organs on the NeuroMechFly body | measured mapping; approximate response curves |
 | Legs | 391 real leg motor neurons → muscles → joints (torque model); 886 proprioceptors feed back | measured mapping; assumed mechanics (calibration ledger) |
-| Walking | Walking CPG reproduced exactly offline. Live: DNg100 drives a 5–8 Hz leg rhythm; swing/stance alternation and tripod are partial; free-walking speed 0.08–0.21 mm/s (real 10–30). **Not walking yet.** | see "Neuromuscular legs" |
+| Walking | Walking CPG reproduced exactly offline. Offline, the tuned descending mix (DNg100 + DNb08 + DNa02 + DNg97) gives swing/stance anti-phase in 5 of 6 legs at 4.2 Hz. Live: legs are stuck in tonic postures (right legs planted, left middle held up); best free-walking speed 0.27 mm/s (real 10–30). **Not walking yet.** | see "Neuromuscular legs" |
 | Escape | giant fibre → TTMn (gap junction) works | literature |
 | Leg sugar → PER | known gap (see Phase 5b) | — |
 
@@ -822,6 +822,24 @@ Live tests:
 - The current contact model is no-slip (effectively infinite friction). Realistic friction and adhesion need a force-based physics body; NeuroMechFly does this in MuJoCo.
 - Deferred until the motor pattern produces clean swing/stance, since friction cannot create propulsion the legs do not generate.
 
+### Descending-mix search and live test (2026-10-05)
+
+**Search** (`tools/dn_mix_search.py`, offline, 381 mixes of walking DNs, symmetric left/right). Score per leg: swing pool and stance pool both modulated, phase near 180°, frequency 7–15 Hz; plus tripod coordination.
+- Best mix: DNg100 + DNb08 + DNa02 + DNg97 = 4 : 1 : 1 : 1.
+  - Left middle −178°, right front 160°, right middle 168°, right hind 172°, left front −98°.
+  - Frequency 4.2 Hz (left front 8.3 Hz).
+- Stronger DNg100 raises the frequency (7.5–8.3 Hz in some mixes) or tripod coordination (up to 0.33), but no mix reaches both.
+
+**Live free walking** with this mix (live rates 200 / 50 / 50 / 50 Hz):
+- 0.27 mm/s net, the best so far.
+- Stance fraction: left front 0.98, left middle 0.00, left hind 0.24, right front 0.95, right middle 1.00, right hind 0.81.
+- Only the hind legs switch between stance and swing (2–2.3 cycles/s).
+
+**Without proprioceptive input** (`--proprio=0`):
+- The left legs cycle (left front 1.8, left middle 4.7, left hind 4.8 cycles/s).
+- The right legs stay planted (0.96–1.0).
+- So the proprioceptive loop, with approximate tuning and no walking-state gating, locks the left middle leg in swing. The right legs are held in stance by a left/right asymmetry in tonic drive; whether that comes from DN sidedness or from the brain/nerve-cord joining is still to be tested.
+
 ## Calibration ledger (motor side): what is data, what is set by hand
 
 Kept so that any walking result can state exactly how much came from the connectome and how much from hand-set values. Basis: **measured** = from data; **literature** = published model or parameter; **assumed** = an approximate value I chose; **tuned** = adjusted while looking at walking. Nothing on the motor side has been tuned to walking yet.
@@ -841,7 +859,7 @@ Kept so that any walking result can state exactly how much came from the connect
 | Stance rule: foot ≤ rest + 5% of reach | no-slip contact | assumed | yes |
 | LOAD_HZ 40 Hz campaniform ground load | — | assumed | under test |
 | Proprioceptor tuning curves (claw, hook, club, hair plate) | — | assumed | under test |
-| Descending command (which DNs, how strong) | search over walking DNs (DNg100, DNb08, DNa02, DNg97, DNp09) | will be **tuned** (step A) | yes |
+| Descending command (which DNs, how strong) | DNg100 : DNb08 : DNa02 : DNg97 = 4 : 1 : 1 : 1 (offline amplitude 400/100/100/100; live 200 Hz / 50 / 50 / 50 Hz), from a 300-trial random search plus an 81-point refinement (`tools/dn_mix_search.py`, `recordings/dn_mix_search.csv`, `dn_mix_refine.csv`) | **tuned** | yes |
 
 **Free-walking diagnosis (2026-10-05)** (`stance_<leg>` and `foot_h_<leg>` columns in probe CSVs):
 - All six feet are never down together (0% of the time).
