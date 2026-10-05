@@ -767,6 +767,35 @@ Live tests:
 
    - Ipsilateral neighbours and the front legs alternate, as in a tripod gait. The cross-body tripod partner is not yet locked in phase.
 
+### Real neuron sizes, descending-neuron screen, combinations (2026-10-05)
+
+**Neuron sizes** (`tools/build_banc_cable.py` → `data/vnc/banc_cable_length.csv`):
+- Cable length of all 114,999 BANC skeletons, computed from the SWC files of Bates et al. 2025 (Harvard Dataverse doi:10.7910/DVN/8TFGGB, `neuron_skeletons.zip`, md5 f7d16e8e…, CC-BY-4.0; user approved the 215.6 MB download). Codex's BANC attribute table has empty morphology columns.
+- Surface area predicted from cable length: log area = 1.037 log cable + 1.179, r = 0.947 on 4,286 neurons with measured area.
+- Coverage: 19,368 of 22,681 VNC residents.
+- Size priority for rate units: measured area > cable-predicted > synapse-count estimate, normalised by the median of Pugliese et al.'s measured subnetwork.
+- With these sizes, right DNg100 alone recruits a swing burst (promotors, trochanter flexors) and one remotor in anti-phase (−178°) at 7.1 Hz.
+
+**Descending-neuron screen** (offline, each neuron alone; left front leg):
+
+| Neuron(s) | Recruits | Rhythm |
+|---|---|---|
+| DNb08 left-soma (98130, 131703) | swing | 12 Hz, 0.99–1.0 |
+| DNb08 right-soma 47118 | stance | 11 Hz, 0.21 |
+| DNa02 left 92992 | stance | 10 Hz, 0.46 (24 Hz mean) |
+| Right DNg100 | both | 7 Hz, 0.8 |
+| DNp09, MDN, DNb02, DNp42 | little or nothing | — |
+
+**Combinations** (offline):
+- Right DNg100 + left DNa02: coxa remotors (−90° to −129°) and promotors plus trochanter flexors (≈ +155°) alternate at 7.1 Hz. This is the first swing/stance alternation in the motor output.
+
+**Live free walking** (bilateral DNg100 ± DNa02 ± DNb08, ground-load feedback on):
+- Net 0.08–0.21 mm/s, against 10–30 mm/s in real flies. Propulsive stepping is not yet achieved.
+
+**Foot friction / physics contact:**
+- The current contact model is no-slip (effectively infinite friction). Realistic friction and adhesion need a force-based physics body; NeuroMechFly does this in MuJoCo.
+- Deferred until the motor pattern produces clean swing/stance, since friction cannot create propulsion the legs do not generate.
+
 ## Former limitation: a global antennal-lobe / mushroom-body runaway (fixed, see the next section)
 
 Strong, sustained bilateral sugar input (both labellar sugar sets at 100 Hz) drives the Shiu et al. spiking model into a self-sustaining global state:

@@ -87,3 +87,7 @@ PUGLIESE = {
     "zenodo_record": "https://zenodo.org/records/22260924",
     "github": "https://github.com/smpuglie/Pugliese_2026/tree/10e7661",
 }
+
+# BANC skeletons (Bates et al. 2025, Harvard Dataverse doi:10.7910/DVN/8TFGGB, file id 11845086, CC-BY-4.0),
+# fetched 2026-10-05 (user approved, 215.6 MB): data/raw/banc/neuron_skeletons.zip md5 f7d16e8ed00454ce26c3c37a351df004
+BANC_SKELETONS = "https://dataverse.harvard.edu/api/access/datafile/11845086"

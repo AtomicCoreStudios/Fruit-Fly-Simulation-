@@ -54,7 +54,8 @@ def calibrate(sigma, tau_n, tau_w):
 
 def _vnc_sizes(n_model):
     """Relative neuron size for the VNC rate units (Pugliese et al.: a /= size, theta *= size): BANC surface area
-    from their table where measured, else exp(4.64) x synapses^0.60 um2 (fit log area vs log synapse count over
+    from their table where measured, else predicted from skeleton cable length (BANC Dataverse skeletons;
+    log area = 1.037 log cable + 1.179, r = 0.947 on 4286 neurons), else exp(4.64) x synapses^0.60 um2 (fit log area vs log synapse count over
     3151 measured VNC neurons, r = 0.90), divided by the median area of their measured subnetwork."""
     size = np.ones(n_model)
     vp = ROOT / "data/vnc/vnc_neurons.csv"; pp = ROOT / "data/raw/pugliese/wTable_20260217_fullData_consistentColumns.csv"
@@ -68,6 +69,11 @@ def _vnc_sizes(n_model):
     k, c = 0.60, 4.64                                       # log(area um2) = 0.60 log(synapses) + 4.64
     area = np.array([sa.get(b_, np.nan) for b_ in v.bid], float)
     est = np.exp(c + k * np.log(np.maximum(cnt.reindex(v.model_index).fillna(1).values, 1)))
+    cp = ROOT / "data/vnc/banc_cable_length.csv"            # skeleton cable length -> area (r = 0.947)
+    if cp.exists():
+        cab = pd.read_csv(cp).set_index("root_id").cable_um
+        cl = cab.reindex(v.bid).values
+        est = np.where(np.isfinite(cl) & (cl > 0), np.exp(1.179 + 1.037 * np.log(np.maximum(cl, 1e-3))), est)
     area = np.where(np.isfinite(area) & (area > 0), area, est)
     # normaliser: median area of Pugliese et al.'s measured subnetwork (their a/size, theta*size convention)
     med = float(np.nanmedian(pt.surf_area_um2)) if pp.exists() else float(np.median(area))
