@@ -796,6 +796,33 @@ Live tests:
 - The current contact model is no-slip (effectively infinite friction). Realistic friction and adhesion need a force-based physics body; NeuroMechFly does this in MuJoCo.
 - Deferred until the motor pattern produces clean swing/stance, since friction cannot create propulsion the legs do not generate.
 
+## Calibration ledger (motor side): what is data, what is set by hand
+
+Kept so that any walking result can state exactly how much came from the connectome and how much from hand-set values. Basis: **measured** = from data; **literature** = published model or parameter; **assumed** = an approximate value I chose; **tuned** = adjusted while looking at walking. Nothing on the motor side has been tuned to walking yet.
+
+| Item | Value | Basis | Walking depends on it? |
+|---|---|---|---|
+| Wiring: BANC VNC synapses, signs (Dale), DN/AN joining | — | measured | yes |
+| Motor neuron → muscle → joint DoF | BANC annotations | measured | yes |
+| VNC interneuron dynamics | Pugliese et al. rate model (τ 20 ms, gain, θ, f_cap 200 Hz, W × 0.03) | literature | yes |
+| Neuron size for rate units | measured area / cable-predicted (r = 0.947) / synapse fit | measured + fit | yes (stance recruitment depends on it) |
+| Leg motor neurons as rate units (not spiking) | abstraction, as Pugliese et al. | literature model | yes (spiking MNs did not follow the CPG) |
+| Rate units take linear (current) input; brain uses conductances | as the published model | literature model | yes (conductance halved the rhythm) |
+| Synaptic filter 5 ms, delay 1.8 ms | Shiu et al. values | literature | yes (sets the 4–8 Hz frequency) |
+| Muscle activation: R_HALF 30 Hz, τ 30 ms | — | assumed | yes |
+| DTHETA_MN 0.4 rad per motor neuron | — | assumed | yes (amplitude) |
+| Joint range and τ_joint 30 ms | NeuroMechFly-like ranges | assumed | yes |
+| Stance rule: foot ≤ rest + 5% of reach | no-slip contact | assumed | yes |
+| LOAD_HZ 40 Hz campaniform ground load | — | assumed | under test |
+| Proprioceptor tuning curves (claw, hook, club, hair plate) | — | assumed | under test |
+| Descending command (which DNs, how strong) | search over walking DNs (DNg100, DNb08, DNa02, DNg97, DNp09) | will be **tuned** (step A) | yes |
+
+**Free-walking diagnosis (2026-10-05)** (`stance_<leg>` and `foot_h_<leg>` columns in probe CSVs):
+- All six feet are never down together (0% of the time).
+- Instead, legs sit in tonic postures. Left middle is held up 98–100% of the time; left front and right middle are planted 98–100%.
+- Foot-lift test (`--legs_lift_test`): trochanter flexion lifts the foot (+0.23 to +0.28 of reach per 0.3 rad), so the swing group can lift. Coxa protraction is horizontal only, and tibia flexion lowers the foot slightly.
+- Conclusion: each leg's tonic bias exceeds its rhythmic modulation. Next to check: proprioceptive phase-transition mechanisms.
+
 ## Former limitation: a global antennal-lobe / mushroom-body runaway (fixed, see the next section)
 
 Strong, sustained bilateral sugar input (both labellar sugar sets at 100 Hz) drives the Shiu et al. spiking model into a self-sustaining global state:

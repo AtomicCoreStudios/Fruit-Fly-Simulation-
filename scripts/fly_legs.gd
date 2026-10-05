@@ -97,7 +97,28 @@ func setup(p_brain: FlyBrain, p_fly) -> String:
 				# alternate flexion/extension tuning; preferred claw angles spread over the FTi range
 				_sens.append([leg, kind, int(ids[k]), float(k) / maxf(ids.size() - 1, 1)])
 	enabled = true
+	if "--legs_lift_test" in OS.get_cmdline_user_args():
+		_lift_test()
 	return ""
+
+
+func _lift_test() -> void:
+	# foot height change (fraction of reach, body frame) for +0.3 rad of each DoF from rest (+ = protract,
+	# adduct, flex, rotate, flex, depress per the sign convention); positive = foot rises
+	var inv: Transform3D = fly.global_transform.affine_inverse()
+	for leg in LEGS:
+		var tip: Node3D = fly.seg.get(leg + "_tarsus5")
+		var p0: Vector3 = inv * tip.global_position
+		var reach := p0.length()
+		var out := []
+		for d in DOFS:
+			angle[leg][d] = 0.3
+			_apply(leg)
+			var p1: Vector3 = inv * tip.global_position
+			out.append("%s %+.2f" % [d, (p1.y - p0.y) / reach])
+			angle[leg][d] = 0.0
+			_apply(leg)
+		print("lift_test ", leg, ": ", ", ".join(out))
 
 
 ## Leg-driven locomotion (no-slip stance): feet whose height in the body frame is below their rest height
@@ -110,6 +131,7 @@ const LOAD_HZ := 40.0         # campaniform rate for a leg carrying a third of b
 var _foot_prev := {}
 var _foot_rest := {}
 var stance := {}
+var foot_height := {}         # foot height above its rest height, as a fraction of leg reach
 
 
 func odometry() -> Array:
@@ -124,6 +146,7 @@ func odometry() -> Array:
 			_foot_rest[leg] = p
 			_foot_prev[leg] = p
 		var reach: float = (_foot_rest[leg] as Vector3).length()
+		foot_height[leg] = (p.y - (_foot_rest[leg] as Vector3).y) / maxf(reach, 1e-6)
 		var on: bool = p.y <= (_foot_rest[leg] as Vector3).y + STANCE_TOL * reach
 		stance[leg] = on
 		if on:
