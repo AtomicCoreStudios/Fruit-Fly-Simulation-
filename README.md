@@ -1,6 +1,7 @@
 # FLY-UI — embodied whole-brain emulation of *Drosophila*
 
-Research aim: a small-scale test of the *Pantheon* "Uploaded Intelligence" idea.
+Research aim: a small-scale test of the "Uploaded Intelligence" idea from Pantheon. If you copy a complete nervous system (brain and nerve cord, synapse by synapse from real connectome data) into a simulated body, does the animal's behavior emerge? And where it doesn't, what's missing that the wiring diagram alone can't supply?
+
 The pipeline is scan (connectome) → emulate (spiking brain) → embody (virtual body and world).
 The brain and body run in a closed loop in real time.
 
