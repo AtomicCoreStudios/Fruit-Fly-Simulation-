@@ -4,9 +4,10 @@ extends Node
 ## angles of the NeuroMechFly skeleton, and joint state -> the leg's real proprioceptor neurons.
 ##
 ## Motor: each motor neuron's rate r (from the brain's activity trace) sets a muscle activation
-##   a = r / (r + R_HALF), low-passed with TAU_ACT. Per degree of freedom the agonist (pos) and antagonist (neg)
-##   pools pull the joint toward an equilibrium  theta* = RANGE_POS * A_pos - RANGE_NEG * A_neg  (rest = 0), and
-##   the joint relaxes to it with TAU_JOINT (passive viscoelastic joint). basis: motor-neuron -> muscle -> joint
+##   a = r / (r + R_HALF), low-passed with TAU_ACT. Per degree of freedom the summed agonist (pos) and antagonist
+##   (neg) motor-unit activations set a torque balanced by passive joint stiffness: equilibrium
+##   theta* = DTHETA_MN x (sum_pos - sum_neg), softly limited to the joint range (tanh), rest = 0; the joint
+##   relaxes to it with TAU_JOINT (overdamped, passive forces dominate in small limbs). basis: motor-neuron -> muscle -> joint
 ##   assignment from BANC annotations (measured); activation and joint dynamics approximate.
 ## Sensory (Tuthill & Wilson 2016 review; Mamiya et al. 2018 Nat Neurosci for the FeCO):
 ##   FeCO claw  tonic position of the femur-tibia joint, half flexion- and half extension-tuned, preferred
@@ -22,7 +23,10 @@ const LEGS := ["lf", "lm", "lh", "rf", "rm", "rh"]
 const DOFS := ["ThC_pro", "ThC_add", "CTr", "FeRot", "FTi", "TiTa"]
 const R_HALF := 30.0          # Hz for half activation
 const TAU_ACT := 0.030        # s, muscle activation
-const TAU_JOINT := 0.030      # s, joint relaxation
+const TAU_JOINT := 0.030      # s, joint relaxation (passive viscoelastic time constant, approximate)
+const DTHETA_MN := 0.4        # rad of joint excursion per fully active motor neuron against passive stiffness
+							  # (approximate calibration; motor-unit forces from Azevedo et al. 2020 eLife not
+							  # yet converted to torque)
 # rad, range reached at full activation of the pos / neg pool (approximate, NeuroMechFly kinematic ranges)
 const RANGE := {"ThC_pro": [0.6, 0.6], "ThC_add": [0.3, 0.3], "CTr": [0.8, 0.8], "FeRot": [0.4, 0.0],
 				"FTi": [1.2, 0.6], "TiTa": [0.5, 0.4]}
@@ -137,11 +141,14 @@ func update(dt: float) -> void:
 						var x: float = act.get(i, 0.0)
 						x += ((r / (r + R_HALF)) - x) * ka
 						act[i] = x
-						A[s] += x * float(ws[k])
-						sw += float(ws[k])
-					A[s] = A[s] / maxf(sw, 1e-6)
+						A[s] += x * float(ws[k])   # motor-unit forces add (summed, not averaged)
 			tot += A[0] + A[1]
-			var target: float = RANGE[d][0] * A[0] - RANGE[d][1] * A[1]
+			# torque balance against passive stiffness (overdamped joint, passive forces dominate in small
+			# limbs: Hooper et al. 2009): equilibrium = DTHETA_MN x (summed agonist - antagonist activation),
+			# softly limited to the joint range; passive torque returns the joint to rest when MNs pause
+			var eq: float = DTHETA_MN * (A[0] - A[1])
+			var lim: float = RANGE[d][0] if eq >= 0.0 else RANGE[d][1]
+			var target: float = lim * tanh(eq / maxf(lim, 1e-3)) if lim > 0.0 else 0.0
 			var old: float = angle[leg][d]
 			var nw := old + (target - old) * kj
 			angle[leg][d] = nw

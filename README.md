@@ -735,10 +735,15 @@ Live tests:
   - They are all one in-phase stance-like synergy (coxa retraction, trochanter extension, tibia flexion); the antagonists stay silent.
   - The muscle model averages activation over the whole pool, so 2 of 6 active neurons barely move the joint.
   - The gap has therefore moved to the biomechanics. Small insect legs moving in air need little force, and passive joint torques dominate (Hooper et al. 2009 J Neurosci). The "fraction recruited → fraction of range" muscle model is too crude.
-- **Next:**
-  - a torque-based muscle and joint model with passive stiffness, using MN/muscle force data (e.g. Azevedo et al. 2020 eLife)
-  - stepping frequency (6 Hz; real 7–15 Hz)
-  - proprioceptive feedback during stepping
+- **Torque-based leg mechanics (`fly_legs.gd`):**
+  - Motor-unit forces now add up.
+  - Each fully active motor neuron gives 0.4 rad of excursion against passive stiffness (`DTHETA_MN`, approximate calibration).
+  - Joint limits are soft (tanh), and the joint is overdamped with passive return (Hooper et al. 2009).
+- **Result, tethered** (`screenshots/gait_dng100.png`):
+  - With DNg100 driven, the legs move continuously and rhythmically: 4–20 Hz joint power 3–4× rest, peaking at about 5 Hz on several legs.
+  - Swing in the 3.5–9 Hz band is 0.12–0.21 rad peak-to-peak (rest 0.01–0.06); total excursions reach 0.75 rad.
+  - Real stepping is about 1–1.5 rad at 7–15 Hz with a tripod pattern. Not yet reached: amplitude is about a sixth of real, the rhythm is slower and irregular, and there is no inter-leg tripod coordination.
+- **Next:** antagonist (swing-phase) recruitment, inter-leg coupling, and proprioceptive feedback while stepping.
 
 ## Former limitation: a global antennal-lobe / mushroom-body runaway (fixed, see the next section)
 
