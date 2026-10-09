@@ -91,3 +91,10 @@ PUGLIESE = {
 # BANC skeletons (Bates et al. 2025, Harvard Dataverse doi:10.7910/DVN/8TFGGB, file id 11845086, CC-BY-4.0),
 # fetched 2026-10-05 (user approved, 215.6 MB): data/raw/banc/neuron_skeletons.zip md5 f7d16e8ed00454ce26c3c37a351df004
 BANC_SKELETONS = "https://dataverse.harvard.edu/api/access/datafile/11845086"
+
+# MANC v1.0 neuron properties (Janelia FlyEM, Takemura et al. 2024 / Marin et al. 2024 / Cheong et al. 2024; CC-BY-4.0),
+# public export bucket gs://flyem-manc-exports, fetched 2026-10-09 (17.2 MB, pre-approved small table):
+# data/raw/manc/manc-v1.0-neuron-properties.feather
+#   sha256 0c4476528906bb0a20e05e1f01e83fc2e5a582761536171ede5463669ca0b891
+# Used to check leg campaniform-sensillum annotations (tools/manc_leg_sensory_check.py).
+MANC_PROPERTIES = "https://storage.googleapis.com/flyem-manc-exports/v1.0/manc-v1.0-neuron-properties.feather"

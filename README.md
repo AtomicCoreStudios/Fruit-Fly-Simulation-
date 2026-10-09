@@ -1056,6 +1056,14 @@ This step moves the body from our kinematic Godot legs to a physical body. The g
   - The 2026-10-05 offsets are restored. **Rule:** homeostatic offsets must be learned while the fly is upright and behaving normally.
 - **Spontaneous GF firing, upstream:** AVLP500 (visual + central input onto DNp70) sits at the −40 mV homeostatic floor and still fires 77–100 Hz. 494 neurons are at that floor in the current offsets.
 
+### Leg load sensors: MANC cross-check (2026-10-09)
+
+`tools/manc_leg_sensory_check.py` checks the gap against MANC v1.0 (male nerve cord, Janelia public export, CC BY 4.0; source and checksum in `tools/fetch_data.py`).
+- **MANC v1.0 does not fill the gap.** Per leg segment it types the FeCO (claw/hook/club), the trochanteral campaniform field (TrCS, only 2–4 per leg) and, in the front leg only, 19 hair plates. The other 79 / 107 / 120 proprioceptors per segment carry only the generic "proprioceptive" label.
+- **BANC** annotates 81 / 81 / 107 "hair plate" neurons in front / middle / hind legs, but campaniform sensilla only 51 / 4 / 4. That is far more hair-plate neurons than real legs carry, so many of them are probably unlabelled campaniform sensilla. No public table says which.
+- **Not used:** the newer MANC v1.2.1 annotations need a neuPrint account (owner's decision), and the FANC leg reconstructions need CAVE access.
+- **Option without new data:** classify the unlabelled neurons by axon morphology. Use the BANC skeletons already downloaded, with the labelled front-leg campaniform and hair-plate axons as serially homologous references. Results would be labelled inferred.
+
 ## Calibration ledger (motor side): what is data, what is set by hand
 
 Kept so that any walking result can state exactly how much came from the connectome and how much from hand-set values. Basis: **measured** = from data; **literature** = published model or parameter; **assumed** = an approximate value I chose; **tuned** = adjusted while looking at walking. Nothing on the motor side has been tuned to walking yet.
