@@ -16,7 +16,7 @@ The brain and body run in a closed loop in real time.
 | Legs | 391 real leg motor neurons → muscles → joints (torque model); 886 proprioceptors feed back | measured mapping; assumed mechanics (calibration ledger) |
 | Walking | Walking CPG reproduced exactly offline. Offline, the tuned descending mix (DNg100 + DNb08 + DNa02 + DNg97) gives swing/stance anti-phase in 5 of 6 legs at 4.2 Hz. Live: with wiring-derived claw/hook tuning and presynaptic gating, 4 of 6 legs switch stance/swing (1.4–3.8 cycles/s); left front and right middle stay planted; best free-walking speed 0.29 mm/s (real 10–30). **Not walking yet.** | see "Neuromuscular legs" |
 | Escape | giant fibre → TTMn (gap junction) works | literature |
-| Physics | MuJoCo installed; musculoskeletal front-leg model validates the motor map; full-body contact physics (NeuroMechFly/FlyGym) not yet ported | literature model |
+| Physics | MuJoCo installed; musculoskeletal front-leg model validates the motor map. FlyGym 2.1.0 installed in `.venv-flygym` (2026-10-08): free NeuroMechFly stands on flat ground with friction 1.0 and adhesion, and the FlyMimic tibia flexor/extensor check passes. Leg control is not yet ported to it. | literature model |
 | Leg sugar → PER | known gap (see Phase 5b) | — |
 
 Sources and papers with DOI links: [REFERENCES.md](REFERENCES.md). Everything below is in chronological order. Dated sections describe the state at that date; this table is the current summary.
@@ -821,6 +821,17 @@ Live tests:
 
 **Foot friction / physics contact:**
 - The current contact model is no-slip (effectively infinite friction). Realistic friction and adhesion need a force-based physics body; NeuroMechFly does this in MuJoCo.
+- 2026-10-08: that body is now installed. FlyGym 2.1.0 runs in a separate environment, because it pins mujoco < 3.10:
+
+  ```
+  py -3.13 -m venv .venv-flygym
+  .venv-flygym/Scripts/python -m pip install -r requirements-flygym.txt
+  .venv-flygym/Scripts/python tools/flygym_smoke.py
+  ```
+
+  FlyGym downloads about 14 MB of meshes on first use. Our tools point `FLYGYM_ASSET_CACHE_DIR` at `assets/flygym_cache` (git-ignored).
+  - Smoke test: a free NeuroMechFly with default contact (sliding friction 1.0) and leg adhesion, legs held at the neutral pose, stays upright for 0.5 s. All 6 legs are in ground contact, and the lowest segment is at 0.06 mm.
+  - Porting the MN → joint torque output onto this body is the next step.
 - Deferred until the motor pattern produces clean swing/stance, since friction cannot create propulsion the legs do not generate.
 
 ### Descending-mix search and live test (2026-10-05)
@@ -876,6 +887,7 @@ Live tests:
   | Coxa | promotors −0.22 / −0.74 (pitch) | remotor/abductor +0.65 |
 
 - **Simplification in our model:** the coxa rotators act mainly about coxa yaw and roll, which our single protraction DoF lumps together.
+- **2026-10-08 cross-check with meshes:** FlyGym 2.1.0 bundles the full FlyMimic model (Ozdil et al. 2026) with meshes. `tools/flygym_smoke.py` gives the same tibia result (flexor +0.708 rad, extensor −0.976 rad), so stripping the meshes did not bias the table.
 - **Scale:** full-muscle excursions of 0.5–1.3 rad agree in magnitude with `DTHETA_MN` = 0.4 rad per motor neuron (2–6 motor neurons per muscle).
 
 ## Calibration ledger (motor side): what is data, what is set by hand

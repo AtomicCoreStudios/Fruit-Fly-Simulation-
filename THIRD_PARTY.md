@@ -19,6 +19,7 @@ checksum). Please cite the original work when you use this project, following ea
 | DoOR 2.0 database, https://github.com/Dahaniel/DoOR.data | olfactory receptor spontaneous rates | see database | Münch & Galizia 2016 Sci Rep |
 | Virtual Fly Brain CATMAID (FAFB), https://fafb.catmaid.virtualflybrain.org | skeleton soma positions for cross-checks | see VFB terms | Zheng et al. 2018 Cell |
 | Micro-CT eye map, https://github.com/reiserlab/eyemap_T4 | ommatidia positions and directions (`data/ommatidia*.json` are derived) | GPL-3.0 | Zhao et al. 2025 Nature |
+| FlyGym 2.1.0 (PyPI) incl. FlyMimic musculoskeletal model, https://github.com/gizemozd/FlyMimic | MuJoCo contact-physics body and musculoskeletal smoke tests (`.venv-flygym`, `tools/flygym_smoke.py`; assets cached in git-ignored `assets/flygym_cache`) | Apache 2.0 (FlyGym); FlyMimic see repository | Wang-Chen et al. 2024; Ozdil et al. 2026 (ICLR, arXiv 2509.06426) |
 | MuJoCo, https://github.com/google-deepmind/mujoco | physics engine (validation tools) | Apache 2.0 | Todorov et al. 2012 |
 | Further literature values | physiology rules, see `data/physiology_rules.json` "basis" fields and README | — | as cited there |
 

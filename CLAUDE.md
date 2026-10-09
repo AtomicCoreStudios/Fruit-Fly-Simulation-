@@ -13,7 +13,10 @@ only as clearly dated history (e.g. "2026-10-03: ..."), never presented as the c
 - Report failures with numbers; keep the README honest about what does not work yet.
 
 ## Machine and data rules
-- Python: use `.venv/Scripts/python` only. Godot: `F:/GODOT4.6/Godot_v4.6-stable_win64_console.exe`.
+- Python: use `.venv/Scripts/python` (brain, data, vision). FlyGym/MuJoCo-physics tools use the separate
+  `.venv-flygym/Scripts/python` (FlyGym pins mujoco<3.10). Every FlyGym tool must set
+  `FLYGYM_ASSET_CACHE_DIR` to `assets/flygym_cache` BEFORE importing flygym; otherwise FlyGym downloads assets to
+  ~/.cache, outside the project. Godot: `F:/GODOT4.6/Godot_v4.6-stable_win64_console.exe`.
 - Godot test runs: always `--quit-after N`; on this PC also `--disable-vsync --fixed-fps 30` (or 60/120 for fine
   time resolution); never two GPU Godot runs at once; re-import (`--headless --import`) after any shader edit.
 - Ask before downloads (small published data tables < 50 MB into `data/raw/` are pre-approved); record each source

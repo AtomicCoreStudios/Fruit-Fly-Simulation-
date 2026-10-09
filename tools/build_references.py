@@ -65,6 +65,8 @@ Raw downloads go to `data/raw/` (not committed). `tools/fetch_data.py` records U
 | NeuroMechFly v2 / FlyGym | body meshes, rig, flybody and musculoskeletal leg models (`assets/flygym`) | https://github.com/NeLy-EPFL/flygym (commit 38c8ec6) | Apache 2.0 |
 | FlyVis | graded optic lobe model (flow/0000/000) | https://github.com/TuragaLab/flyvis | MIT |
 | Virtual Fly Brain CATMAID (FAFB) | skeleton soma positions for cross-checks | https://fafb.catmaid.virtualflybrain.org | cite Court et al. 2023 (https://www.virtualflybrain.org/about/cite/) |
+| FlyGym 2.1.0 (PyPI) | full-body MuJoCo fly, contact/adhesion, FlyMimic musculoskeletal model (`.venv-flygym`, `tools/flygym_smoke.py`); assets fetched from FlyGym's S3 bucket into `assets/flygym_cache` (git-ignored) | https://pypi.org/project/flygym/ | Apache 2.0 |
+| FlyMimic | musculoskeletal leg model bundled with FlyGym 2.x | https://github.com/gizemozd/FlyMimic | see repository |
 | MuJoCo | physics engine (musculoskeletal validation) | https://github.com/google-deepmind/mujoco | Apache 2.0 |
 
 """
@@ -74,6 +76,7 @@ Raw downloads go to `data/raw/` (not committed). `tools/fetch_data.py` records U
 MANUAL = {
     "FlyWire Codex": ("10.13140/RG.2.2.35928.67844", "FlyWire Codex (Connectome Data Explorer); citation DOI given at https://codex.flywire.ai/about_flywire", "ResearchGate", 2023),
     "Bates et al. 2025 (dataset)": ("10.7910/DVN/8TFGGB", "Preprint version: Distributed control circuits across a brain-and-cord connectome (BANC data, v626, CC BY 4.0)", "Harvard Dataverse", 2025),
+    "Ozdil et al. 2026": ("10.48550/arXiv.2509.06426", "Musculoskeletal simulation of limb movement biomechanics in Drosophila melanogaster (FlyMimic; ICLR 2026)", "arXiv", 2026),
     "Pugliese et al. 2026 (dataset)": ("10.5281/zenodo.22260924", "Pugliese et al. 2026 data (CC BY 4.0)", "Zenodo", 2026),
 }
 
@@ -96,7 +99,7 @@ Each provider's own citation rules, as checked on 2026-10-05. Any publication us
 - **Tastekin et al.** gustatory types: cite Tastekin et al. 2026 (Cell) or the preprint.
 - **DoOR:** cite Muench & Galizia 2016.
 - **Eye map** (GPL-3.0): cite Zhao et al. 2025.
-- **NeuroMechFly / FlyGym** (Apache 2.0): cite Wang-Chen et al. 2024 and Lobato-Rios et al. 2022.
+- **NeuroMechFly / FlyGym** (Apache 2.0): cite Wang-Chen et al. 2024 and Lobato-Rios et al. 2022; for the musculoskeletal model also Ozdil et al. 2026 (FlyMimic).
 - **FlyVis** (MIT): cite Lappalainen et al. 2024.
 - **Virtual Fly Brain:** cite Court et al. 2023.
 - **MuJoCo** (Apache 2.0): cite Todorov et al. 2012.

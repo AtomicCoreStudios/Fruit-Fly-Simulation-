@@ -67,6 +67,8 @@ the sun. The HUD shows region, sensory and motor bars. There is a live 3D connec
 - APL fires at over 300 Hz; the real APL is graded and non-spiking.
 - The EPG compass neurons are silent.
 
+> 2026-10-08: FlyGym 2.1.0 is also installed as a Python package in `.venv-flygym` (`requirements-flygym.txt`, `tools/flygym_smoke.py`). Set `FLYGYM_ASSET_CACHE_DIR=assets/flygym_cache` before importing it. Next step: drive its legs from our motor neurons (MuJoCo contact physics).
+
 ## 4. Assets to use: NeuroMechFly / FlyGym (Apache-2.0, NeLy-EPFL, github.com/NeLy-EPFL/flygym)
 
 The FlyGym body comes from a micro-CT scan of a real adult female fly. It has separate STL meshes per
