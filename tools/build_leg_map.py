@@ -40,9 +40,17 @@ for r in lm.itertuples():
         L["motor"][dof][key].append(int(r.model_index)); L["motor"][dof]["w_" + key].append(w)
 SENS = {"claw_chordotonal": "FeCO_claw", "hook_chordotonal": "FeCO_hook", "club_chordotonal": "FeCO_club",
         "hair_plate": "hair_plate", "campaniform": "campaniform"}
+# validated re-labels of leg sensory neurons from morphology + wiring (tools/classify_leg_sensory.py, ~95% precision):
+# unlabelled / untyped / mislabelled neurons identified as FeCO claw/hook/club join those lists; neurons identified as
+# bristles, taste or multidendritic leave the proprioceptor lists (kept in data/leg_sensory_relabel.json for later)
+import json as _json
+_rl = (ROOT / "data/leg_sensory_relabel.json")
+RELABEL = {int(k): x["class"] for k, x in _json.load(open(_rl))["neurons"].items()} if _rl.exists() else {}
 sn = v[v.super_class.isin(["sensory", "sensory_ascending"]) & v.body_part.astype(str).str.contains("leg")]
 for r in sn.itertuples():
     k = next((lab for key, lab in SENS.items() if key in str(r.sub_class)), None)
+    if int(r.model_index) in RELABEL:
+        k = RELABEL[int(r.model_index)] if RELABEL[int(r.model_index)] in ("FeCO_claw", "FeCO_hook", "FeCO_club") else None
     part = str(r.body_part).split("_")[0]
     if k is None or part not in LEG or r.side not in ("left", "right"):
         continue

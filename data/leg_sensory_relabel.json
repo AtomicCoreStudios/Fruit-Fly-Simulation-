@@ -1,0 +1,628 @@
+{
+ "basis": "inferred from BANC morphology and wiring (tools/classify_leg_sensory.py); validated rules, precision morph+wiring_hl 95.2%, wiring_hl+wiring_ct 95.0% on labelled middle/hind neurons",
+ "neurons": {
+  "138801": {
+   "class": "FeCO_hook",
+   "banc": "orphan",
+   "leg": "hind",
+   "side": "left",
+   "rule": "morph+wiring_hl (precision 95%)"
+  },
+  "139032": {
+   "class": "taste_tactile",
+   "banc": "orphan",
+   "leg": "front",
+   "side": "right",
+   "rule": "wiring_hl+wiring_ct (precision 95%)"
+  },
+  "139715": {
+   "class": "bristle",
+   "banc": "orphan",
+   "leg": "hind",
+   "side": "right",
+   "rule": "wiring_hl+wiring_ct (precision 95%)"
+  },
+  "140027": {
+   "class": "bristle",
+   "banc": "orphan",
+   "leg": "middle",
+   "side": "right",
+   "rule": "wiring_hl+wiring_ct (precision 95%)"
+  },
+  "140033": {
+   "class": "bristle",
+   "banc": "orphan",
+   "leg": "middle",
+   "side": "left",
+   "rule": "wiring_hl+wiring_ct (precision 95%)"
+  },
+  "140282": {
+   "class": "FeCO_club",
+   "banc": "orphan",
+   "leg": "hind",
+   "side": "right",
+   "rule": "wiring_hl+wiring_ct (precision 95%)"
+  },
+  "140599": {
+   "class": "bristle",
+   "banc": "orphan",
+   "leg": "middle",
+   "side": "right",
+   "rule": "morph+wiring_hl (precision 95%)"
+  },
+  "140930": {
+   "class": "bristle",
+   "banc": "orphan",
+   "leg": "hind",
+   "side": "right",
+   "rule": "wiring_hl+wiring_ct (precision 95%)"
+  },
+  "141092": {
+   "class": "FeCO_club",
+   "banc": "orphan",
+   "leg": "hind",
+   "side": "right",
+   "rule": "wiring_hl+wiring_ct (precision 95%)"
+  },
+  "141406": {
+   "class": "FeCO_claw",
+   "banc": "chordotonal_organ",
+   "leg": "middle",
+   "side": "right",
+   "rule": "wiring_hl+wiring_ct (precision 95%)"
+  },
+  "141713": {
+   "class": "bristle",
+   "banc": "orphan",
+   "leg": "middle",
+   "side": "left",
+   "rule": "morph+wiring_hl (precision 95%)"
+  },
+  "142364": {
+   "class": "bristle",
+   "banc": "orphan",
+   "leg": "middle",
+   "side": "right",
+   "rule": "morph+wiring_hl (precision 95%)"
+  },
+  "142471": {
+   "class": "bristle",
+   "banc": "orphan",
+   "leg": "middle",
+   "side": "left",
+   "rule": "morph+wiring_hl (precision 95%)"
+  },
+  "142805": {
+   "class": "bristle",
+   "banc": "orphan",
+   "leg": "front",
+   "side": "right",
+   "rule": "morph+wiring_hl (precision 95%)"
+  },
+  "143694": {
+   "class": "FeCO_claw",
+   "banc": "chordotonal_organ",
+   "leg": "hind",
+   "side": "right",
+   "rule": "wiring_hl+wiring_ct (precision 95%)"
+  },
+  "144361": {
+   "class": "bristle",
+   "banc": "orphan",
+   "leg": "hind",
+   "side": "left",
+   "rule": "morph+wiring_hl (precision 95%)"
+  },
+  "144393": {
+   "class": "bristle",
+   "banc": "orphan",
+   "leg": "hind",
+   "side": "left",
+   "rule": "morph+wiring_hl (precision 95%)"
+  },
+  "144442": {
+   "class": "bristle",
+   "banc": "orphan",
+   "leg": "hind",
+   "side": "right",
+   "rule": "wiring_hl+wiring_ct (precision 95%)"
+  },
+  "144584": {
+   "class": "bristle",
+   "banc": "orphan",
+   "leg": "middle",
+   "side": "left",
+   "rule": "wiring_hl+wiring_ct (precision 95%)"
+  },
+  "144704": {
+   "class": "taste_gustatory",
+   "banc": "orphan",
+   "leg": "middle",
+   "side": "left",
+   "rule": "wiring_hl+wiring_ct (precision 95%)"
+  },
+  "144795": {
+   "class": "bristle",
+   "banc": "orphan",
+   "leg": "middle",
+   "side": "right",
+   "rule": "wiring_hl+wiring_ct (precision 95%)"
+  },
+  "145084": {
+   "class": "FeCO_claw",
+   "banc": "chordotonal_organ",
+   "leg": "hind",
+   "side": "right",
+   "rule": "morph+wiring_hl (precision 95%)"
+  },
+  "145325": {
+   "class": "FeCO_claw",
+   "banc": "chordotonal_organ",
+   "leg": "middle",
+   "side": "right",
+   "rule": "wiring_hl+wiring_ct (precision 95%)"
+  },
+  "145331": {
+   "class": "FeCO_hook",
+   "banc": "orphan",
+   "leg": "middle",
+   "side": "left",
+   "rule": "wiring_hl+wiring_ct (precision 95%)"
+  },
+  "145858": {
+   "class": "FeCO_claw",
+   "banc": "orphan",
+   "leg": "hind",
+   "side": "left",
+   "rule": "morph+wiring_hl (precision 95%)"
+  },
+  "146284": {
+   "class": "FeCO_hook",
+   "banc": "orphan",
+   "leg": "middle",
+   "side": "left",
+   "rule": "morph+wiring_hl (precision 95%)"
+  },
+  "147942": {
+   "class": "FeCO_claw",
+   "banc": "orphan",
+   "leg": "hind",
+   "side": "left",
+   "rule": "wiring_hl+wiring_ct (precision 95%)"
+  },
+  "148171": {
+   "class": "bristle",
+   "banc": "orphan",
+   "leg": "hind",
+   "side": "left",
+   "rule": "morph+wiring_hl (precision 95%)"
+  },
+  "148478": {
+   "class": "bristle",
+   "banc": "orphan",
+   "leg": "hind",
+   "side": "right",
+   "rule": "morph+wiring_hl (precision 95%)"
+  },
+  "148563": {
+   "class": "FeCO_claw",
+   "banc": "hair_plate",
+   "leg": "middle",
+   "side": "left",
+   "rule": "wiring_hl+wiring_ct (precision 95%)"
+  },
+  "148833": {
+   "class": "bristle",
+   "banc": "orphan",
+   "leg": "hind",
+   "side": "right",
+   "rule": "morph+wiring_hl (precision 95%)"
+  },
+  "149040": {
+   "class": "bristle",
+   "banc": "orphan",
+   "leg": "middle",
+   "side": "right",
+   "rule": "morph+wiring_hl (precision 95%)"
+  },
+  "149697": {
+   "class": "FeCO_club",
+   "banc": "chordotonal_organ",
+   "leg": "front",
+   "side": "right",
+   "rule": "morph+wiring_hl (precision 95%)"
+  },
+  "149983": {
+   "class": "FeCO_claw",
+   "banc": "hair_plate",
+   "leg": "middle",
+   "side": "left",
+   "rule": "morph+wiring_hl (precision 95%)"
+  },
+  "150077": {
+   "class": "bristle",
+   "banc": "orphan",
+   "leg": "hind",
+   "side": "right",
+   "rule": "wiring_hl+wiring_ct (precision 95%)"
+  },
+  "150728": {
+   "class": "bristle",
+   "banc": "orphan",
+   "leg": "middle",
+   "side": "left",
+   "rule": "morph+wiring_hl (precision 95%)"
+  },
+  "151349": {
+   "class": "FeCO_hook",
+   "banc": "chordotonal_organ",
+   "leg": "hind",
+   "side": "left",
+   "rule": "morph+wiring_hl (precision 95%)"
+  },
+  "151571": {
+   "class": "taste_gustatory",
+   "banc": "orphan",
+   "leg": "hind",
+   "side": "right",
+   "rule": "wiring_hl+wiring_ct (precision 95%)"
+  },
+  "152154": {
+   "class": "FeCO_claw",
+   "banc": "chordotonal_organ",
+   "leg": "middle",
+   "side": "right",
+   "rule": "wiring_hl+wiring_ct (precision 95%)"
+  },
+  "152216": {
+   "class": "FeCO_hook",
+   "banc": "orphan",
+   "leg": "hind",
+   "side": "right",
+   "rule": "wiring_hl+wiring_ct (precision 95%)"
+  },
+  "152541": {
+   "class": "bristle",
+   "banc": "orphan",
+   "leg": "middle",
+   "side": "right",
+   "rule": "morph+wiring_hl (precision 95%)"
+  },
+  "152764": {
+   "class": "bristle",
+   "banc": "orphan",
+   "leg": "hind",
+   "side": "left",
+   "rule": "wiring_hl+wiring_ct (precision 95%)"
+  },
+  "153030": {
+   "class": "FeCO_club",
+   "banc": "chordotonal_organ",
+   "leg": "front",
+   "side": "left",
+   "rule": "morph+wiring_hl (precision 95%)"
+  },
+  "153836": {
+   "class": "FeCO_hook",
+   "banc": "orphan",
+   "leg": "middle",
+   "side": "left",
+   "rule": "wiring_hl+wiring_ct (precision 95%)"
+  },
+  "153843": {
+   "class": "bristle",
+   "banc": "orphan",
+   "leg": "hind",
+   "side": "left",
+   "rule": "wiring_hl+wiring_ct (precision 95%)"
+  },
+  "154170": {
+   "class": "bristle",
+   "banc": "orphan",
+   "leg": "middle",
+   "side": "left",
+   "rule": "morph+wiring_hl (precision 95%)"
+  },
+  "154570": {
+   "class": "bristle",
+   "banc": "orphan",
+   "leg": "hind",
+   "side": "left",
+   "rule": "wiring_hl+wiring_ct (precision 95%)"
+  },
+  "154753": {
+   "class": "FeCO_club",
+   "banc": "orphan",
+   "leg": "hind",
+   "side": "left",
+   "rule": "wiring_hl+wiring_ct (precision 95%)"
+  },
+  "154938": {
+   "class": "FeCO_hook",
+   "banc": "orphan",
+   "leg": "hind",
+   "side": "right",
+   "rule": "wiring_hl+wiring_ct (precision 95%)"
+  },
+  "155041": {
+   "class": "FeCO_hook",
+   "banc": "orphan",
+   "leg": "hind",
+   "side": "right",
+   "rule": "wiring_hl+wiring_ct (precision 95%)"
+  },
+  "155239": {
+   "class": "bristle",
+   "banc": "orphan",
+   "leg": "hind",
+   "side": "left",
+   "rule": "wiring_hl+wiring_ct (precision 95%)"
+  },
+  "155443": {
+   "class": "FeCO_claw",
+   "banc": "chordotonal_organ",
+   "leg": "middle",
+   "side": "left",
+   "rule": "wiring_hl+wiring_ct (precision 95%)"
+  },
+  "155927": {
+   "class": "FeCO_club",
+   "banc": "orphan",
+   "leg": "hind",
+   "side": "left",
+   "rule": "morph+wiring_hl (precision 95%)"
+  },
+  "155993": {
+   "class": "bristle",
+   "banc": "orphan",
+   "leg": "middle",
+   "side": "right",
+   "rule": "morph+wiring_hl (precision 95%)"
+  },
+  "156048": {
+   "class": "bristle",
+   "banc": "orphan",
+   "leg": "middle",
+   "side": "left",
+   "rule": "morph+wiring_hl (precision 95%)"
+  },
+  "156446": {
+   "class": "bristle",
+   "banc": "orphan",
+   "leg": "middle",
+   "side": "left",
+   "rule": "wiring_hl+wiring_ct (precision 95%)"
+  },
+  "156481": {
+   "class": "bristle",
+   "banc": "orphan",
+   "leg": "middle",
+   "side": "right",
+   "rule": "morph+wiring_hl (precision 95%)"
+  },
+  "156500": {
+   "class": "bristle",
+   "banc": "orphan",
+   "leg": "middle",
+   "side": "left",
+   "rule": "morph+wiring_hl (precision 95%)"
+  },
+  "156506": {
+   "class": "bristle",
+   "banc": "orphan",
+   "leg": "hind",
+   "side": "right",
+   "rule": "wiring_hl+wiring_ct (precision 95%)"
+  },
+  "156652": {
+   "class": "FeCO_club",
+   "banc": "chordotonal_organ",
+   "leg": "front",
+   "side": "left",
+   "rule": "morph+wiring_hl (precision 95%)"
+  },
+  "156702": {
+   "class": "bristle",
+   "banc": "orphan",
+   "leg": "hind",
+   "side": "left",
+   "rule": "morph+wiring_hl (precision 95%)"
+  },
+  "156880": {
+   "class": "taste_gustatory",
+   "banc": "orphan",
+   "leg": "front",
+   "side": "right",
+   "rule": "morph+wiring_hl (precision 95%)"
+  },
+  "157311": {
+   "class": "bristle",
+   "banc": "orphan",
+   "leg": "hind",
+   "side": "left",
+   "rule": "morph+wiring_hl (precision 95%)"
+  },
+  "157429": {
+   "class": "bristle",
+   "banc": "orphan",
+   "leg": "hind",
+   "side": "left",
+   "rule": "morph+wiring_hl (precision 95%)"
+  },
+  "157442": {
+   "class": "bristle",
+   "banc": "orphan",
+   "leg": "hind",
+   "side": "right",
+   "rule": "wiring_hl+wiring_ct (precision 95%)"
+  },
+  "157475": {
+   "class": "FeCO_club",
+   "banc": "orphan",
+   "leg": "middle",
+   "side": "left",
+   "rule": "wiring_hl+wiring_ct (precision 95%)"
+  },
+  "157619": {
+   "class": "bristle",
+   "banc": "orphan",
+   "leg": "hind",
+   "side": "left",
+   "rule": "morph+wiring_hl (precision 95%)"
+  },
+  "157730": {
+   "class": "bristle",
+   "banc": "orphan",
+   "leg": "hind",
+   "side": "left",
+   "rule": "morph+wiring_hl (precision 95%)"
+  },
+  "157740": {
+   "class": "bristle",
+   "banc": "orphan",
+   "leg": "hind",
+   "side": "left",
+   "rule": "wiring_hl+wiring_ct (precision 95%)"
+  },
+  "158034": {
+   "class": "taste_tactile",
+   "banc": "orphan",
+   "leg": "front",
+   "side": "left",
+   "rule": "morph+wiring_hl (precision 95%)"
+  },
+  "158063": {
+   "class": "FeCO_hook",
+   "banc": "hair_plate",
+   "leg": "hind",
+   "side": "left",
+   "rule": "morph+wiring_hl (precision 95%)"
+  },
+  "158099": {
+   "class": "bristle",
+   "banc": "orphan",
+   "leg": "hind",
+   "side": "right",
+   "rule": "wiring_hl+wiring_ct (precision 95%)"
+  },
+  "158169": {
+   "class": "FeCO_club",
+   "banc": "orphan",
+   "leg": "front",
+   "side": "right",
+   "rule": "wiring_hl+wiring_ct (precision 95%)"
+  },
+  "158202": {
+   "class": "taste_gustatory",
+   "banc": "orphan",
+   "leg": "hind",
+   "side": "left",
+   "rule": "morph+wiring_hl (precision 95%)"
+  },
+  "158387": {
+   "class": "bristle",
+   "banc": "orphan",
+   "leg": "middle",
+   "side": "right",
+   "rule": "morph+wiring_hl (precision 95%)"
+  },
+  "158534": {
+   "class": "bristle",
+   "banc": "orphan",
+   "leg": "hind",
+   "side": "left",
+   "rule": "morph+wiring_hl (precision 95%)"
+  },
+  "158684": {
+   "class": "taste_gustatory",
+   "banc": "orphan",
+   "leg": "front",
+   "side": "left",
+   "rule": "wiring_hl+wiring_ct (precision 95%)"
+  },
+  "158727": {
+   "class": "bristle",
+   "banc": "orphan",
+   "leg": "middle",
+   "side": "left",
+   "rule": "wiring_hl+wiring_ct (precision 95%)"
+  },
+  "159575": {
+   "class": "bristle",
+   "banc": "orphan",
+   "leg": "hind",
+   "side": "right",
+   "rule": "wiring_hl+wiring_ct (precision 95%)"
+  },
+  "159639": {
+   "class": "FeCO_club",
+   "banc": "orphan",
+   "leg": "middle",
+   "side": "left",
+   "rule": "wiring_hl+wiring_ct (precision 95%)"
+  },
+  "159745": {
+   "class": "FeCO_club",
+   "banc": "orphan",
+   "leg": "front",
+   "side": "right",
+   "rule": "wiring_hl+wiring_ct (precision 95%)"
+  },
+  "160087": {
+   "class": "bristle",
+   "banc": "orphan",
+   "leg": "front",
+   "side": "right",
+   "rule": "morph+wiring_hl (precision 95%)"
+  },
+  "160617": {
+   "class": "FeCO_claw",
+   "banc": "chordotonal_organ",
+   "leg": "middle",
+   "side": "right",
+   "rule": "wiring_hl+wiring_ct (precision 95%)"
+  },
+  "160732": {
+   "class": "FeCO_claw",
+   "banc": "orphan",
+   "leg": "hind",
+   "side": "right",
+   "rule": "morph+wiring_hl (precision 95%)"
+  },
+  "160772": {
+   "class": "bristle",
+   "banc": "orphan",
+   "leg": "hind",
+   "side": "left",
+   "rule": "morph+wiring_hl (precision 95%)"
+  },
+  "160825": {
+   "class": "FeCO_claw",
+   "banc": "orphan",
+   "leg": "hind",
+   "side": "left",
+   "rule": "wiring_hl+wiring_ct (precision 95%)"
+  },
+  "161009": {
+   "class": "FeCO_club",
+   "banc": "orphan",
+   "leg": "front",
+   "side": "left",
+   "rule": "wiring_hl+wiring_ct (precision 95%)"
+  },
+  "161270": {
+   "class": "bristle",
+   "banc": "orphan",
+   "leg": "middle",
+   "side": "right",
+   "rule": "morph+wiring_hl (precision 95%)"
+  },
+  "161311": {
+   "class": "bristle",
+   "banc": "hair_plate",
+   "leg": "hind",
+   "side": "right",
+   "rule": "wiring_hl+wiring_ct (precision 95%)"
+  }
+ }
+}

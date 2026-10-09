@@ -1,0 +1,44 @@
+morph: 5-fold CV accuracy 0.813; campaniform vs hair plate 0.707 (n=92, majority-class baseline 0.707)
+  confusion (rows true, cols predicted) ['FeCO_claw', 'FeCO_club', 'FeCO_hook', 'bristle', 'campaniform', 'campaniform_bilateral', 'hair_plate', 'multidendritic', 'taste_gustatory', 'taste_tactile']
+[[107   3   9   5   1   0   0   0   0   0]
+ [  4 253   5   5   2   0   0   1   2   0]
+ [ 14   6  61   1   4   0   1   0   0   0]
+ [  4   3   3 159   0   0   2   1  26   9]
+ [  2   2   2   1  13   1   6   0   0   0]
+ [  0   4   0   0   1   4   0   0   0   0]
+ [  2   0   1   2   8   0  52   0   0   0]
+ [  0   1   0   2   0   0   0   9   3   4]
+ [  0   0   0  23   0   0   0   1 148   7]
+ [  0   2   0  13   0   0   0   2   5  87]]
+  front-left -> front-right transfer 0.778
+  front -> middle/hind transfer (classes labelled in every leg) 0.290
+wiring_hl: 5-fold CV accuracy 0.810; campaniform vs hair plate 0.602 (n=128, majority-class baseline 0.625)
+  confusion (rows true, cols predicted) ['FeCO_claw', 'FeCO_club', 'FeCO_hook', 'bristle', 'campaniform', 'campaniform_bilateral', 'hair_plate', 'multidendritic', 'taste_gustatory', 'taste_tactile']
+[[124   8  18   3   4   0   5   0   0   0]
+ [ 12 276  13   2   4   0   0   1   2   1]
+ [ 20  14  97   1   7   0   1   0   1   0]
+ [  3   5   1 210   0   0   5   0  10   6]
+ [  5   4  13   3  11   0   7   0   2   3]
+ [  0   0   0   0   2   7   0   0   0   0]
+ [  3   0   0   5   5   1  66   0   0   0]
+ [  0   1   0   2   0   0   0  12   2   4]
+ [  0   2   1  12   1   0   0   2 210  12]
+ [  0   1   0   8   1   0   0   4   7  92]]
+  front-left -> front-right transfer 0.644
+  front -> middle/hind transfer (classes labelled in every leg) 0.790
+wiring_ct: 5-fold CV accuracy 0.861; campaniform vs hair plate 0.719 (n=128, majority-class baseline 0.625)
+  confusion (rows true, cols predicted) ['FeCO_claw', 'FeCO_club', 'FeCO_hook', 'bristle', 'campaniform', 'campaniform_bilateral', 'hair_plate', 'multidendritic', 'taste_gustatory', 'taste_tactile']
+[[142   5  13   0   1   0   1   0   0   0]
+ [  5 288  13   1   4   0   0   0   0   0]
+ [ 17  14 105   0   5   0   0   0   0   0]
+ [  2   1   1 213   0   0   2   0  15   6]
+ [  1   4   7   0  23   1  11   0   0   1]
+ [  0   0   0   0   1   8   0   0   0   0]
+ [  0   0   0   2   9   0  69   0   0   0]
+ [  0   0   0   0   0   0   0  14   0   7]
+ [  0   1   0  13   1   0   1   0 216   8]
+ [  0   0   0   4   0   0   1   9   2  97]]
+  front-left -> front-right transfer 0.777
+  front -> middle/hind transfer (classes labelled in every leg) 0.807
+rule morph+wiring_hl (agree, both p >= 0.8), trained on front legs, tested on 680 labelled middle/hind neurons: accepts 84 (12%), correct 95.2%
+rule wiring_hl+wiring_ct (agree, both p >= 0.8), trained on front legs, tested on 835 labelled middle/hind neurons: accepts 417 (50%), correct 95.0%

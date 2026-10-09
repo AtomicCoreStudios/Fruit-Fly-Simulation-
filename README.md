@@ -16,7 +16,7 @@ The brain and body run in a closed loop in real time.
 | Legs | 391 real leg motor neurons → muscles → joints (torque model); 886 proprioceptors feed back | measured mapping; assumed mechanics (calibration ledger) |
 | Walking | Walking CPG reproduced exactly offline. Offline, the tuned descending mix (DNg100 + DNb08 + DNa02 + DNg97) gives swing/stance anti-phase in 5 of 6 legs at 4.2 Hz. Live on the kinematic body (2026-10-05): with wiring-derived claw/hook tuning and presynaptic gating, 4 of 6 legs switch stance/swing (1.4–3.8 cycles/s); left front and right middle stay planted; best free-walking speed 0.29 mm/s (real 10–30). **Not walking yet.** | see "Neuromuscular legs" |
 | Escape | giant fibre → TTMn follows 1:1 (gap junction, 16 mV, 2026-10-09). The GF fires spontaneously at 0.4–0.8 Hz at rest (tonic LC4 plus DNp70 bursts), so escapes occur without a threat. Under investigation. | literature + calibrated |
-| Physics | One body: `--physics=mujoco` runs the live FlyWire+BANC brain and the 1,709-facet eyes on the physical NeuroMechFly body in MuJoCo (FlyGym 2.1.0, true scale, 1.02 mg, friction 1.0, pad adhesion). The brain's 391 leg and 16 neck motor neurons drive it; 886 leg and 70 neck proprioceptors are fed back from the physics. Every segment, including the head carrying the eyes, takes the MuJoCo pose (mapping check: max deviation 5×10⁻⁶). The brain still runs at 1.00× real time (15–17 fps vs 25 without physics). **No walking yet**, live or offline (closed-loop descending-mix search: best 1.2 mm/s vs 0.5 mm/s drift with no drive). Standing needs pad adhesion of about body weight per leg. | literature model + assumed (ledger) |
+| Physics | One body: `--physics=mujoco` runs the live FlyWire+BANC brain and the 1,709-facet eyes on the physical NeuroMechFly body in MuJoCo (FlyGym 2.1.0, true scale, 1.02 mg, friction 1.0, pad adhesion). The brain's 391 leg and 16 neck motor neurons drive it; 915 leg and 70 neck proprioceptors are fed back from the physics (incl. 33 FeCO afferents identified from shape and wiring). Every segment, including the head carrying the eyes, takes the MuJoCo pose (mapping check: max deviation 5×10⁻⁶). The brain still runs at 1.00× real time (15–17 fps vs 25 without physics). **No walking yet**, live or offline (closed-loop descending-mix search: best 1.2 mm/s vs 0.5 mm/s drift with no drive). Standing needs pad adhesion of about body weight per leg. | literature model + assumed (ledger) |
 | Leg sugar → PER | known gap (see Phase 5b) | — |
 
 Sources and papers with DOI links: [REFERENCES.md](REFERENCES.md). Everything below is in chronological order. Dated sections describe the state at that date; this table is the current summary.
@@ -1063,6 +1063,41 @@ This step moves the body from our kinematic Godot legs to a physical body. The g
 - **BANC** annotates 81 / 81 / 107 "hair plate" neurons in front / middle / hind legs, but campaniform sensilla only 51 / 4 / 4. That is far more hair-plate neurons than real legs carry, so many of them are probably unlabelled campaniform sensilla. No public table says which.
 - **Not used:** the newer MANC v1.2.1 annotations need a neuPrint account (owner's decision), and the FANC leg reconstructions need CAVE access.
 - **Option without new data:** classify the unlabelled neurons by axon morphology. Use the BANC skeletons already downloaded, with the labelled front-leg campaniform and hair-plate axons as serially homologous references. Results would be labelled inferred.
+
+### Leg sensory neurons identified from shape and wiring (2026-10-09)
+
+`tools/classify_leg_sensory.py` → `data/leg_sensory_inferred.csv` (every call with probabilities), `data/leg_sensory_relabel.json` (validated re-labels only), `recordings/leg_sensory_cv.txt`.
+
+**Descriptors**, built from BANC v626:
+- **Morphology:** each leg neuromere's axon cloud (left legs mirrored) is registered onto the front-right one with ICP; median residual 0.05–0.10 of the neuromere radius.
+- **Wiring:** synapse shares split by partner hemilineage, and separately by partner cell type. 380 interneuron types repeat in all three leg segments.
+- **Classifier:** logistic regression per descriptor, trained on labelled leg sensory neurons.
+
+**Validation:**
+
+| Descriptor | 5-fold CV | Front-left → front-right | Front → middle/hind |
+|---|---|---|---|
+| Morphology | 0.81 | 0.78 | 0.29 |
+| Wiring by hemilineage | 0.81 | 0.64 | 0.79 |
+| Wiring by cell type | 0.86 | 0.78 | 0.81 |
+
+- **Acceptance rule:** two independent descriptors agree, each with p ≥ 0.8. Trained on front legs and tested on labelled middle/hind neurons, it is **95% correct** (morphology + wiring: 84 accepted; two wiring views: 417 accepted).
+
+**The load-sensor gap is not resolved.**
+- Campaniform vs hair plate (front legs, where BANC labels both): morphology 0.71 (= the majority-class baseline), wiring by hemilineage 0.60, wiring by cell type 0.72 (baseline 0.63).
+- No middle/hind "hair plate" can be shown to be a campaniform sensillum. BANC's front-leg labels may themselves be partly noisy.
+- 85 of the 154 middle/hind hair plates also have no skeleton in the v626 archive.
+
+**Validated re-labels** (FeCO, bristle and taste classes; used in `tools/build_leg_map.py`):
+- 34 new FeCO afferents, from 20 orphan neurons, 11 untyped chordotonal neurons and 3 BANC "hair plates" (2 claw, 1 hook). Their claw/hook tuning comes from wiring as before.
+- 1 "hair plate" is a bristle.
+- Orphans: 47 are bristles, 5 taste and 2 tactile-taste. These are stored for wiring touch and taste later.
+- **Leg-map change:** the six legs gain 33 FeCO afferents and lose 4 hair plates; the motor side is unchanged. 985 proprioceptors are now fed back (886 leg before).
+
+**Effect live** (`--physics=mujoco`, 20 s; repeated runs are identical, so the comparison is exact):
+- Right-middle depressor pool: 41 → 7 Hz. Thorax mean: 0.57 → 0.49 mm.
+- Neither version stands; push-down tone is missing in four of six legs either way.
+- The re-label is kept, because the data is more accurate. It shows that standing does not come from adding sensors alone.
 
 ## Calibration ledger (motor side): what is data, what is set by hand
 
