@@ -338,6 +338,8 @@ var _mj_prev := Vector3.ZERO           # virtual root (x, y, yaw) in the MuJoCo 
 var _mj_have_prev := false
 var _mj_odo := [0.0, 0.0, 0.0]
 var _mj_last_ms := -1.0
+var mj_min_z := 99.0                   # lowest thorax height (mm) after 2 s (upright check for warm-ups)
+var mj_min_up := 1.0                   # lowest z-component of the thorax up axis after 2 s
 var head_yaw := 0.0                    # rad, + = left (MuJoCo neck, driven by the real neck motor neurons)
 var head_roll := 0.0
 
@@ -498,7 +500,10 @@ func _mujoco_update() -> void:
 		foot_height[leg] = out[o2 + 18 + li]
 		for di in DOFS.size():
 			angle[leg][DOFS[di]] = out[o2 + 24 + li * 6 + di]
-	sense = {"thorax_z_mm": th.origin.z, "load_lf": out[o2 + 6], "load_rf": out[o2 + 9]}
+	sense = {"thorax_z_mm": th.origin.z, "thorax_up": th.basis.z.z, "load_lf": out[o2 + 6], "load_rf": out[o2 + 9]}
+	if brain.sim_time_ms > 2000.0:
+		mj_min_z = minf(mj_min_z, th.origin.z)
+		mj_min_up = minf(mj_min_up, th.basis.z.z)
 	if out.size() >= o2 + 24 + 36 + 2:       # protocol v2: head yaw/roll (rad, + = left) driven by the neck motor neurons
 		head_yaw = out[o2 + 60]
 		head_roll = out[o2 + 61]

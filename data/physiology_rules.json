@@ -84,10 +84,9 @@
    "rate_unit": {
     "fcap_hz": 200.0,
     "gain_hz_per_mv": 21.82,
-    "threshold_mv": 0.3437,
-    "target_hz": 0.5
+    "threshold_mv": 0.3437
    },
-   "basis": "model abstraction: leg motor neurons as firing-rate units (as in Pugliese et al. 2025, whose model reproduces fly stepping); real MNs spike, the muscle model uses their rate | 2026-10-09: homeostatic set point 0.5 Hz (as the spiking brain: default sparse baseline 1 Hz; motor neurons 0.5 Hz), learned as an input offset during an upright warm-up; without it the nerve cord ran at ~110 Hz mean and tonic 13A/16B/08A inhibitors (50-150 Hz) silenced the front/hind depressor pools"
+   "basis": "model abstraction: leg motor neurons as firing-rate units (as in Pugliese et al. 2025, whose model reproduces fly stepping); real MNs spike, the muscle model uses their rate | 2026-10-09: no homeostatic set point (tested 0.5 Hz: it removed the tonic depressor drive a standing fly needs; motor output is behaviour, not regulated to a fixed rate)"
   },
   {
    "match": {

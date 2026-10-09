@@ -1121,6 +1121,17 @@ This step moves the body from our kinematic Godot legs to a physical body. The g
    - **Still wrong:** front legs and left hind have no depressor drive. The body sits below its passive height (0.76 mm). The right/left middle-leg imbalance remains (the lean).
    - Some nerve-cord populations still average about 100 Hz once standing free, so the set points are not fully held outside the tethered state.
 
+### Two-stage upright calibration; no set point for motor neurons (2026-10-09, in progress)
+
+- **`--homeostasis=continue`** keeps learning from the saved offsets. Warm-ups in physics mode are saved only if the fly stayed upright: thorax at least 0.5 mm and up-axis at least 0.5 after 2 s. Otherwise "NOT saved" is printed.
+- **Stage 2** (free standing, continuing from the tethered offsets) was saved, but its test removed nearly all depressor drive. Thorax 0.78 mm; hind levators 69–76 Hz.
+  - The 0.5 Hz homeostatic set point for leg motor neurons was the cause. A standing fly needs tonic motor output, so leg motor neurons now have **no set point**; only the 12,791 interneuron rate units do.
+- **Re-calibration without the motor set point was refused by the upright guard.** The tether's rotational hold was too weak (the fly twisted, up-axis −0.39) and the fly flipped when free.
+  - The tether's rotational stiffness is now 100 µN·mm/rad (critically damped). It holds level against strong opposite leg torques (up-axis 0.996).
+  - Probe CSVs now also record `thorax_up`.
+- **Current offsets:** `data/homeostasis_offsets.bin` is the stage-2 file. Motor-neuron offsets in it are ignored (no set point).
+- **Next:** repeat the tethered and free-standing warm-ups with the stiffer tether, then the free-standing test, now with orientation logged.
+
 ## Calibration ledger (motor side): what is data, what is set by hand
 
 Kept so that any walking result can state exactly how much came from the connectome and how much from hand-set values. Basis: **measured** = from data; **literature** = published model or parameter; **assumed** = an approximate value I chose; **tuned** = adjusted while looking at walking. Nothing on the motor side has been tuned to walking yet.

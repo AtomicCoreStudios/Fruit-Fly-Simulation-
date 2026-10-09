@@ -47,6 +47,7 @@ func _ready() -> void:
 		which = "synthetic"
 	brain.physiology = _args.get("physiology", "1") != "0"
 	brain.homeostasis_learning = _args.has("homeostasis")
+	brain.homeostasis_continue = str(_args.get("homeostasis", "")) == "continue"
 	brain.conductance_synapses = _args.get("synapses", "conductance") != "current"
 	brain.act_tau_ms = float(_args.get("act_tau", "60"))
 	if _args.has("phys_ablate"):
@@ -643,6 +644,7 @@ func _probe() -> void:
 				head.append("head_yaw")
 				head.append("head_roll")
 				head.append("thorax_z_mm")
+				head.append("thorax_up")
 		_probe_f.store_csv_line(head)
 	var act := brain.activity_bytes.to_float32_array()
 	var row := PackedStringArray(["%.1f" % brain.sim_time_ms, str(int(threat.visible))])
@@ -662,6 +664,7 @@ func _probe() -> void:
 			row.append("%.4f" % fly.legs.head_yaw)
 			row.append("%.4f" % fly.legs.head_roll)
 			row.append("%.4f" % float(fly.legs.sense.get("thorax_z_mm", 0.0)))
+			row.append("%.3f" % float(fly.legs.sense.get("thorax_up", 1.0)))
 	_probe_f.store_csv_line(row)
 
 
@@ -689,8 +692,14 @@ func _maybe_finish() -> void:
 	if _rec:
 		_rec.close()
 	if brain.homeostasis_learning:
-		brain.save_homeostasis()
-		print("homeostasis: learned offsets saved to " + brain.homeo_path())
+		# learn only while upright: with the physical body, a warm-up in which the fly went down or tipped over is
+		# discarded (2026-10-09: offsets learned on a fly lying on its back doubled the clamped neurons)
+		var fell: bool = fly.legs != null and fly.legs.physics_mujoco and (fly.legs.mj_min_z < 0.5 or fly.legs.mj_min_up < 0.5)
+		if fell:
+			print("homeostasis: NOT saved - the fly was not upright (min thorax height %.2f mm, min up %.2f)" % [fly.legs.mj_min_z, fly.legs.mj_min_up])
+		else:
+			brain.save_homeostasis()
+			print("homeostasis: learned offsets saved to " + brain.homeo_path())
 	if _eye_f:
 		_eye_f.close()
 	if _probe_f:

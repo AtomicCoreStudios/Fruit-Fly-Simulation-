@@ -194,7 +194,9 @@ class Body:
         f = k * (self.tether_pos - d.xpos[b]) - c * v6[3:]
         R = d.xmat[b].reshape(3, 3)
         err = 0.5 * np.array([R[2, 1] - R[1, 2], R[0, 2] - R[2, 0], R[1, 0] - R[0, 1]])      # rotation error toward identity
-        I = float(m.body_inertia[b].max()) * 10.0; kr = 200.0 * mass; cr = 2.0 * np.sqrt(kr * I)
+        # rotational hold: 100 uN mm/rad (about 10x the largest leg-joint torque per rad), critically damped on the
+        # thorax-subtree inertia; omega*dt ~ 0.1 at the 0.1 ms step (stable)
+        I = max(float(m.body_inertia[b].max()), mass * 0.3 ** 2); kr = 100.0; cr = 2.0 * np.sqrt(kr * I)
         tq = -kr * err - cr * v6[:3]
         d.xfrc_applied[b, :3] = f; d.xfrc_applied[b, 3:] = tq
 
