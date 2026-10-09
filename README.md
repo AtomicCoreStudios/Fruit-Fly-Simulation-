@@ -1043,6 +1043,19 @@ This step moves the body from our kinematic Godot legs to a physical body. The g
    - **Trigger:** DNp70, whose rate doubles from 3.2 to 6.2 Hz in the 100 ms before each GF onset (587 synapses).
    - **Next to examine:** why LC4 is tonically active in a static scene, and what drives DNp70.
 
+### Why the live fly sinks; homeostasis must be learned upright (2026-10-09)
+
+- **Support pools, live** (`recordings/probe_support_live.csv`, `--physics=mujoco`, 20 s):
+  - Only the middle legs drive their trochanter depressors: right middle 45–70 Hz, left middle 3–14 Hz.
+  - Front and hind legs have about 0 Hz depressor drive. Right front and both hind legs drive levators (10–38 Hz).
+  - The thorax sinks from 1.1 mm (1 s) to 0.6 mm (8 s), then rests on the belly at 0.45 mm (passive standing height 0.76 mm). The uneven middle-leg push is the sideways lean seen live.
+  - This points to the missing load feedback: BANC annotates only 2 campaniform neurons per middle or hind leg (data gap above).
+- **Homeostasis re-learned on the physical body was rejected.**
+  - A 60 s `--homeostasis --clean_air` warm-up in physics mode lowered spontaneous GF firing (1 escape in 20 s instead of 6; GF 0.36 Hz).
+  - But the fly fell on its back during the warm-up, so the offsets were learned for a fly flailing on its back. Neurons at the −40 mV floor rose from 494 to 947, and the fly fell over again.
+  - The 2026-10-05 offsets are restored. **Rule:** homeostatic offsets must be learned while the fly is upright and behaving normally.
+- **Spontaneous GF firing, upstream:** AVLP500 (visual + central input onto DNp70) sits at the −40 mV homeostatic floor and still fires 77–100 Hz. 494 neurons are at that floor in the current offsets.
+
 ## Calibration ledger (motor side): what is data, what is set by hand
 
 Kept so that any walking result can state exactly how much came from the connectome and how much from hand-set values. Basis: **measured** = from data; **literature** = published model or parameter; **assumed** = an approximate value I chose; **tuned** = adjusted while looking at walking. Nothing on the motor side has been tuned to walking yet.

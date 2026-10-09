@@ -642,6 +642,7 @@ func _probe() -> void:
 			if fly.legs.physics_mujoco:
 				head.append("head_yaw")
 				head.append("head_roll")
+				head.append("thorax_z_mm")
 		_probe_f.store_csv_line(head)
 	var act := brain.activity_bytes.to_float32_array()
 	var row := PackedStringArray(["%.1f" % brain.sim_time_ms, str(int(threat.visible))])
@@ -660,6 +661,7 @@ func _probe() -> void:
 		if fly.legs.physics_mujoco:
 			row.append("%.4f" % fly.legs.head_yaw)
 			row.append("%.4f" % fly.legs.head_roll)
+			row.append("%.4f" % float(fly.legs.sense.get("thorax_z_mm", 0.0)))
 	_probe_f.store_csv_line(row)
 
 
