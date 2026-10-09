@@ -136,6 +136,26 @@ def main():
     target_rate = np.full(len(tab), -1.0, np.float32)     # homeostatic set point (Hz); -1 = none
     graded = np.zeros((len(tab), 4), np.float32)            # non-spiking: (r_max Hz, gain Hz/mV, thr mV, 0)
     vnc_size = _vnc_sizes(len(tab)) if any("rate_unit" in r for r in rules["rules"]) else None
+    # optional reconstruction-completeness correction for leg motor neurons (FLY_MN_COMPLETENESS=1, default off):
+    # per leg segment and motor-neuron type, if one side's median input-synapse count is lower than the other side's,
+    # that side's synaptic input is scaled up to match (gain x k, threshold / k: exactly input x k for a linear rate
+    # unit), k <= 2. Assumes bilateral symmetry and that the less-connected side is under-reconstructed; measured
+    # synapses are never removed. basis: approximate (2026-10-09: left front/middle leg MNs have 45%/32% fewer
+    # input synapses than the right in BANC v626)
+    mn_k = {}
+    if os.environ.get("FLY_MN_COMPLETENESS") == "1" and vp.exists():
+        ev = pd.read_parquet(ROOT / "data/vnc/vnc_edges.parquet", columns=["Postsynaptic_Index", "Connectivity"])
+        nin = ev.groupby("Postsynaptic_Index").Connectivity.sum()
+        lmn = vn[vn.cell_class == "leg_motor_neuron"].assign(nin=lambda d: d.model_index.map(nin).fillna(0))
+        for (seg, typ), g in lmn.groupby(["sub_class", "cell_type"]):
+            med = g.groupby("side").nin.median()
+            if {"left", "right"} <= set(med.index) and med.min() > 0:
+                for side in ("left", "right"):
+                    k = min(2.0, max(1.0, med.max() / med[side]))
+                    for mi in g[g.side == side].model_index:
+                        mn_k[int(mi)] = k
+        print(f"MN completeness correction: {sum(k > 1.0 for k in mn_k.values())} of {len(mn_k)} leg motor neurons scaled up, "
+              f"median k {np.median([k for k in mn_k.values() if k > 1.0]):.2f}")
     used = {}
     ct = tab.cell_type.fillna("").astype(str).values; cc = tab.cell_class.fillna("").astype(str).values
     sc = tab.super_class.fillna("").astype(str).values
@@ -156,7 +176,8 @@ def main():
                 # gain and threshold mapped to mV (see _vnc_sizes / data/physiology_rules.json)
                 ru = r["rate_unit"]; sz = float(vnc_size[i])
                 out[i] = (0.0, 0.0, 0.0, 1.0)
-                graded[i] = (ru["fcap_hz"], ru["gain_hz_per_mv"] / sz, ru["threshold_mv"] * sz, 0.0)
+                kc = mn_k.get(i, 1.0)
+                graded[i] = (ru["fcap_hz"], ru["gain_hz_per_mv"] / sz * kc, ru["threshold_mv"] * sz / kc, 0.0)
                 target_rate[i] = float(ru.get("target_hz", -1.0))   # homeostatic set point (offset learned on input)
                 used[k] = used.get(k, 0) + 1
                 break

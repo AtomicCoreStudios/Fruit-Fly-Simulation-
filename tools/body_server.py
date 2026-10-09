@@ -27,10 +27,12 @@ ap.add_argument("--adhesion", default="pad")
 ap.add_argument("--pad_fmax", type=float, default=10.0)
 ap.add_argument("--k_joint", type=float, default=10.0)
 ap.add_argument("--memory_mb", type=float, default=64.0)
-ap.add_argument("--tether", type=int, default=0)       # 1: thorax held level at standing height (calibration runs)
+ap.add_argument("--tether", type=int, default=0)
+ap.add_argument("--sensors", default="")   # comma list of leg afferent kinds to keep (diagnostic; default all)       # 1: thorax held level at standing height (calibration runs)
 args = ap.parse_args()
 
-legs = Legs(None, k_joint=args.k_joint)
+from vnc_body_model import KINDS
+legs = Legs(None, k_joint=args.k_joint, sensors=args.sensors.split(",") if args.sensors else KINDS)
 neck = Neck(None, k_joint=args.k_joint)
 N_LEG_MN, N_LEG_S = len(legs.mn_idx), len(legs.s_idx)
 body = Body(k_joint=args.k_joint, adhesion=args.adhesion, pad_fmax=args.pad_fmax, memory_mb=args.memory_mb,

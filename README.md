@@ -1150,6 +1150,27 @@ This step moves the body from our kinematic Godot legs to a physical body. The g
 - **Current offsets:** `data/homeostasis_offsets.bin` is the stage-2 file. Motor-neuron offsets in it are ignored (no set point).
 - **Next:** repeat the tethered and free-standing warm-ups with the stiffer tether, then the free-standing test, now with orientation logged.
 
+### Where the left/right lean comes from (2026-10-09)
+
+Two-stage calibration with motor neurons free of a set point:
+- **Stage 1** (tethered, from zero) was saved.
+- **Stage 2** (free standing) was refused by the upright guard: the fly flipped (up-axis −0.99).
+
+With the stage-1 offsets, the free fly rolls 35–55° (up-axis 0.58–0.80). Right front and right middle tibia extensors drive (53 and 131 Hz), while the left front leg is held up (levator 53 Hz). Tests (`recordings/probe_support_*.csv`):
+
+| Test | Result |
+|---|---|
+| All 1,299 descending neurons silenced | Same asymmetry, so not the brain's commands |
+| Descending neurons silenced **and** leg proprioceptors off | Symmetric (left/right differences 0–12 Hz); upright at 1.30 mm |
+| Leave one afferent kind out | Club afferents carry most of it (differences shrink about 3×); no single kind removes it |
+| Fly held level by the tether | Same asymmetry (right-middle tibia extensors 127 vs 20 Hz), so static, not a roll that amplifies itself |
+| Leg motor-neuron input completeness (left front/middle have 45%/32% fewer input synapses than the right) corrected, `FLY_MN_COMPLETENESS=1` | No change (196 motor neurons scaled up, median ×1.38): silent pools have no input to scale. Hypothesis rejected; the option is kept but off |
+| Front tibia-extensor inputs traced (`recordings/probe_tibext_inputs_live.csv`) | Same interneuron types on both sides, opposite states: left IN13A063/IN13A014/IN08A005 (inhibitory) at 95–99 Hz vs 0 Hz on the right; right IN04B034/038/031, IN03A065 (excitatory) at 14–184 Hz vs 0 Hz on the left |
+
+**Conclusion:** each side's premotor network locks into a different stable state, driven by the sensory input. The interneurons sit at about 100 Hz despite their 1 Hz set point. Pugliese rate units have no spike-frequency adaptation, so recurrent loops can latch, as GFC2 did. **Next:** give the nerve-cord rate units the brain's adaptation (AdEx-style current, τ_w 300 ms).
+
+Also fixed: `--mj_sensors` diagnostic (afferent kinds to keep). An empty argument from Godot is now no longer passed, since Windows dropped it and the server failed to start.
+
 ## Calibration ledger (motor side): what is data, what is set by hand
 
 Kept so that any walking result can state exactly how much came from the connectome and how much from hand-set values. Basis: **measured** = from data; **literature** = published model or parameter; **assumed** = an approximate value I chose; **tuned** = adjusted while looking at walking. Only the descending command mix has been tuned to walking; everything else is measured, literature or assumed.
