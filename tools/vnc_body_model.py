@@ -17,6 +17,13 @@ DN = {"DNg100": [130297, 135733], "DNb08": [47118, 98130, 115273, 131703], "DNa0
       "DNg97": [42812, 78013], "DNp09": [83620, 119032]}
 
 
+class _Id:
+    """Identity index map (bridge mode: indices are neuron model ids)."""
+
+    def __getitem__(self, x):
+        return int(x)
+
+
 class Cord:
     """Rate network with synaptic filter and delay (as tools/dn_mix_search.py)."""
 
@@ -53,7 +60,9 @@ class Legs:
 
     def __init__(self, cord, k_joint=10.0, sensors=KINDS, cs_muscle=0.0):
         lm = json.load(open(ROOT / "data/leg_motor_map.json"))
-        p = cord.pos; self.cord = cord; self.k = k_joint; self.cs_muscle = cs_muscle
+        # cord=None: no local network (live bridge to the Godot brain); indices are then neuron model ids, motor rates
+        # are passed to torques() and presynaptic inhibition is applied by the brain (fly_legs.gd release gain)
+        p = cord.pos if cord is not None else _Id(); self.cord = cord; self.k = k_joint; self.cs_muscle = cs_muscle
         # motor: activation matrix rows = (leg, dof, side) pools, columns = MN slots
         mns = sorted({p[x] for L in lm["legs"].values() for m in L["motor"].values() for s in ("pos", "neg") for x in m[s]})
         self.mn_idx = np.array(mns, int); slot = {x: i for i, x in enumerate(mns)}
@@ -82,23 +91,24 @@ class Legs:
         # hair plates: joint and limit direction from tools/hair_plate_tuning.py (data/hair_plate_tuning.json);
         # without the file: the old rule (fires at either limit, joint by alternation; positive feedback, 2026-10-08)
         hpt = json.load(open(ROOT / "data/hair_plate_tuning.json")) if (ROOT / "data/hair_plate_tuning.json").exists() else {}
-        inv = {i: x for x, i in p.items()}
+        inv = {i: x for x, i in p.items()} if cord is not None else _Id()
         self.hp_j = np.array([DOFS.index(hpt[str(inv[i])]["joint"]) if str(inv[i]) in hpt else (0 if fl else 2)
                               for i, fl in zip(self.s_idx, self.s_flex)])
         self.hp_s = np.array([{"pos": 1.0, "neg": -1.0}.get(hpt.get(str(inv[i]), {}).get("limit"), 0.0) for i in self.s_idx])
         self.s_on = np.isin(self.s_kind, [KINDS.index(k) for k in sensors]).astype(float)
         # presynaptic inhibition (Dallmann 2025): afferent row -> inhibitory neurons x synapses
-        pre = lm.get("presyn_inhibition", {}); r_, c_, v_ = [], [], []
+        pre = lm.get("presyn_inhibition", {}) if cord is not None else {}; r_, c_, v_ = [], [], []
         where = {int(x): i for i, x in enumerate(self.s_idx)}
         for key, lst in pre.items():
             if p[int(key)] in where:
                 for j, sy in lst:
                     r_.append(where[p[int(key)]]); c_.append(p[int(j)]); v_.append(float(sy))
-        self.Pre = sp.csr_matrix((v_, (r_, c_)), shape=(len(S), cord.n))
+        self.Pre = sp.csr_matrix((v_, (r_, c_)), shape=(len(S), cord.n)) if cord is not None else None
 
-    def torques(self, dt):
-        """Activation update and per-DoF torque (uN mm) in 'biological' sign (+ protract/adduct/flex/lower)."""
-        r = np.maximum(self.cord.R[self.mn_idx], 0.0)
+    def torques(self, dt, mn_rates=None):
+        """Activation update and per-DoF torque (uN mm) in 'biological' sign (+ protract/adduct/flex/lower).
+        mn_rates: Hz per motor neuron in mn_idx order (bridge mode); default: from the local cord."""
+        r = np.maximum(self.cord.R[self.mn_idx] if mn_rates is None else np.asarray(mn_rates, float), 0.0)
         self.act += (r / (r + R_HALF) - self.act) * (1 - np.exp(-dt / TAU_ACT))
         A = (self.P @ self.act).reshape(36, 2)
         self.A = A
@@ -122,4 +132,6 @@ class Legs:
         x = np.maximum(load_x[L], 0.0)
         camp = np.clip(load[L] * 25.0 * self.cs_muscle + 150.0 * x / (x + 1.0), 0.0, 150.0)
         r = np.choose(self.s_kind, [claw, hook, club, hair, camp]) * self.s_on
+        if self.Pre is None:
+            return r
         return r / (1.0 + (self.Pre @ np.maximum(self.cord.R, 0.0)) / I_HALF)

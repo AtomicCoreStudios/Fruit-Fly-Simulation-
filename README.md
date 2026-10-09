@@ -14,9 +14,9 @@ The brain and body run in a closed loop in real time.
 | Eyes and vision | 1,709-facet compound eyes → FlyVis + graded optic lobe → VPNs | measured / literature |
 | Taste, smell, wind | per-neuron sense organs on the NeuroMechFly body | measured mapping; approximate response curves |
 | Legs | 391 real leg motor neurons → muscles → joints (torque model); 886 proprioceptors feed back | measured mapping; assumed mechanics (calibration ledger) |
-| Walking | Walking CPG reproduced exactly offline. Offline, the tuned descending mix (DNg100 + DNb08 + DNa02 + DNg97) gives swing/stance anti-phase in 5 of 6 legs at 4.2 Hz. Live: with wiring-derived claw/hook tuning and presynaptic gating, 4 of 6 legs switch stance/swing (1.4–3.8 cycles/s); left front and right middle stay planted; best free-walking speed 0.29 mm/s (real 10–30). **Not walking yet.** | see "Neuromuscular legs" |
+| Walking | Walking CPG reproduced exactly offline. Offline, the tuned descending mix (DNg100 + DNb08 + DNa02 + DNg97) gives swing/stance anti-phase in 5 of 6 legs at 4.2 Hz. Live on the kinematic body (2026-10-05): with wiring-derived claw/hook tuning and presynaptic gating, 4 of 6 legs switch stance/swing (1.4–3.8 cycles/s); left front and right middle stay planted; best free-walking speed 0.29 mm/s (real 10–30). **Not walking yet.** | see "Neuromuscular legs" |
 | Escape | giant fibre → TTMn (gap junction) works | literature |
-| Physics | MuJoCo body (FlyGym 2.1.0, true scale, 1.02 mg, friction 1.0, tarsal adhesion) driven by the real leg motor neurons of the nerve-cord rate model, with proprioceptors fed back from the physics, offline (`tools/nmf_closed_loop.py`). Reflexes from the real wiring push the body up (thorax up to 1.56–1.75 mm; the passive body rests at 0.71 mm). But the fly only stays upright with tarsal adhesion of at least about body weight per leg; with weaker or no adhesion it tips over. **No walking yet:** standing reflex tone dominates the descending drive, and the hind legs oscillate at 8–17 touchdowns/s. Not yet coupled to the live Godot brain and eyes. | literature model + assumed (ledger) |
+| Physics | One body: `--physics=mujoco` runs the live FlyWire+BANC brain and the 1,709-facet eyes on the physical NeuroMechFly body in MuJoCo (FlyGym 2.1.0, true scale, 1.02 mg, friction 1.0, pad adhesion). The brain's 391 leg motor neurons drive it; 886 leg proprioceptors are fed back from the physics. Every segment, including the head carrying the eyes, takes the MuJoCo pose (mapping check: max deviation 5×10⁻⁶). The brain still runs at 1.00× real time (15–17 fps vs 25 without physics). **No walking yet**, live or offline (closed-loop descending-mix search: best 1.2 mm/s vs 0.5 mm/s drift with no drive). Standing needs pad adhesion of about body weight per leg. | literature model + assumed (ledger) |
 | Leg sugar → PER | known gap (see Phase 5b) | — |
 
 Sources and papers with DOI links: [REFERENCES.md](REFERENCES.md). Everything below is in chronological order. Dated sections describe the state at that date; this table is the current summary.
@@ -70,6 +70,7 @@ Test harness (arguments go after `--`):
 - `--sugar_release=x` force the sugar-GRN release gain (otherwise set by hunger)
 - `--legs=0` cosmetic legs instead of the neuromuscular model; `--legs_log`, `--legs_lift_test` leg diagnostics
 - `--locomotion=legs` the body moves only by its stance feet (default: descending-neuron rate kinematics)
+- `--physics=mujoco` the physical body: starts `tools/body_server.py` (needs `.venv-flygym`; localhost only) and moves the fly by MuJoCo physics. Options: `--pad_fmax=10` pad strength in µN per leg; `--mj_port=47830`; `--mj_rigid_head=1` diagnostic (head held on the thorax)
 
 Always add Godot's `--quit-after` as a watchdog.
 
@@ -958,6 +959,45 @@ This step moves the body from our kinematic Godot legs to a physical body. The g
   3. Run the descending-mix search in closed loop.
   4. Couple the body to Godot.
 
+### One body: the live brain and eyes on the MuJoCo body; tone asymmetry; pad adhesion; closed-loop search (2026-10-09)
+
+**1. Uneven resting tone: a data gap, not biology** (`tools/tone_asymmetry.py`). The nerve cord was settled at the neutral pose with no drive and one afferent kind on at a time.
+- **Claw:** the right front leg gets a trochanter torque of −5.5 µN·mm; the left front gets 0.
+- **Campaniform:** under an equal load, front-leg coxa and hind-leg trochanter torques point in **opposite directions** on the left and right sides.
+- **Cause: the BANC sensory annotations are incomplete.**
+  - Campaniform-sensillum neurons are annotated as 27 and 24 in the front legs, but only 2 per middle or hind leg. Real legs have dozens each.
+  - The middle and hind legs instead have 34–58 "hair plate" neurons, of the same cell types (SNpp45, SNpp52) as the front-leg campaniform sensilla.
+  - Claw counts differ between sides: left middle 34, right middle 13.
+- These cannot be split without inventing labels, so they stay as they are and go on the **"missing for 1:1" list**.
+
+**2. Physical adhesion** (`tools/nmf_body.py`, `--adhesion pad`, now the default).
+- **Model:** per leg, a MuJoCo connect constraint to the touchdown point. It carries only what the leg loads it with; it breaks above `pad_fmax` or when the leg actively lifts (peeling). It never pulls a foot down.
+- **Passive body:** stands at 0.76 mm.
+- **With the reflex network:** at 2 or 5 µN the fly falls (0.53–0.58 mm); at 10 µN (about body weight) it stays upright (100% of the time) at 0.68 mm, about passive height. The earlier 1.7 mm "stand" depended on FlyGym's constant 40 µN pull.
+
+**3. Descending-mix search in closed loop** (`tools/dn_mix_closed_loop.py`, `recordings/dn_mix_closed_loop.csv`): 42 trials, each 2 s of physics, with DNg100, DNb08, DNa02, DNg97 and DNp09 at 0–800.
+- **Best:** 1.23 mm/s (DNg100 : DNb08 : DNa02 : DNg97 = 400 : 400 : 800 : 200).
+- **No-drive control:** drifts at 0.46 mm/s. Real flies walk at 10–30 mm/s.
+- At most 4 legs step, never in a tripod.
+- 2 trials ran out of MuJoCo constraint memory (the arena is now 64 MB).
+- **Conclusion:** no descending mix of the nerve cord alone produces walking. Tuning further would only fit noise. The nerve-cord-only loop lacks the brain's tonic descending input and walking-state reflex modulation, which is why the live coupling (4) came next.
+
+**4. One body, live** (`--physics=mujoco`; `tools/body_server.py`, client in `scripts/fly_legs.gd`; protocol test `tools/body_server_test.py`, which passes).
+- **What happens:**
+  - Godot starts the server.
+  - Each brain update, Godot sends the brain's 391 leg-motor-neuron rates.
+  - MuJoCo advances by exactly the brain's simulated time.
+  - Godot receives all 69 segment poses and the 886 proprioceptor rates, and keeps presynaptic gating in the brain.
+  - Heading and planar position move the fly node; everything else sits on the segment nodes.
+- **Verified:** the MuJoCo neutral pose, mapped to Godot, reproduces every segment's rest transform to within 5×10⁻⁶. Units, axes, rotations and neutral pose are identical, so the eye cameras and facets sit on the physical head.
+- **Speed:** the brain stays at 1.00× real time (15–17 fps vs 25 without physics). The physics alone runs at 0.6× real time.
+- **Escapes:**
+  - Over 20 s the jump motor neuron TTMn spikes 6–7 times in physics mode, versus 1 (the start-up transient) without physics. The giant fibre stays at 0 Hz.
+  - Holding the head rigid does not change it. Cutting the leg proprioceptors (`--proprio=0`) brings it back to 1.
+  - So leg sensory input reaches TTMn inside the nerve cord. TTMn drives the middle-leg tergotrochanter muscle, which is itself a leg muscle.
+  - The escape counter treats every TTMn spike as a jump command. In physics mode the jump is counted but not executed (no jump model yet).
+- **Not driven by the physics yet:** the proboscis (PER animation), the wings, and the neck motor neurons (head held by a passive spring). The MuJoCo floor is flat, and the Godot arena objects are not in the physics.
+
 ## Calibration ledger (motor side): what is data, what is set by hand
 
 Kept so that any walking result can state exactly how much came from the connectome and how much from hand-set values. Basis: **measured** = from data; **literature** = published model or parameter; **assumed** = an approximate value I chose; **tuned** = adjusted while looking at walking. Nothing on the motor side has been tuned to walking yet.
@@ -981,7 +1021,7 @@ Kept so that any walking result can state exactly how much came from the connect
 | Proprioceptor tuning curve shapes (claw sigmoid width, hook/club gains, hair plate limits) | — | assumed | yes |
 | MuJoCo joint spring K (springref = neutral pose) | 10 µN·mm/rad (FlyGym default); damping K × 30 ms | assumed (FlyGym default) | yes |
 | MuJoCo torque per motor neuron | K × 0.4 rad (same equilibrium as DTHETA_MN), tanh-limited to the joint range | assumed | yes |
-| Tarsal adhesion | `--adh_gain` µN per leg, constant pull while in contact (MuJoCo adhesion); 40 = NeuroMechFly v2 default; on while in contact and not levating | literature model value; no Drosophila measurement found; on/off rule assumed | yes (fly tips over below about 1× body weight per leg) |
+| Tarsal adhesion | pad bond (default since 2026-10-09): connect constraint at touchdown, breaks above `pad_fmax` = 10 µN per leg or when the leg actively levates; FlyGym's constant-pull actuator (`--adhesion auto`, 40 µN) kept for comparison | mechanics approximate; pad_fmax assumed (no Drosophila measurement found; stick-insect pads ≤ 0.8 × body weight) | yes (falls below about 1× body weight per leg) |
 | Campaniform rate in MuJoCo | 150 Hz × x/(x+1), x = bending moment at the femur base / ((W/3) × leg length), from MuJoCo `cfrc_int` (2026-10-09; before: 120 Hz × ground force / W) | strain physics from the simulation; response shape and reference assumed | yes |
 | Hair-plate joint and limit direction | joint from BANC annotation (trochanter) or coxa (assumed); direction = the limit its network output opposes (Pratt et al. 2024 limit detectors) | measured wiring + literature function | yes |
 | Descending command (which DNs, how strong) | DNg100 : DNb08 : DNa02 : DNg97 = 4 : 1 : 1 : 1 (offline amplitude 400/100/100/100; live 200 Hz / 50 / 50 / 50 Hz), from a 300-trial random search plus an 81-point refinement (`tools/dn_mix_search.py`, `recordings/dn_mix_search.csv`, `dn_mix_refine.csv`) | **tuned** | yes |

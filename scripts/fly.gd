@@ -507,6 +507,12 @@ func update_motor(dt: float) -> void:
 	_update_proboscis(dt)
 	if legs != null:
 		legs.update(dt)
+	# with the MuJoCo body there is no flight/jump model yet: TTMn spikes are counted, the body stays physical (the
+	# cooldown set here also keeps the scripted take-off below from starting)
+	if legs != null and legs.physics_mujoco and motor["ttmn"] > 0.0 and _escape_cooldown <= 0.0:
+		escapes += 1
+		_escape_cooldown = 3.0
+		print("ESCAPE (TTMn jump, not executed: no jump model in the physical body) at t=%.2fs" % (brain.sim_time_ms / 1000.0))
 	if tethered:
 		if motor["ttmn"] > 0.0 and _escape_cooldown <= 0.0:
 			escapes += 1          # TTMn spike = jump command, counted but body held

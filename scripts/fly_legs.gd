@@ -105,6 +105,9 @@ func setup(p_brain: FlyBrain, p_fly) -> String:
 				# tools/build_leg_map.py), "" for other kinds
 				_sens.append([leg, kind, int(ids[k]), float(k) / maxf(ids.size() - 1, 1), str(tun.get(str(int(ids[k])), ""))])
 	enabled = true
+	if _user_arg("physics", "") == "mujoco":
+		enabled = false
+		return mujoco_start()
 	if "--legs_lift_test" in OS.get_cmdline_user_args():
 		_lift_test()
 	return ""
@@ -143,6 +146,8 @@ var foot_height := {}         # foot height above its rest height, as a fraction
 
 
 func odometry() -> Array:
+	if physics_mujoco:
+		return mujoco_odometry()
 	var inv: Transform3D = fly.global_transform.affine_inverse()
 	var dp := Vector3.ZERO
 	var dyaw := 0.0
@@ -191,6 +196,9 @@ func _fix_sign(leg: String, dof: String, tip: Node3D, metric: Callable) -> void:
 ## Call every frame after brain.tick().
 func update(dt: float) -> void:
 	if not enabled:
+		return
+	if physics_mujoco:
+		_mujoco_update()
 		return
 	var a := brain.activity_bytes.to_float32_array()
 	var to_hz := 1000.0 / brain.act_tau_ms
@@ -304,3 +312,208 @@ func _presyn_gate() -> void:
 		gsum += gain
 		gn += 1
 	sense["presyn_gain_mean"] = gsum / maxf(gn, 1)
+
+
+# ---------------- Physical body in MuJoCo (--physics=mujoco) ----------------
+## The body is simulated in MuJoCo by tools/body_server.py (FlyGym NeuroMechFly, true scale, contact physics, pad
+## adhesion). Each motor update sends the brain's real leg motor-neuron rates and receives every segment's pose and
+## the rates of the leg's real proprioceptors. Every segment node (including c_head, which carries the compound-eye
+## cameras and facets) takes the MuJoCo pose, so the eyes sit on the physical head. Physics time = brain simulated
+## time. Not driven by MuJoCo yet: proboscis (c_rostrum, c_haustellum; PER animation) and wings (flight not modelled).
+## Started with the project's .venv-flygym; the server listens on 127.0.0.1 only and stops with Godot.
+const MJ_PORT := 47830
+const MJ_SKIP := ["c_rostrum", "c_haustellum", "l_wing", "r_wing"]
+const _C := Basis(Vector3(1, 0, 0), Vector3(0, 0, -1), Vector3(0, 1, 0))   # MuJoCo/Blender z-up -> glTF/Godot y-up
+const THORAX_REST_X := 0.496           # mm, thorax origin in the rig frame (data/flygym_rig.json)
+var physics_mujoco := false
+var mj_info := {}
+var _tcp: StreamPeerTCP
+var _srv_pid := -1
+var _mj_mn := PackedInt32Array()
+var _mj_nodes: Array = []
+var _mj_parent := PackedInt32Array()
+var _mj_thorax := -1
+var _mj_ns := 0
+var _mj_prev := Vector3.ZERO           # virtual root (x, y, yaw) in the MuJoCo world
+var _mj_have_prev := false
+var _mj_odo := [0.0, 0.0, 0.0]
+var _mj_last_ms := -1.0
+
+
+static func _user_arg(key: String, def: String) -> String:
+	for a in OS.get_cmdline_user_args():
+		if a.begins_with("--" + key + "="):
+			return a.split("=", true, 1)[1]
+	return def
+
+
+func mujoco_start() -> String:
+	var py := ProjectSettings.globalize_path("res://.venv-flygym/Scripts/python.exe")
+	if not FileAccess.file_exists(py):
+		return ".venv-flygym missing (README: FlyGym environment)"
+	var port := int(_user_arg("mj_port", str(MJ_PORT)))
+	var argv := [ProjectSettings.globalize_path("res://tools/body_server.py"), "--port", str(port),
+		"--pad_fmax", _user_arg("pad_fmax", "10")]
+	_srv_pid = OS.create_process(py, argv, false)
+	if _srv_pid <= 0:
+		return "could not start tools/body_server.py"
+	_tcp = StreamPeerTCP.new()
+	var t0 := Time.get_ticks_msec()
+	while Time.get_ticks_msec() - t0 < 120000:
+		var st := _tcp.get_status()
+		if st == StreamPeerTCP.STATUS_NONE or st == StreamPeerTCP.STATUS_ERROR:
+			_tcp = StreamPeerTCP.new()
+			_tcp.connect_to_host("127.0.0.1", port)
+		_tcp.poll()
+		if _tcp.get_status() == StreamPeerTCP.STATUS_CONNECTED:
+			break
+		OS.delay_msec(250)
+	if _tcp.get_status() != StreamPeerTCP.STATUS_CONNECTED:
+		return "body server did not accept a connection within 120 s"
+	_tcp.set_no_delay(true)
+	var line := PackedByteArray()
+	while true:
+		var b := _mj_read(1)
+		if b.is_empty():
+			return "body server handshake timed out"
+		if b[0] == 10:
+			break
+		line.append(b[0])
+	mj_info = JSON.parse_string(line.get_string_from_utf8())
+	_mj_mn = PackedInt32Array(mj_info["mn_ids"])
+	idx = PackedInt32Array(mj_info["sensor_ids"])
+	_mj_ns = idx.size()
+	rate.resize(_mj_ns)
+	var names: Array = mj_info["segments"]
+	# --mj_rigid_head=1 (diagnostic): the head keeps its rest pose on the thorax (neck motion not shown to the eyes)
+	var skip: Array = MJ_SKIP.duplicate()
+	if _user_arg("mj_rigid_head", "0") == "1":
+		skip.append("c_head")
+	for nm in names:
+		_mj_nodes.append(null if skip.has(nm) else fly.seg.get(nm))
+	for k in names.size():
+		var nd: Node3D = fly.seg.get(names[k])
+		var p := -1
+		if nd != null and nd.get_parent() != null:
+			p = names.find(str(nd.get_parent().name))
+		_mj_parent.append(p)
+	_mj_thorax = names.find("c_thorax")
+	# self-check: the MuJoCo neutral pose (handshake) mapped exactly as in _mujoco_update must reproduce every Godot
+	# segment's rest transform (built in Blender from the same rig and neutral pose); prints the largest deviation
+	var rp: Array = mj_info["rest_poses"]
+	var RT: Array[Transform3D] = []
+	for r in rp:
+		RT.append(Transform3D(Basis(Quaternion(r[4], r[5], r[6], r[3])), Vector3(r[0], r[1], r[2])))
+	var worst := 0.0
+	var worst_info := ""
+	for k in names.size():
+		var nd: Node3D = fly.seg.get(names[k])
+		if nd == null:
+			continue
+		var rel: Transform3D = RT[k] if _mj_parent[k] < 0 else RT[_mj_parent[k]].affine_inverse() * RT[k]
+		var g := Transform3D(_C * rel.basis * _C.transposed(), _C * rel.origin)
+		if _mj_parent[k] < 0:
+			g.origin = nd.position       # root height/position are set by the physics, compare orientation only
+		var dev := maxf((nd.position - g.origin).length(), (nd.basis.x - g.basis.x).length() + (nd.basis.y - g.basis.y).length() + (nd.basis.z - g.basis.z).length())
+		if dev > worst:
+			worst = dev
+			worst_info = "%s: node %s | mapped MuJoCo %s" % [names[k], str(nd.transform), str(g)]
+	physics_mujoco = true
+	enabled = true
+	print("legs: MuJoCo body connected (%d segments, %d motor neurons, %d proprioceptors; pose-mapping check max deviation %.6f)"
+		% [names.size(), _mj_mn.size(), _mj_ns, worst])
+	if worst > 1e-3:
+		print("legs: pose-mapping check worst segment ", worst_info)
+	return ""
+
+
+func _mj_read(n: int) -> PackedByteArray:
+	var t0 := Time.get_ticks_msec()
+	while _tcp.get_available_bytes() < n:
+		_tcp.poll()
+		if _tcp.get_status() != StreamPeerTCP.STATUS_CONNECTED or Time.get_ticks_msec() - t0 > 60000:
+			return PackedByteArray()
+		OS.delay_usec(100)
+	var r: Array = _tcp.get_data(n)
+	return r[1] if r[0] == OK else PackedByteArray()
+
+
+func _mujoco_update() -> void:
+	# physics advances by the brain's simulated time since the last motor update
+	var now_ms: float = brain.sim_time_ms
+	var dts := 0.0 if _mj_last_ms < 0.0 else (now_ms - _mj_last_ms) / 1000.0
+	_mj_last_ms = now_ms
+	if dts <= 0.0:
+		return
+	var a := brain.activity_bytes.to_float32_array()
+	var to_hz := 1000.0 / brain.act_tau_ms
+	var msg := PackedFloat32Array()
+	msg.resize(1 + _mj_mn.size())
+	msg[0] = dts
+	for k in _mj_mn.size():
+		var i := _mj_mn[k]
+		msg[k + 1] = maxf(a[i] * to_hz, 0.0) if i < a.size() else 0.0
+	var head := PackedByteArray()
+	head.resize(4)
+	head.encode_u32(0, msg.size())
+	_tcp.put_data(head + msg.to_byte_array())
+	var hb := _mj_read(4)
+	if hb.size() < 4:
+		push_error("body server stopped answering")
+		enabled = false
+		return
+	var out := _mj_read(4 * hb.decode_u32(0)).to_float32_array()
+	var n := _mj_nodes.size()
+	var T: Array[Transform3D] = []
+	for s in n:
+		var o := s * 7
+		T.append(Transform3D(Basis(Quaternion(out[o + 4], out[o + 5], out[o + 6], out[o + 3])), Vector3(out[o], out[o + 1], out[o + 2])))
+	# heading and planar position move the fly node (odometry); everything else is shown on the segment nodes
+	var th := T[_mj_thorax]
+	var yaw := atan2(th.basis.x.y, th.basis.x.x)
+	var root := Vector2(th.origin.x, th.origin.y) - Vector2(cos(yaw), sin(yaw)) * THORAX_REST_X
+	if _mj_have_prev:
+		var d := (root - Vector2(_mj_prev.x, _mj_prev.y)).rotated(-_mj_prev.z)
+		_mj_odo[0] += d.x * 0.1            # mm -> arena units (cm); + = forward
+		_mj_odo[1] += -d.y * 0.1           # MuJoCo +y is the fly's left; odometry + = right
+		_mj_odo[2] += wrapf(yaw - _mj_prev.z, -PI, PI)
+	_mj_prev = Vector3(root.x, root.y, yaw)
+	_mj_have_prev = true
+	var root_inv := Transform3D(Basis(Vector3(0, 0, 1), yaw), Vector3(root.x, root.y, 0.0)).affine_inverse()
+	for s in n:
+		var nd: Node3D = _mj_nodes[s]
+		if nd == null:
+			continue
+		var rel: Transform3D = (root_inv if _mj_parent[s] < 0 else T[_mj_parent[s]].affine_inverse()) * T[s]
+		nd.transform = Transform3D(_C * rel.basis * _C.transposed(), _C * rel.origin)
+	var o2 := 7 * n
+	for k in _mj_ns:
+		rate[k] = out[o2 + k]
+	o2 += _mj_ns
+	for li in LEGS.size():
+		var leg: String = LEGS[li]
+		stance[leg] = out[o2 + li] > 0.5
+		foot_height[leg] = out[o2 + 18 + li]
+		for di in DOFS.size():
+			angle[leg][DOFS[di]] = out[o2 + 24 + li * 6 + di]
+	sense = {"thorax_z_mm": th.origin.z, "load_lf": out[o2 + 6], "load_rf": out[o2 + 9]}
+	_presyn_gate()
+
+
+func mujoco_odometry() -> Array:
+	var od := _mj_odo.duplicate()
+	_mj_odo = [0.0, 0.0, 0.0]
+	return od
+
+
+func _exit_tree() -> void:
+	if _tcp != null and _tcp.get_status() == StreamPeerTCP.STATUS_CONNECTED:
+		var z := PackedByteArray()
+		z.resize(4)
+		z.encode_u32(0, 0)
+		_tcp.put_data(z)
+		_tcp.disconnect_from_host()
+	if _srv_pid > 0 and OS.is_process_running(_srv_pid):
+		OS.delay_msec(300)
+		if OS.is_process_running(_srv_pid):
+			OS.kill(_srv_pid)

@@ -67,6 +67,7 @@ the sun. The HUD shows region, sensory and motor bars. There is a live 3D connec
 - APL fires at over 300 Hz; the real APL is graded and non-spiking.
 - The EPG compass neurons are silent.
 
+> 2026-10-09: ONE BODY done: `--physics=mujoco` runs the live brain and eyes on the MuJoCo body (`tools/body_server.py`, `tools/nmf_body.py`; pose mapping verified to 5e-6). No walking yet. Next candidates: neck motor neurons -> head joints; TTMn/jump in physics; brain-tonic descending input in live closed-loop DN tests; the missing middle/hind-leg campaniform annotations (data gap); then the chemical-signalling layer (5b).
 > 2026-10-08 (later): closed loop nerve cord <-> MuJoCo body works offline (`tools/nmf_closed_loop.py`, README "MuJoCo body in closed loop"). Reflexes from the wiring hold the fly up; no walking yet. Plan: (1) campaniform strain calibration, (2) closed-loop DN-mix search, (3) Godot <-> MuJoCo bridge so the live brain and the 1,709-facet eyes ride on the physical body (Godot poses body and head from MuJoCo each frame).
 > 2026-10-08: FlyGym 2.1.0 is also installed as a Python package in `.venv-flygym` (`requirements-flygym.txt`, `tools/flygym_smoke.py`). Set `FLYGYM_ASSET_CACHE_DIR=assets/flygym_cache` before importing it. Next step: drive its legs from our motor neurons (MuJoCo contact physics).
 
@@ -176,7 +177,7 @@ Architecture:
    single-cell transcriptomes, VNC atlases). This feeds the existing hooks: release gain (binding 20), intrinsic
    excitability, adaptation and plasticity.
 
-Known data gaps: receptor identity per synapse (only per cell type, from transcriptomics); peptide release sites (dense-core
+Known data gaps: BANC leg campaniform sensilla annotated almost only in the front legs (2 per middle/hind leg); receptor identity per synapse (only per cell type, from transcriptomics); peptide release sites (dense-core
 vesicles are not in the connectome); diffusion and uptake constants for most modulators.
 
 ## 6. How to work with this user
