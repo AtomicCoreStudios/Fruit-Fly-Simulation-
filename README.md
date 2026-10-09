@@ -15,7 +15,7 @@ The brain and body run in a closed loop in real time.
 | Taste, smell, wind | per-neuron sense organs on the NeuroMechFly body | measured mapping; approximate response curves |
 | Legs | 391 real leg motor neurons → muscles → joints (torque model); 886 proprioceptors feed back | measured mapping; assumed mechanics (calibration ledger) |
 | Walking | Walking CPG reproduced exactly offline. Offline, the tuned descending mix (DNg100 + DNb08 + DNa02 + DNg97) gives swing/stance anti-phase in 5 of 6 legs at 4.2 Hz. Live on the kinematic body (2026-10-05): with wiring-derived claw/hook tuning and presynaptic gating, 4 of 6 legs switch stance/swing (1.4–3.8 cycles/s); left front and right middle stay planted; best free-walking speed 0.29 mm/s (real 10–30). **Not walking yet.** | see "Neuromuscular legs" |
-| Escape | giant fibre → TTMn follows 1:1 (gap junction, 16 mV, 2026-10-09). The GF fires spontaneously at 0.4–0.8 Hz at rest (tonic LC4 plus DNp70 bursts), so escapes occur without a threat. Under investigation. | literature + calibrated |
+| Escape | giant fibre → TTMn follows 1:1 (gap junction, 16 mV). After the upright homeostasis warm-up, 1 escape (start-up) in 20 s at rest; before, the GF fired spontaneously at 0.4–0.8 Hz (tonic LC4 plus DNp70 bursts). | literature + calibrated |
 | Physics | One body: `--physics=mujoco` runs the live FlyWire+BANC brain and the 1,709-facet eyes on the physical NeuroMechFly body in MuJoCo (FlyGym 2.1.0, true scale, 1.02 mg, friction 1.0, pad adhesion). The brain's 391 leg and 16 neck motor neurons drive it; 915 leg and 70 neck proprioceptors are fed back from the physics (incl. 33 FeCO afferents identified from shape and wiring). Every segment, including the head carrying the eyes, takes the MuJoCo pose (mapping check: max deviation 5×10⁻⁶). The brain still runs at 1.00× real time (15–17 fps vs 25 without physics). **No walking yet**, live or offline (closed-loop descending-mix search: best 1.2 mm/s vs 0.5 mm/s drift with no drive). Standing needs pad adhesion of about body weight per leg. | literature model + assumed (ledger) |
 | Leg sugar → PER | known gap (see Phase 5b) | — |
 
@@ -70,7 +70,7 @@ Test harness (arguments go after `--`):
 - `--sugar_release=x` force the sugar-GRN release gain (otherwise set by hunger)
 - `--legs=0` cosmetic legs instead of the neuromuscular model; `--legs_log`, `--legs_lift_test` leg diagnostics
 - `--locomotion=legs` the body moves only by its stance feet (default: descending-neuron rate kinematics)
-- `--physics=mujoco` the physical body: starts `tools/body_server.py` (needs `.venv-flygym`; localhost only) and moves the fly by MuJoCo physics. Options: `--pad_fmax=10` pad strength in µN per leg; `--mj_port=47830`; `--mj_rigid_head=1` diagnostic (head held on the thorax)
+- `--physics=mujoco` the physical body: starts `tools/body_server.py` (needs `.venv-flygym`; localhost only) and moves the fly by MuJoCo physics. Options: `--pad_fmax=10` pad strength in µN per leg; `--mj_port=47830`; `--mj_rigid_head=1` diagnostic (head held on the thorax); `--mj_tether=1` thorax held level at standing height (use for `--homeostasis` warm-ups: learn only while upright)
 
 Always add Godot's `--quit-after` as a watchdog.
 
@@ -1098,6 +1098,28 @@ This step moves the body from our kinematic Godot legs to a physical body. The g
 - Right-middle depressor pool: 41 → 7 Hz. Thorax mean: 0.57 → 0.49 mm.
 - Neither version stands; push-down tone is missing in four of six legs either way.
 - The re-label is kept, because the data is more accurate. It shows that standing does not come from adding sensors alone.
+
+### Why the front/hind legs did not push down: a hot nerve cord; homeostasis for rate units, learned upright (2026-10-09)
+
+1. **Depressor inputs traced live** (`recordings/probe_dep_inputs_live.csv`, `dep_inputs_weights.csv`):
+   - Front- and hind-leg depressor pools received −170k to −246k synapse·Hz of inhibition, against +16k to +94k of excitation. The inhibition came from interneurons of hemilineages 13A, 16B and 08A firing tonically at 50–150 Hz.
+   - The nerve-cord rate units (13,162 neurons) had no homeostasis, and the population ran at about 110 Hz.
+   - Pool thresholds do not differ between legs (0.50–0.69 mV), so neuron size is not the cause.
+2. **Stale-offset bug fixed** (`scripts/fly_brain.gd`). 371 leg motor neurons still carried homeostatic offsets (mean −1.2 mV, down to −14 mV) learned when they were spiking. At a rate unit's 21.8 Hz/mV, that silenced some of them. Offsets are now applied only to neurons that have a homeostatic target.
+3. **Rate units now get homeostasis**, like every spiking brain neuron: set point 1 Hz for nerve-cord interneurons (the model's default sparse baseline) and 0.5 Hz for leg motor neurons (the motor rule). Basis: mechanism literature; set points approximate.
+4. **Learned upright.** A tether (`--mj_tether=1`, calibration only) holds the thorax level at neutral-pose height with all feet on the ground (1.03 mm). The 60 s warm-up ran in that state.
+   - Rate-unit offsets: median +0.07 mV, 5–95% −3.5…+0.4 mV, none at the −40 mV floor. Brain neurons at the floor: 531 (494 before).
+5. **Free standing, 20 s** (`recordings/probe_support_homeo.csv`):
+
+   | | Before | After |
+   |---|---|---|
+   | Thorax height | sank to 0.45 mm | holds at 0.62–0.72 mm (mean 0.66) |
+   | Middle-leg depressors | low | left 45 Hz, right 103 Hz |
+   | Right-hind depressor | 0 | 6 Hz |
+   | Escapes in 20 s | 6 | 1 (start-up) |
+
+   - **Still wrong:** front legs and left hind have no depressor drive. The body sits below its passive height (0.76 mm). The right/left middle-leg imbalance remains (the lean).
+   - Some nerve-cord populations still average about 100 Hz once standing free, so the set points are not fully held outside the tethered state.
 
 ## Calibration ledger (motor side): what is data, what is set by hand
 

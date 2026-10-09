@@ -244,8 +244,17 @@ func _homeo_bytes() -> PackedByteArray:
 	var of := FileAccess.open(homeo_path(), FileAccess.READ)
 	if physiology and of != null and of.get_length() == n * 4 and not homeostasis_learning and not "homeo" in phys_ablate:
 		var o := of.get_buffer(n * 4).to_float32_array()
+		# only neurons with a homeostatic target carry a learned offset; others (rate units, graded neurons) never
+		# learn one, so a stored value is stale (2026-10-09: leg motor neurons kept offsets of up to -14 mV from
+		# when they were spiking, i.e. up to ~300 Hz of suppression at a rate unit's 21.8 Hz/mV gain)
+		var stale := 0
 		for i in n:
-			a[2 * i + 1] = o[i]
+			if a[2 * i] >= 0.0:
+				a[2 * i + 1] = o[i]
+			elif absf(o[i]) > 1e-6:
+				stale += 1
+		if stale > 0:
+			print("homeostasis: ignored %d stale offsets of neurons without a homeostatic target" % stale)
 		homeostasis_loaded = true
 	return a.to_byte_array()
 

@@ -355,7 +355,7 @@ func mujoco_start() -> String:
 		return ".venv-flygym missing (README: FlyGym environment)"
 	var port := int(_user_arg("mj_port", str(MJ_PORT)))
 	var argv := [ProjectSettings.globalize_path("res://tools/body_server.py"), "--port", str(port),
-		"--pad_fmax", _user_arg("pad_fmax", "10")]
+		"--pad_fmax", _user_arg("pad_fmax", "10"), "--tether", _user_arg("mj_tether", "0")]
 	_srv_pid = OS.create_process(py, argv, false)
 	if _srv_pid <= 0:
 		return "could not start tools/body_server.py"

@@ -27,12 +27,14 @@ ap.add_argument("--adhesion", default="pad")
 ap.add_argument("--pad_fmax", type=float, default=10.0)
 ap.add_argument("--k_joint", type=float, default=10.0)
 ap.add_argument("--memory_mb", type=float, default=64.0)
+ap.add_argument("--tether", type=int, default=0)       # 1: thorax held level at standing height (calibration runs)
 args = ap.parse_args()
 
 legs = Legs(None, k_joint=args.k_joint)
 neck = Neck(None, k_joint=args.k_joint)
 N_LEG_MN, N_LEG_S = len(legs.mn_idx), len(legs.s_idx)
-body = Body(k_joint=args.k_joint, adhesion=args.adhesion, pad_fmax=args.pad_fmax, memory_mb=args.memory_mb)
+body = Body(k_joint=args.k_joint, adhesion=args.adhesion, pad_fmax=args.pad_fmax, memory_mb=args.memory_mb,
+            tether=bool(args.tether))
 hello = {"version": 2, "mn_ids": [int(x) for x in legs.mn_idx] + [int(x) for x in neck.mn_ids],
          "sensor_ids": [int(x) for x in legs.s_idx] + [int(x) for x in neck.s_ids],
          "n_leg_mn": N_LEG_MN, "n_leg_sensors": N_LEG_S,

@@ -157,6 +157,7 @@ def main():
                 ru = r["rate_unit"]; sz = float(vnc_size[i])
                 out[i] = (0.0, 0.0, 0.0, 1.0)
                 graded[i] = (ru["fcap_hz"], ru["gain_hz_per_mv"] / sz, ru["threshold_mv"] * sz, 0.0)
+                target_rate[i] = float(ru.get("target_hz", -1.0))   # homeostatic set point (offset learned on input)
                 used[k] = used.get(k, 0) + 1
                 break
             if "graded" in r:

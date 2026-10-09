@@ -35,7 +35,7 @@ NECK_DOF = {"yaw": "c_thorax-c_head-roll", "roll": "c_thorax-c_head-yaw"}
 
 class Body:
     def __init__(self, k_joint=10.0, skeleton="ALL_BIOLOGICAL", adhesion="pad", pad_fmax=10.0, adh_gain=40.0,
-                 spawn_z=0.7, memory_mb=None):
+                 spawn_z=0.7, memory_mb=None, tether=False):
         self.adhesion, self.pad_fmax = adhesion, pad_fmax
         self.k = k_joint
         fly = NeuroMechFly()
@@ -84,6 +84,13 @@ class Body:
         self.fem_b = [self._bid(f"{l}_trochanterfemur") for l in LEGS]; self.tib_b = [self._bid(f"{l}_tibia") for l in LEGS]
         self.tip_b = [self._bid(f"{l}_tarsus5") for l in LEGS]
         self.M_REF = np.array([self.W / 3 * np.linalg.norm(d.xpos[t] - d.xpos[f]) for f, t in zip(self.fem_b, self.tip_b)])
+        # tether (calibration only, e.g. homeostasis warm-up): a stiff spring-damper holds the thorax level at the
+        # neutral-pose height at which the highest foot touches the ground (all six feet in contact) at its start position, like a fly on a tether
+        # standing on a surface; the legs still carry load and sense it. Off by default.
+        self.tether = tether
+        mj.mj_kinematics(m, d)
+        self.stand_z = float(d.xpos[self.thor][2] - max(d.xpos[t][2] for t in self.tip_b))   # highest foot touches; others press
+        self.tether_pos = np.array([d.xpos[self.thor][0], d.xpos[self.thor][1], self.stand_z])
 
     def _bid(self, part):
         return self.seg_ids[self.seg_names.index(part)]
@@ -176,7 +183,20 @@ class Body:
                         np.full(6, self.adhesion == "on")).astype(float)
             self.sim.set_leg_adhesion_states(self.fly.name, self.adh[np.argsort(self.leg_perm)])
         for _ in range(n_sub):
+            if self.tether:
+                self._tether_force()
             self.sim.step()
+
+    def _tether_force(self):
+        m, d, b = self.model, self.data, self.thor
+        mass = float(m.body_subtreemass[b]); k = 2000.0; c = 2.0 * np.sqrt(k * mass)       # uN/mm, critically damped
+        v6 = np.zeros(6); mj.mj_objectVelocity(m, d, mj.mjtObj.mjOBJ_BODY, b, v6, 0)       # (ang, lin) in world frame
+        f = k * (self.tether_pos - d.xpos[b]) - c * v6[3:]
+        R = d.xmat[b].reshape(3, 3)
+        err = 0.5 * np.array([R[2, 1] - R[1, 2], R[0, 2] - R[2, 0], R[1, 0] - R[0, 1]])      # rotation error toward identity
+        I = float(m.body_inertia[b].max()) * 10.0; kr = 200.0 * mass; cr = 2.0 * np.sqrt(kr * I)
+        tq = -kr * err - cr * v6[:3]
+        d.xfrc_applied[b, :3] = f; d.xfrc_applied[b, 3:] = tq
 
     def segment_poses(self):
         """(n_seg, 7): world position (mm) and quaternion (w, x, y, z) of every segment body."""
