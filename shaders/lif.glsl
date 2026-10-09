@@ -120,13 +120,14 @@ void main() {
 		}
 		bool rate_unit = graded[i].y > 0.0;           // st2.y is then the release accumulator
 		if (!rate_unit) s2.y *= exp(-p.dt / max(ph.w, 1.0));
+		else if (ph.z > 0.0) s2.x *= exp(-p.dt / max(ph.w, 1.0));   // rate unit: st2.x = adaptation current (mV; no noise)
 		vec2 hm = homeo[i];
 		if (p.pad == 1u && hm.x >= 0.0) {
 			float r_est = activity[i] / 0.06;   // spikes filtered with 60 ms time constant -> Hz
 			hm.y = clamp(hm.y + ETA_H * p.dt * (hm.x - r_est), HOMEO_MIN, HOMEO_MAX);
 			homeo[i] = hm;
 		}
-		float bias = ext[p.n + i] + ph.x + s2.x - (rate_unit ? 0.0 : s2.y) + hm.y;
+		float bias = ext[p.n + i] + ph.x + (rate_unit ? -s2.x : s2.x - s2.y) + hm.y;
 		float vi = v[i] + float(atomicExchange(v_kick[i], 0)) * 0.001;
 		bool not_refr = refrac[i] <= 0.0;
 		float gh = 0.0;
@@ -176,6 +177,7 @@ void main() {
 				if (nq >= 1.0) {
 					s2.y -= nq;
 					s = uint(min(nq, 255.0));   // number of quanta this step
+					s2.x += ph.z * nq / RATE_Q;    // spike-frequency adaptation per released spike-equivalent
 				}
 			} else {
 				float f = gp.x / (1.0 + exp(-(vi - GRADED_V_HALF) / GRADED_K));

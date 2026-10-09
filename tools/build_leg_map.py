@@ -38,6 +38,24 @@ for r in lm.itertuples():
         L["motor"].setdefault(dof, {"pos": [], "neg": [], "w_pos": [], "w_neg": []})
         key = "pos" if sgn > 0 else "neg"
         L["motor"][dof][key].append(int(r.model_index)); L["motor"][dof]["w_" + key].append(w)
+# motor-unit force ~ motor-neuron size (Henneman size principle; shown for Drosophila leg motor neurons by Azevedo et al.
+# 2020 eLife: small, early-recruited neurons give small forces, large ones large forces). Each neuron's weight in its
+# pool is scaled by its surface area (predicted from BANC skeleton cable length, r = 0.947; pool median where missing)
+# divided by the pool mean, so the pool's total force is unchanged. basis: principle literature, sizes measured,
+# proportionality assumed. FLY_MN_FORCE_UNIFORM=1: equal force per motor neuron (before 2026-10-09).
+import os as _os, numpy as _np
+if _os.environ.get("FLY_MN_FORCE_UNIFORM") != "1":
+    _cab = pd.read_csv(ROOT / "data/vnc/banc_cable_length.csv").set_index("root_id").cable_um
+    _bid = v.set_index("model_index").bid
+    for _leg, _L in out["legs"].items():
+        for _dof, _m in _L["motor"].items():
+            for _k in ("pos", "neg"):
+                _a = _np.array([_np.exp(1.179 + 1.037 * _np.log(_cab.get(_bid.get(i), _np.nan))) for i in _m[_k]], float)
+                if len(_a) == 0:
+                    continue
+                _a = _np.where(_np.isfinite(_a), _a, _np.nanmedian(_a) if _np.isfinite(_a).any() else 1.0)
+                _m["w_" + _k] = [round(float(w * x / _a.mean()), 4) for w, x in zip(_m["w_" + _k], _a)]
+    out["motor_force_basis"] = "size principle: weight x area / pool mean area (Azevedo et al. 2020); FLY_MN_FORCE_UNIFORM=1 for equal force"
 SENS = {"claw_chordotonal": "FeCO_claw", "hook_chordotonal": "FeCO_hook", "club_chordotonal": "FeCO_club",
         "hair_plate": "hair_plate", "campaniform": "campaniform"}
 # validated re-labels of leg sensory neurons from morphology + wiring (tools/classify_leg_sensory.py, ~95% precision):

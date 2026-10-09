@@ -88,6 +88,7 @@ class Body:
         # neutral-pose height at which the highest foot touches the ground (all six feet in contact) at its start position, like a fly on a tether
         # standing on a surface; the legs still carry load and sense it. Off by default.
         self.tether = tether
+        self.tether_gain = 1.0                   # 0..1, ramped down for a gradual release
         mj.mj_kinematics(m, d)
         self.stand_z = float(d.xpos[self.thor][2] - max(d.xpos[t][2] for t in self.tip_b))   # highest foot touches; others press
         self.tether_pos = np.array([d.xpos[self.thor][0], d.xpos[self.thor][1], self.stand_z])
@@ -198,7 +199,7 @@ class Body:
         # thorax-subtree inertia; omega*dt ~ 0.1 at the 0.1 ms step (stable)
         I = max(float(m.body_inertia[b].max()), mass * 0.3 ** 2); kr = 100.0; cr = 2.0 * np.sqrt(kr * I)
         tq = -kr * err - cr * v6[:3]
-        d.xfrc_applied[b, :3] = f; d.xfrc_applied[b, 3:] = tq
+        d.xfrc_applied[b, :3] = f * self.tether_gain; d.xfrc_applied[b, 3:] = tq * self.tether_gain
 
     def segment_poses(self):
         """(n_seg, 7): world position (mm) and quaternion (w, x, y, z) of every segment body."""

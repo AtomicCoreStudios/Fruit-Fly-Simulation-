@@ -27,8 +27,10 @@ ap.add_argument("--adhesion", default="pad")
 ap.add_argument("--pad_fmax", type=float, default=10.0)
 ap.add_argument("--k_joint", type=float, default=10.0)
 ap.add_argument("--memory_mb", type=float, default=64.0)
-ap.add_argument("--tether", type=int, default=0)
-ap.add_argument("--sensors", default="")   # comma list of leg afferent kinds to keep (diagnostic; default all)       # 1: thorax held level at standing height (calibration runs)
+ap.add_argument("--tether", type=int, default=0)       # 1: thorax held level at standing height (calibration runs)
+ap.add_argument("--release", type=float, default=0.0)  # s: hold the fly standing (tether) until then, then let go
+                                                       # (sets the fly down standing instead of dropping it)
+ap.add_argument("--sensors", default="")               # comma list of leg afferent kinds to keep (diagnostic; default all)
 args = ap.parse_args()
 
 from vnc_body_model import KINDS
@@ -36,13 +38,14 @@ legs = Legs(None, k_joint=args.k_joint, sensors=args.sensors.split(",") if args.
 neck = Neck(None, k_joint=args.k_joint)
 N_LEG_MN, N_LEG_S = len(legs.mn_idx), len(legs.s_idx)
 body = Body(k_joint=args.k_joint, adhesion=args.adhesion, pad_fmax=args.pad_fmax, memory_mb=args.memory_mb,
-            tether=bool(args.tether))
+            tether=bool(args.tether) or args.release > 0)
 hello = {"version": 2, "mn_ids": [int(x) for x in legs.mn_idx] + [int(x) for x in neck.mn_ids],
          "sensor_ids": [int(x) for x in legs.s_idx] + [int(x) for x in neck.s_ids],
          "n_leg_mn": N_LEG_MN, "n_leg_sensors": N_LEG_S,
          "segments": body.seg_names, "dt_phys": DT_P, "weight_uN": body.W, "legs": LEGS,
          "rest_poses": body.segment_poses().round(6).tolist()}     # neutral pose at reset (renderer self-check)
 CHUNK = int(round(0.001 / DT_P))
+RAMP = 0.5                                              # s, tether release ramp
 
 
 def recv_exact(conn, n):
@@ -90,6 +93,13 @@ try:
                               body.adh, foot_z, ang.ravel(), ha]).astype("<f4")
         conn.sendall(struct.pack("<I", out.size) + out.tobytes())
         frames += 1; sim_t += steps * DT_P
+        if args.release > 0 and not args.tether and body.tether and sim_t >= args.release:
+            # gradual release over RAMP s: the legs take the weight progressively (an instant release acted as a
+            # catapult: the legs had been pushing against the tether)
+            body.tether_gain = max(0.0, 1.0 - (sim_t - args.release) / RAMP)
+            if body.tether_gain <= 0.0:
+                body.tether = False; body.data.xfrc_applied[body.thor] = 0.0
+                print(f"body server: released at {sim_t:.2f} s", flush=True)
         if frames % 100 == 0:
             print(f"body server: {frames} frames, {sim_t:.2f} s simulated, {sim_t / (time.time() - wall0):.2f}x real time, "
                   f"thorax z {body.data.xpos[body.thor][2]:.3f} mm", flush=True)

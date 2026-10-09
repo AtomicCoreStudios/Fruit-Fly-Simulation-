@@ -178,6 +178,12 @@ def main():
                 out[i] = (0.0, 0.0, 0.0, 1.0)
                 kc = mn_k.get(i, 1.0)
                 graded[i] = (ru["fcap_hz"], ru["gain_hz_per_mv"] / sz * kc, ru["threshold_mv"] * sz / kc, 0.0)
+                # spike-frequency adaptation for rate units (as the spiking neurons): steady/onset = 1 / (1 + g b tau_w)
+                # for a linear rate unit, so b = (1/index - 1) / (g tau_w); stored in phys as (0, 0, b, tau_w)
+                ai = ru.get("adapt_index")
+                if ai:
+                    g_eff = ru["gain_hz_per_mv"] / sz * kc
+                    out[i] = (0.0, 0.0, (1.0 / ai - 1.0) / (g_eff * tau_w / 1000.0), tau_w)
                 target_rate[i] = float(ru.get("target_hz", -1.0))   # homeostatic set point (offset learned on input)
                 used[k] = used.get(k, 0) + 1
                 break
