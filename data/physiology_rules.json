@@ -50,6 +50,19 @@
   },
   {
    "match": {
+    "cell_type": [
+     "GFC1",
+     "GFC2",
+     "GFC3",
+     "GFC4"
+    ]
+   },
+   "rate_hz": 1.0,
+   "adapt_index": 0.6,
+   "basis": "assumed (2026-10-09): giant-fibre-coupled interneurons belong to the fast spiking escape circuit (GF, TTMn, PSI spike), so they spike with the default sparse baseline and spike-frequency adaptation instead of being Pugliese rate units; as rate units (no adaptation) GFC2 latched at 140-150 Hz under physical leg proprioception and drove TTMn tonically"
+  },
+  {
+   "match": {
     "super_class": [
      "vnc_intrinsic"
     ]

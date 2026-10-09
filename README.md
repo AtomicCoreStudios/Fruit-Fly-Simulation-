@@ -15,7 +15,7 @@ The brain and body run in a closed loop in real time.
 | Taste, smell, wind | per-neuron sense organs on the NeuroMechFly body | measured mapping; approximate response curves |
 | Legs | 391 real leg motor neurons → muscles → joints (torque model); 886 proprioceptors feed back | measured mapping; assumed mechanics (calibration ledger) |
 | Walking | Walking CPG reproduced exactly offline. Offline, the tuned descending mix (DNg100 + DNb08 + DNa02 + DNg97) gives swing/stance anti-phase in 5 of 6 legs at 4.2 Hz. Live on the kinematic body (2026-10-05): with wiring-derived claw/hook tuning and presynaptic gating, 4 of 6 legs switch stance/swing (1.4–3.8 cycles/s); left front and right middle stay planted; best free-walking speed 0.29 mm/s (real 10–30). **Not walking yet.** | see "Neuromuscular legs" |
-| Escape | giant fibre → TTMn (gap junction) works | literature |
+| Escape | giant fibre → TTMn follows 1:1 (gap junction, 16 mV, 2026-10-09). The GF fires spontaneously at 0.4–0.8 Hz at rest (tonic LC4 plus DNp70 bursts), so escapes occur without a threat. Under investigation. | literature + calibrated |
 | Physics | One body: `--physics=mujoco` runs the live FlyWire+BANC brain and the 1,709-facet eyes on the physical NeuroMechFly body in MuJoCo (FlyGym 2.1.0, true scale, 1.02 mg, friction 1.0, pad adhesion). The brain's 391 leg and 16 neck motor neurons drive it; 886 leg and 70 neck proprioceptors are fed back from the physics. Every segment, including the head carrying the eyes, takes the MuJoCo pose (mapping check: max deviation 5×10⁻⁶). The brain still runs at 1.00× real time (15–17 fps vs 25 without physics). **No walking yet**, live or offline (closed-loop descending-mix search: best 1.2 mm/s vs 0.5 mm/s drift with no drive). Standing needs pad adhesion of about body weight per leg. | literature model + assumed (ledger) |
 | Leg sugar → PER | known gap (see Phase 5b) | — |
 
@@ -1029,6 +1029,20 @@ This step moves the body from our kinematic Godot legs to a physical body. The g
   - How strong the TTM muscle is. Only qualitative takeoff data was found (Card & Dickinson 2008, doi:10.1242/jeb.012682), so TTMn stays an ordinary member of the middle-leg trochanter-extensor pool.
   - In physics mode, TTMn spikes are counted as escapes but not executed.
 
+### Escape circuit: GFC latch removed, GF→TTMn 1:1 restored, spontaneous giant-fibre spikes traced (2026-10-09)
+
+1. **GFC1–4 now spike.** The giant-fibre-coupled interneurons (36 neurons, `data/physiology_rules.json`) were Pugliese rate units, which have no adaptation, and GFC2 latched at 140–150 Hz. They are now spiking, with the default sparse baseline and spike-frequency adaptation (assumed).
+   - **Physics mode, at rest:** GFC2 averages 6 Hz, and TTMn is silent with no escapes in 20 s, where it fired 6–7 times before.
+   - `recordings/probe_escape_*.csv`; the physiology rebuild was first checked to be byte-identical before the rule was added.
+2. **GF→TTMn coupling raised from 8 to 16 mV** (`data/vnc/electrical_synapses.json`, connectome metadata; GF→PSI too).
+   - The 8 mV value assumed the standard resting potential. But the quiescent escape motor neurons rest 8 mV lower (their physiology rule), so TTMn followed only 0.29 of GF spikes.
+   - At 16 mV, a GF driven at 53 Hz gives TTMn 0.92 spikes per GF spike, matching the measured 1:1 following (Tanouye & Wyman 1980). Basis: calibrated to that measurement.
+3. **The giant fibre fires spontaneously** (`recordings/probe_gf_inputs_live.csv`, `gf_inputs_weights.csv`). Now that TTMn follows it, this is what remains of the "escapes".
+   - **Rate at rest:** 0.84 Hz in physics mode (13 onsets in 20 s) and 0.44 Hz on the kinematic body (3 escapes in 20 s; these are the take-offs seen in the default mode). A real GF is silent at rest.
+   - **Tonic drive:** LC4 loom detectors at 8.8 Hz with the scene standing still (805 synapses; 7,100 synapse·Hz).
+   - **Trigger:** DNp70, whose rate doubles from 3.2 to 6.2 Hz in the 100 ms before each GF onset (587 synapses).
+   - **Next to examine:** why LC4 is tonically active in a static scene, and what drives DNp70.
+
 ## Calibration ledger (motor side): what is data, what is set by hand
 
 Kept so that any walking result can state exactly how much came from the connectome and how much from hand-set values. Basis: **measured** = from data; **literature** = published model or parameter; **assumed** = an approximate value I chose; **tuned** = adjusted while looking at walking. Nothing on the motor side has been tuned to walking yet.
@@ -1057,6 +1071,8 @@ Kept so that any walking result can state exactly how much came from the connect
 | Hair-plate joint and limit direction | joint from BANC annotation (trochanter) or coxa (assumed); direction = the limit its network output opposes (Pratt et al. 2024 limit detectors) | measured wiring + literature function | yes |
 | Neck motor neurons → head yaw/roll | ADNM1/2 yaw, DProN1–5 roll (BANC); motor-neuron side from its nerve; ipsilateral rotation; range 0.35 rad | axes measured (annotation); direction and range assumed | head/eye stabilisation |
 | Neck proprioceptor axis/direction | signed 1+2-hop wiring onto the neck pools; prosternal = negative feedback (Preuss & Hengstenberg 1992) | measured wiring + literature function | head/eye stabilisation |
+| Giant-fibre electrical coupling (GF→TTMn, GF→PSI) | 16 mV (one GF spike lifts the quiescent motor neuron from its resting offset just over threshold) | calibrated to measured 1:1 following | escape |
+| GFC1–4 dynamics | spiking with adaptation (not rate units) | assumed | escape (rate units latched) |
 | Descending command (which DNs, how strong) | DNg100 : DNb08 : DNa02 : DNg97 = 4 : 1 : 1 : 1 (offline amplitude 400/100/100/100; live 200 Hz / 50 / 50 / 50 Hz), from a 300-trial random search plus an 81-point refinement (`tools/dn_mix_search.py`, `recordings/dn_mix_search.csv`, `dn_mix_refine.csv`) | **tuned** | yes |
 
 **Free-walking diagnosis (2026-10-05)** (`stance_<leg>` and `foot_h_<leg>` columns in probe CSVs):
