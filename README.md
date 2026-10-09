@@ -5,7 +5,7 @@ Research aim: a small-scale test of the "Uploaded Intelligence" idea from Panthe
 The pipeline is scan (connectome) → emulate (spiking brain) → embody (virtual body and world).
 The brain and body run in a closed loop in real time.
 
-## Current status (2026-10-08)
+## Current status (2026-10-09)
 
 | Part | State | Basis |
 |---|---|---|
@@ -16,7 +16,7 @@ The brain and body run in a closed loop in real time.
 | Legs | 391 real leg motor neurons → muscles → joints (torque model); 886 proprioceptors feed back | measured mapping; assumed mechanics (calibration ledger) |
 | Walking | Walking CPG reproduced exactly offline. Offline, the tuned descending mix (DNg100 + DNb08 + DNa02 + DNg97) gives swing/stance anti-phase in 5 of 6 legs at 4.2 Hz. Live: with wiring-derived claw/hook tuning and presynaptic gating, 4 of 6 legs switch stance/swing (1.4–3.8 cycles/s); left front and right middle stay planted; best free-walking speed 0.29 mm/s (real 10–30). **Not walking yet.** | see "Neuromuscular legs" |
 | Escape | giant fibre → TTMn (gap junction) works | literature |
-| Physics | MuJoCo body (FlyGym 2.1.0, true scale, 1.02 mg, friction 1.0, tarsal adhesion) driven by the real leg motor neurons of the nerve-cord rate model, with proprioceptors fed back from the physics, offline (`tools/nmf_closed_loop.py`). Leg reflexes from the real wiring hold the fly up: thorax height 1.75 mm with proprioception, versus a collapse to 0.59 mm without. **No walking yet:** standing reflex tone dominates the descending drive, and the hind legs oscillate at 10–13 Hz. Not yet coupled to the live Godot brain and eyes. | literature model + assumed (ledger) |
+| Physics | MuJoCo body (FlyGym 2.1.0, true scale, 1.02 mg, friction 1.0, tarsal adhesion) driven by the real leg motor neurons of the nerve-cord rate model, with proprioceptors fed back from the physics, offline (`tools/nmf_closed_loop.py`). Reflexes from the real wiring push the body up (thorax up to 1.56–1.75 mm; the passive body rests at 0.71 mm). But the fly only stays upright with tarsal adhesion of at least about body weight per leg; with weaker or no adhesion it tips over. **No walking yet:** standing reflex tone dominates the descending drive, and the hind legs oscillate at 8–17 touchdowns/s. Not yet coupled to the live Godot brain and eyes. | literature model + assumed (ledger) |
 | Leg sugar → PER | known gap (see Phase 5b) | — |
 
 Sources and papers with DOI links: [REFERENCES.md](REFERENCES.md). Everything below is in chronological order. Dated sections describe the state at that date; this table is the current summary.
@@ -919,13 +919,44 @@ This step moves the body from our kinematic Godot legs to a physical body. The g
   | Sensors on, adhesion off | 0.51–0.52 mm (falls) | — | load signal ≈ 0, stance support lost |
 
 - **What this means:**
-  - Standing against gravity now **emerges from the connectome's reflex arcs**: resistance reflexes plus load feedback, with no hand-written posture controller.
+  - Standing against gravity now **emerges from the connectome's reflex arcs**: resistance reflexes plus load feedback, with no hand-written posture controller. (2026-10-09 correction below: only with strong adhesion; the fly is not yet balanced.)
   - Walking does not. The descending command, tuned open-loop, is too weak against the reflex tone, and in real flies walking also changes reflex gains.
   - With adhesion on, the campaniform sensilla saturate (mean 140 Hz), because the 40 µN adhesion pull is about 4× body weight and the contact force includes it. Their response curve needs a physical calibration.
 - **Next:**
   - Campaniform response from cuticle strain (graded, not saturating).
   - Re-run the descending-mix search in closed loop with the body.
   - Couple this physics body to the live Godot brain and eyes. Godot will pose its body and head from MuJoCo every frame, so the 1,709 facets stay physically on the head and keep their wiring.
+
+### Load sensing from cuticle strain; adhesion and balance (2026-10-09)
+
+- **Campaniform sensilla now read cuticle strain from the physics.**
+  - **What is measured:** the bending moment carried through each femur base. MuJoCo `cfrc_int` gives the force and torque the coxa transmits to the femur subtree (weight, ground contact, adhesion, inertia); the part perpendicular to the femur axis is the bending moment.
+  - **Unit:** M_REF = (body weight / 3) × leg length.
+  - **Response:** rate = 150 Hz × x / (x + 1), graded instead of hard-capped.
+  - **Basis:** the shape and M_REF are assumed. That campaniform sensilla encode strain is from Zill et al. 2004.
+- **FlyGym's adhesion is not physical as a constant.** The MuJoCo adhesion actuator pulls the foot into the ground with a constant force for as long as it touches. Real pads resist being pulled off; they don't press the foot down.
+  - At the NeuroMechFly default of 40 µN per leg (4× body weight), planted feet carry 37–45 µN, the strain reads 10–13 × M_REF, and the load sensors saturate.
+  - I found no measured *Drosophila* adhesion force. Stick-insect toe pads reach up to about 0.8 × body weight.
+- **Passive checks** (no neurons):
+  - Without adhesion, the body rests on its joint springs at 0.71 mm with all feet down.
+  - With 40 µN adhesion, it rests at 1.08 mm.
+- **Closed loop, sensors on, no descending drive** (`recordings/nmf_closed_loop_nodrive_adh*.csv`):
+
+  | Adhesion per leg | Result |
+  |---|---|
+  | 0 or 2 µN | Reflexes push the body up to 1.56 mm by 0.3 s. Support is uneven: the front legs lose contact. The fly tips over (thorax 0.50 mm, no feet on the ground). |
+  | 10 µN (about 1× body weight) | Stays upright at 1.74 mm. Load sensors average 73 Hz (not saturated). Hind legs step in place at 10–17 touchdowns/s. |
+  | 40 µN (FlyGym default) | Upright at 1.70 mm. Load sensors saturated. |
+
+- **Honest status:**
+  - The wiring produces active support; the reflexes do lift the body.
+  - **It does not yet balance.** Without strong adhesion the uneven push tips the fly over.
+  - Standing at 10 µN depends on an adhesion value that is assumed.
+- **Next:**
+  1. Find the source of the left/right and front/hind tone asymmetry: the right front leg's resting trochanter torque is −6.4 µN·mm versus −0.1 on the left front, and the hind legs oscillate even with no drive.
+  2. Model adhesion physically: resist detachment only, with a measured or bounded force.
+  3. Run the descending-mix search in closed loop.
+  4. Couple the body to Godot.
 
 ## Calibration ledger (motor side): what is data, what is set by hand
 
@@ -950,8 +981,8 @@ Kept so that any walking result can state exactly how much came from the connect
 | Proprioceptor tuning curve shapes (claw sigmoid width, hook/club gains, hair plate limits) | — | assumed | yes |
 | MuJoCo joint spring K (springref = neutral pose) | 10 µN·mm/rad (FlyGym default); damping K × 30 ms | assumed (FlyGym default) | yes |
 | MuJoCo torque per motor neuron | K × 0.4 rad (same equilibrium as DTHETA_MN), tanh-limited to the joint range | assumed | yes |
-| Tarsal adhesion | 40 µN per leg (NeuroMechFly v2 default); on while in contact and not levating | literature model; on/off rule assumed | yes (fly falls without it) |
-| Campaniform rate in MuJoCo | 120 Hz × leg ground-reaction force / body weight, capped at 150 Hz (40 Hz at an equal 3-leg share) | assumed | yes (saturates with adhesion) |
+| Tarsal adhesion | `--adh_gain` µN per leg, constant pull while in contact (MuJoCo adhesion); 40 = NeuroMechFly v2 default; on while in contact and not levating | literature model value; no Drosophila measurement found; on/off rule assumed | yes (fly tips over below about 1× body weight per leg) |
+| Campaniform rate in MuJoCo | 150 Hz × x/(x+1), x = bending moment at the femur base / ((W/3) × leg length), from MuJoCo `cfrc_int` (2026-10-09; before: 120 Hz × ground force / W) | strain physics from the simulation; response shape and reference assumed | yes |
 | Hair-plate joint and limit direction | joint from BANC annotation (trochanter) or coxa (assumed); direction = the limit its network output opposes (Pratt et al. 2024 limit detectors) | measured wiring + literature function | yes |
 | Descending command (which DNs, how strong) | DNg100 : DNb08 : DNa02 : DNg97 = 4 : 1 : 1 : 1 (offline amplitude 400/100/100/100; live 200 Hz / 50 / 50 / 50 Hz), from a 300-trial random search plus an 81-point refinement (`tools/dn_mix_search.py`, `recordings/dn_mix_search.csv`, `dn_mix_refine.csv`) | **tuned** | yes |
 

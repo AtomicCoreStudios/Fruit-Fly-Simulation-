@@ -29,7 +29,7 @@ def settle(li, dof, x, v):
         fn[li] += W_BODY / 2
     tq = []
     for s in range(int(T / cord.dt)):
-        cord.step(drive_on=False, clamp_idx=body.s_idx, clamp_val=body.afferents(ang, om, fn, W_BODY))
+        cord.step(drive_on=False, clamp_idx=body.s_idx, clamp_val=body.afferents(ang, om, 3.0 * fn / W_BODY))
         t = body.torques(cord.dt)
         if s * cord.dt > T - 0.1:
             tq.append(t)

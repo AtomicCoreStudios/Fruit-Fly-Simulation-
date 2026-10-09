@@ -106,8 +106,11 @@ class Legs:
         lim = np.where(eq >= 0, self.lim_pos, self.lim_neg)
         return np.where(lim > 0, self.k * lim * np.tanh(eq / np.maximum(lim, 1e-3)), 0.0)
 
-    def afferents(self, ang, om, fn, w_body):
-        """ang, om: (6 legs, 6 dofs) biological-sign angle re neutral / velocity; fn: (6,) ground force (uN)."""
+    def afferents(self, ang, om, load_x):
+        """ang, om: (6 legs, 6 dofs) biological-sign angle re neutral / velocity; load_x: (6,) cuticular load of each
+        leg in units of M_REF (bending moment at the femur base from a third of body weight at full leg lever).
+        Campaniform rate 150 Hz x x / (x + 1): graded, half-maximal at M_REF (shape and M_REF assumed; campaniform
+        sensilla encode cuticular strain, Zill et al. 2004; Dinges et al. 2021 for the Drosophila leg fields)."""
         L = self.s_leg; th = ang[L, 4]; w = om[L, 4]; sgn = np.where(self.s_flex, 1.0, -1.0)
         claw = 60.0 / (1.0 + np.exp(-sgn * (th - (-0.6 + 1.8 * self.s_u)) / 0.1))
         hook = np.clip(sgn * w * 20.0, 0.0, 120.0)
@@ -116,6 +119,7 @@ class Legs:
         hp_x = np.where(self.hp_s != 0, self.hp_s * hj, np.abs(hj))
         hair = 80.0 / (1.0 + np.exp(-(hp_x - 0.6) / 0.08))
         load = self.A.reshape(6, 12).sum(1) if hasattr(self, "A") else np.zeros(6)
-        camp = np.clip(load[L] * 25.0 * self.cs_muscle + 120.0 * fn[L] / w_body, 0.0, 150.0)
+        x = np.maximum(load_x[L], 0.0)
+        camp = np.clip(load[L] * 25.0 * self.cs_muscle + 150.0 * x / (x + 1.0), 0.0, 150.0)
         r = np.choose(self.s_kind, [claw, hook, club, hair, camp]) * self.s_on
         return r / (1.0 + (self.Pre @ np.maximum(self.cord.R, 0.0)) / I_HALF)

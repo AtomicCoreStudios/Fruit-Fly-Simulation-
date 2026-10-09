@@ -144,6 +144,41 @@ one line. Check whether meshes exist for the right-hand side or need mirroring.
 - Record CSVs of each test.
 - Report honestly which behaviours emerge from the real wiring and which don't.
 
+### 5b. Back burner: chemical signalling layer (owner's design, 2026-10-08; build after the Godot <-> MuJoCo bridge)
+
+Goal: every transmitter and receptor that is actually mapped acts as it does in the fly. No invented triggers; whatever data is
+missing goes on a public "what is missing for 1:1" list (GitHub discussion, ask the owner before posting).
+
+Fact-checked basis (2026-10-08):
+- Fast transmitters: ACh (excitatory, nicotinic; muscarinic receptors slow, some inhibitory), GABA (RDL fast, GABA-B slow),
+  glutamate (mostly inhibitory in the CNS via GluClalpha, Liu & Wilson 2013; excitatory at muscles), histamine
+  (photoreceptors, inhibitory via ort/HisCl1). Per-neuron identity already in use: Eckstein et al. 2024 predictions
+  (ACh, GABA, Glu, DA, 5-HT, OA; no tyramine, no histamine, no peptides).
+- Modulators: dopamine (learning signal to the mushroom body, arousal, sleep), serotonin, octopamine (arousal, flight,
+  aggression; learning via dopamine neurons, Burke et al. 2012), tyramine (own receptors), about 50 neuropeptides (NPF,
+  sNPF, tachykinin, DILPs, AKH, DH44, DH31, leucokinin, allatostatins, PDF, DSK, SIFamide, corazonin, ...), nitric
+  oxide, hormones (JH, ecdysone), gap junctions (innexins), co-transmission.
+
+Architecture:
+1. Fast synapses stay point-to-point, with the sign and kinetics given by the (transmitter, postsynaptic receptor) pair.
+2. Modulators use volume transmission: release at the real FlyWire synapse coordinates into a 3D concentration field on
+   a voxel grid (the continuum limit of the released particles; a molecule-by-molecule simulation of 50M synapses is not
+   tractable). Diffusion runs in a GPU compute pass beside lif.glsl.
+2b. Owner's addition (2026-10-08): real particles on the GPU. Each particle is one released quantum (one vesicle's
+   worth of transmitter), emitted at a real release site when the neuron releases. It moves by Brownian motion with
+   the measured diffusion coefficient, binds receptors on nearby neurons, and is removed stochastically by uptake and
+   breakdown. Molecule-level counts are out of reach; quanta are tractable (tens of millions of particles). The
+   concentration field of item 2 is the cross-check, and the fallback where particle counts get too high. Later:
+   per-neuron vesicle pools filled by synthesis (TH, Ddc, Tbh, VMAT), so particles come from modelled production.
+3. The "cooldown" is the measured biology: reuptake (DAT, SerT), breakdown (AChE), receptor desensitisation,
+   autoreceptors, homeostasis. No hand-set stabiliser.
+4. Each neuron responds to the local concentration through the receptors its cell type expresses (Fly Cell Atlas
+   single-cell transcriptomes, VNC atlases). This feeds the existing hooks: release gain (binding 20), intrinsic
+   excitability, adaptation and plasticity.
+
+Known data gaps: receptor identity per synapse (only per cell type, from transcriptomics); peptide release sites (dense-core
+vesicles are not in the connectome); diffusion and uptake constants for most modulators.
+
 ## 6. How to work with this user
 
 - The user is non-technical-to-intermediate and driven by the research question.

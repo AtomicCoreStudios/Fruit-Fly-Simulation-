@@ -5,8 +5,8 @@ and ground reaction forces -> the leg's real proprioceptor neurons -> nerve cord
 Neural side (tools/vnc_body_model.py): the VNC rate model (Pugliese et al. 2025 equations on our BANC graph,
 measured/cable-estimated sizes, 5 ms synapse, 1.8 ms delay; tools/export_vnc_rate_net.py). Descending input: the
 tuned DN mix of tools/dn_mix_search.py (DNg100:DNb08:DNa02:DNg97 = 400:100:100:100, basis tuned). Afferents (claw,
-hook, club, hair plate, campaniform) are clamped to rates computed from the MuJoCo joint state and the measured ground
-reaction of each leg; hook/club get presynaptic inhibition (Dallmann 2025); hair-plate direction from
+hook, club, hair plate, campaniform) are clamped to rates computed from the MuJoCo joint state and the bending
+moment carried through each femur base (cuticular strain); hook/club get presynaptic inhibition (Dallmann 2025); hair-plate direction from
 tools/hair_plate_tuning.py.
 
 Body side: per degree of freedom the summed agonist/antagonist motor-unit activations give
@@ -40,6 +40,7 @@ ap.add_argument("--proprio", type=int, default=1)
 ap.add_argument("--sensors", default=",".join(KINDS))
 ap.add_argument("--adhesion", default="auto", choices=["auto", "on", "off"])
 ap.add_argument("--cs_muscle", type=float, default=0.0)
+ap.add_argument("--adh_gain", type=float, default=40.0)
 ap.add_argument("--k_joint", type=float, default=10.0)
 ap.add_argument("--skeleton", default="ALL_BIOLOGICAL")
 ap.add_argument("--tag", default="")
@@ -50,7 +51,9 @@ MJ_DOF = {"ThC_pro": "c_thorax-{l}_coxa-pitch", "ThC_add": "c_thorax-{l}_coxa-ro
           "FTi": "{l}_trochanterfemur-{l}_tibia-pitch", "TiTa": "{l}_tibia-{l}_tarsus1-pitch"}
 K_JOINT = args.k_joint            # uN mm / rad, FlyGym default joint stiffness (assumed by FlyGym)
 D_JOINT = K_JOINT * 0.030         # damping: unloaded joint relaxes with TAU_JOINT = 30 ms (approximate)
-ADH_GAIN = 40.0                   # uN per leg, NeuroMechFly v2 default adhesion force (Wang-Chen et al. 2024)
+ADH_GAIN = args.adh_gain          # uN per leg; 40 = NeuroMechFly v2 default (Wang-Chen et al. 2024). MuJoCo adhesion is a
+                                  # constant pull while in contact (real pads resist detachment); no Drosophila value found
+                                  # (stick-insect arolia: up to 0.8 x body weight, Labonte/Federle)
 DT_N, DT_P = 0.0002, 0.0001       # neural step; MuJoCo step (FlyGym default)
 DN_ON = 0.2                       # s of settling before the descending drive starts
 
@@ -111,6 +114,24 @@ for li, leg in enumerate(LEGS):
             lift_sign[li] = 1.0 if (dp @ up) * sign[li * 6 + di] > 0 else -1.0   # + CTr drive raises the tip?
 data.qpos[:] = qpos_save; mj.mj_forward(model, data)
 W_BODY = float(model.body_subtreemass[thor]) * 9810.0          # uN
+# cuticular load: bending moment carried through each femur base (MuJoCo cfrc_int = force/torque the coxa exerts on the
+# femur subtree: weight, contact, adhesion, inertia), perpendicular to the femur axis, in units of
+# M_REF = (W/3) x leg length (femur base -> tarsus tip at the neutral pose)
+fem_b = [body_id(f"{l}_trochanterfemur") for l in LEGS]; tib_b = [body_id(f"{l}_tibia") for l in LEGS]
+tip_b = [body_id(f"{l}_tarsus5") for l in LEGS]
+M_REF = np.array([W_BODY / 3 * np.linalg.norm(data.xpos[t] - data.xpos[f]) for f, t in zip(fem_b, tip_b)])
+
+
+def leg_load():
+    mj.mj_rnePostConstraint(model, data)
+    out = np.zeros(6)
+    for i, (b, tb) in enumerate(zip(fem_b, tib_b)):
+        c = data.subtree_com[model.body_rootid[b]]; tq, f = data.cfrc_int[b, :3], data.cfrc_int[b, 3:]
+        tp = tq + np.cross(c - data.xpos[b], f)                 # moment about the femur base
+        ax = data.xpos[tb] - data.xpos[b]; ax /= np.linalg.norm(ax)
+        out[i] = np.linalg.norm(tp - (tp @ ax) * ax) / M_REF[i]
+    return out
+
 print(f"skeleton {args.skeleton}: {len(jname)} joint DoFs, mass {model.body_subtreemass[thor] * 1000:.3f} mg, "
       f"weight {W_BODY:.2f} uN; trochanter flexion lifts the tarsus in {[l for l, s in zip(LEGS, lift_sign) if s > 0]}")
 
@@ -126,7 +147,8 @@ for s in range(int(args.T / DT_N)):
     cf, frc = sim.get_ground_contact_info(fly.name)[:2]
     contact = np.asarray(cf)[leg_perm] > 0.5; fn = np.linalg.norm(np.asarray(frc)[leg_perm], axis=1)
     if args.proprio:
-        rates = legs.afferents(ang, om, fn, W_BODY)
+        lx = leg_load()
+        rates = legs.afferents(ang, om, lx)
     cord.step(drive_on=t >= DN_ON, clamp_idx=legs.s_idx if args.proprio else None, clamp_val=rates)
     tq = legs.torques(DT_N)
     lift = (legs.A[:, 0] - legs.A[:, 1]).reshape(6, 6)[:, 2] * lift_sign
@@ -143,6 +165,7 @@ for s in range(int(args.T / DT_N)):
         row = {"t": round(t, 4), "x": th[0], "y": th[1], "z": th[2]}
         for i, leg in enumerate(LEGS):
             row[f"{leg}_contact"] = int(contact[i]); row[f"{leg}_fn"] = fn[i]; row[f"{leg}_adh"] = adh[i]
+            row[f"{leg}_load"] = lx[i] if args.proprio else 0.0
             row[f"{leg}_swing_mn"] = cord.R[swing[i]].sum(); row[f"{leg}_stance_mn"] = cord.R[stance[i]].sum()
             for di, d in enumerate(DOFS):
                 row[f"{leg}_{d}"] = ang[i, di]

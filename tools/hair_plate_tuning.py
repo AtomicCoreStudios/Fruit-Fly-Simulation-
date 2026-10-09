@@ -38,7 +38,7 @@ ang = np.zeros((6, 6)); om = np.zeros((6, 6)); fn = np.full(6, W_BODY / 6)
 def settle(extra_idx=None):
     cord.reset(); body.act[:] = 0; tq = []
     for s in range(int(T / cord.dt)):
-        r = body.afferents(ang, om, fn, W_BODY)
+        r = body.afferents(ang, om, 3.0 * fn / W_BODY)
         if extra_idx is not None:
             r = r.copy(); r[extra_idx] += 80.0
         cord.step(drive_on=False, clamp_idx=body.s_idx, clamp_val=r)
