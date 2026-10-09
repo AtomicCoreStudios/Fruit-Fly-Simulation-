@@ -5,7 +5,7 @@ Research aim: a small-scale test of the "Uploaded Intelligence" idea from Panthe
 The pipeline is scan (connectome) → emulate (spiking brain) → embody (virtual body and world).
 The brain and body run in a closed loop in real time.
 
-## Current status (2026-10-05)
+## Current status (2026-10-08)
 
 | Part | State | Basis |
 |---|---|---|
@@ -16,7 +16,7 @@ The brain and body run in a closed loop in real time.
 | Legs | 391 real leg motor neurons → muscles → joints (torque model); 886 proprioceptors feed back | measured mapping; assumed mechanics (calibration ledger) |
 | Walking | Walking CPG reproduced exactly offline. Offline, the tuned descending mix (DNg100 + DNb08 + DNa02 + DNg97) gives swing/stance anti-phase in 5 of 6 legs at 4.2 Hz. Live: with wiring-derived claw/hook tuning and presynaptic gating, 4 of 6 legs switch stance/swing (1.4–3.8 cycles/s); left front and right middle stay planted; best free-walking speed 0.29 mm/s (real 10–30). **Not walking yet.** | see "Neuromuscular legs" |
 | Escape | giant fibre → TTMn (gap junction) works | literature |
-| Physics | MuJoCo installed; musculoskeletal front-leg model validates the motor map. FlyGym 2.1.0 installed in `.venv-flygym` (2026-10-08): free NeuroMechFly stands on flat ground with friction 1.0 and adhesion, and the FlyMimic tibia flexor/extensor check passes. Leg control is not yet ported to it. | literature model |
+| Physics | MuJoCo body (FlyGym 2.1.0, true scale, 1.02 mg, friction 1.0, tarsal adhesion) driven by the real leg motor neurons of the nerve-cord rate model, with proprioceptors fed back from the physics, offline (`tools/nmf_closed_loop.py`). Leg reflexes from the real wiring hold the fly up: thorax height 1.75 mm with proprioception, versus a collapse to 0.59 mm without. **No walking yet:** standing reflex tone dominates the descending drive, and the hind legs oscillate at 10–13 Hz. Not yet coupled to the live Godot brain and eyes. | literature model + assumed (ledger) |
 | Leg sugar → PER | known gap (see Phase 5b) | — |
 
 Sources and papers with DOI links: [REFERENCES.md](REFERENCES.md). Everything below is in chronological order. Dated sections describe the state at that date; this table is the current summary.
@@ -890,6 +890,43 @@ Live tests:
 - **2026-10-08 cross-check with meshes:** FlyGym 2.1.0 bundles the full FlyMimic model (Ozdil et al. 2026) with meshes. `tools/flygym_smoke.py` gives the same tibia result (flexor +0.708 rad, extensor −0.976 rad), so stripping the meshes did not bias the table.
 - **Scale:** full-muscle excursions of 0.5–1.3 rad agree in magnitude with `DTHETA_MN` = 0.4 rad per motor neuron (2–6 motor neurons per muscle).
 
+### MuJoCo body in closed loop with the nerve cord (2026-10-08, offline)
+
+This step moves the body from our kinematic Godot legs to a physical body. The goal is one body at true scale, with the brain, eyes and nerve cord all wired to it. Posture and walking should come out of the network and physics, with no scripted standing or walking functions.
+
+- **Setup** (`.venv-flygym/Scripts/python tools/nmf_closed_loop.py`; shared model in `tools/vnc_body_model.py`; network exported by `.venv/Scripts/python tools/export_vnc_rate_net.py`):
+  - **Body:** the NeuroMechFly body in MuJoCo (FlyGym 2.1.0, full biological skeleton with 126 joint DoFs, head included). Units are mm, g and s; mass 1.024 mg, weight 10.05 µN.
+  - **Nerve cord:** the full VNC rate model (25,227 neurons, 818,619 edges; Pugliese et al. equations, 5 ms synapse, 1.8 ms delay), stepped every 0.2 ms with two MuJoCo steps of 0.1 ms. It runs at about 1/12 real time.
+  - **Motor side:** each degree of freedom gets torque = K·lim·tanh(0.4·(A_pos − A_neg)/lim), set against a passive spring K = 10 µN·mm/rad whose rest angle is the neutral pose. This reproduces the Godot model's equilibrium when the leg is unloaded. Coxa yaw, tarsal, head and abdomen joints are passive.
+  - **Adhesion:** on while a foot touches the ground and its trochanter drive is not lifting it.
+  - **Proprioceptors:** the same rules as `fly_legs.gd`. Campaniform sensilla now read the measured ground reaction force of their own leg instead of the old muscle-activation proxy.
+- **Load-sensor runaway found and fixed.** The Godot proxy (25 Hz × summed muscle activation) feeds muscle activity back to the muscles. In a physical body it ran away: with no descending drive and only campaniform input, the hind-leg swing pools reached 460–620 Hz and legs lifted off.
+- **Reflex sign probe** (`tools/reflex_probe.py`, `recordings/reflex_probe.csv`): a joint state is imposed on one leg with no drive, and the torque the motor neurons produce is read.
+  - **Femur–tibia:** the claw/hook/club wiring gives **resistance reflexes** in 22 of 24 tests (6 legs × ±position, ±velocity), as measured in flies.
+  - **Hair plates:** the old rule fired at either joint limit and gave **positive feedback at the trochanter in all 6 legs**. This was the cause of the "legs lock up" postures.
+- **Hair-plate direction from wiring** (`tools/hair_plate_tuning.py` → `data/hair_plate_tuning.json`): each of the 206 hair-plate afferents was driven alone through the network. It is tuned to fire at the joint limit its output pushes away from: limit detectors with negative feedback (Pratt et al. 2024).
+  - **Joint:** trochanter where BANC annotates it (26 neurons, front legs only), otherwise coxa (assumed).
+  - **Result:** 124 afferents got a direction; the other 82 act too weakly at rest and keep the either-limit rule.
+  - **Probe after the change:** coxa bends are resisted in 5 of 6 legs and trochanter bends in both front legs. The middle and hind legs have no annotated trochanter hair plates.
+- **Result (2 s runs, last 1.5 s; `recordings/nmf_closed_loop_*.csv`):**
+
+  | Run | Thorax height | Forward speed | Legs |
+  |---|---|---|---|
+  | No leg sensors, walking drive | 0.59 mm (body sags) | +0.11 mm/s | feet shuffle, motor neurons 3–20 Hz |
+  | Sensors on, no descending drive | 1.76 mm (stands) | 0.03 mm/s | front/middle legs in stance tone (stance pools 400–1,400 Hz); hind legs oscillate at 9–10 touchdowns/s |
+  | Sensors on, walking drive (4:1:1:1) | 1.75 mm | −0.18 mm/s | almost the same as no drive |
+  | Same, drive doubled | 1.65 mm | −0.06 mm/s | front-leg swing silenced, hind legs oscillate |
+  | Sensors on, adhesion off | 0.51–0.52 mm (falls) | — | load signal ≈ 0, stance support lost |
+
+- **What this means:**
+  - Standing against gravity now **emerges from the connectome's reflex arcs**: resistance reflexes plus load feedback, with no hand-written posture controller.
+  - Walking does not. The descending command, tuned open-loop, is too weak against the reflex tone, and in real flies walking also changes reflex gains.
+  - With adhesion on, the campaniform sensilla saturate (mean 140 Hz), because the 40 µN adhesion pull is about 4× body weight and the contact force includes it. Their response curve needs a physical calibration.
+- **Next:**
+  - Campaniform response from cuticle strain (graded, not saturating).
+  - Re-run the descending-mix search in closed loop with the body.
+  - Couple this physics body to the live Godot brain and eyes. Godot will pose its body and head from MuJoCo every frame, so the 1,709 facets stay physically on the head and keep their wiring.
+
 ## Calibration ledger (motor side): what is data, what is set by hand
 
 Kept so that any walking result can state exactly how much came from the connectome and how much from hand-set values. Basis: **measured** = from data; **literature** = published model or parameter; **assumed** = an approximate value I chose; **tuned** = adjusted while looking at walking. Nothing on the motor side has been tuned to walking yet.
@@ -911,6 +948,11 @@ Kept so that any walking result can state exactly how much came from the connect
 | Claw/hook flexion vs extension tuning | per neuron from its wiring: signed 1+2-hop drive to tibia extensor vs flexor MNs (Lee et al. 2025 criterion) | measured wiring + literature | yes |
 | Presynaptic inhibition of hook/club afferents | release × 1/(1 + Σ syn·rate / I_HALF) using BANC inhibitory inputs onto each terminal (Dallmann et al. 2025); I_HALF = 500 syn·Hz | wiring measured; I_HALF assumed | yes |
 | Proprioceptor tuning curve shapes (claw sigmoid width, hook/club gains, hair plate limits) | — | assumed | yes |
+| MuJoCo joint spring K (springref = neutral pose) | 10 µN·mm/rad (FlyGym default); damping K × 30 ms | assumed (FlyGym default) | yes |
+| MuJoCo torque per motor neuron | K × 0.4 rad (same equilibrium as DTHETA_MN), tanh-limited to the joint range | assumed | yes |
+| Tarsal adhesion | 40 µN per leg (NeuroMechFly v2 default); on while in contact and not levating | literature model; on/off rule assumed | yes (fly falls without it) |
+| Campaniform rate in MuJoCo | 120 Hz × leg ground-reaction force / body weight, capped at 150 Hz (40 Hz at an equal 3-leg share) | assumed | yes (saturates with adhesion) |
+| Hair-plate joint and limit direction | joint from BANC annotation (trochanter) or coxa (assumed); direction = the limit its network output opposes (Pratt et al. 2024 limit detectors) | measured wiring + literature function | yes |
 | Descending command (which DNs, how strong) | DNg100 : DNb08 : DNa02 : DNg97 = 4 : 1 : 1 : 1 (offline amplitude 400/100/100/100; live 200 Hz / 50 / 50 / 50 Hz), from a 300-trial random search plus an 81-point refinement (`tools/dn_mix_search.py`, `recordings/dn_mix_search.csv`, `dn_mix_refine.csv`) | **tuned** | yes |
 
 **Free-walking diagnosis (2026-10-05)** (`stance_<leg>` and `foot_h_<leg>` columns in probe CSVs):

@@ -67,6 +67,7 @@ the sun. The HUD shows region, sensory and motor bars. There is a live 3D connec
 - APL fires at over 300 Hz; the real APL is graded and non-spiking.
 - The EPG compass neurons are silent.
 
+> 2026-10-08 (later): closed loop nerve cord <-> MuJoCo body works offline (`tools/nmf_closed_loop.py`, README "MuJoCo body in closed loop"). Reflexes from the wiring hold the fly up; no walking yet. Plan: (1) campaniform strain calibration, (2) closed-loop DN-mix search, (3) Godot <-> MuJoCo bridge so the live brain and the 1,709-facet eyes ride on the physical body (Godot poses body and head from MuJoCo each frame).
 > 2026-10-08: FlyGym 2.1.0 is also installed as a Python package in `.venv-flygym` (`requirements-flygym.txt`, `tools/flygym_smoke.py`). Set `FLYGYM_ASSET_CACHE_DIR=assets/flygym_cache` before importing it. Next step: drive its legs from our motor neurons (MuJoCo contact physics).
 
 ## 4. Assets to use: NeuroMechFly / FlyGym (Apache-2.0, NeLy-EPFL, github.com/NeLy-EPFL/flygym)

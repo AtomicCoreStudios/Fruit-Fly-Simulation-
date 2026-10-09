@@ -36,3 +36,4 @@ data/named_feeding_neurons.*
 *.csv.import
 .venv-flygym/
 assets/flygym_cache/
+data/vnc/vnc_rate_net.npz

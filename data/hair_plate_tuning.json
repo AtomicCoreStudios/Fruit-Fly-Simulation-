@@ -1,0 +1,1444 @@
+{
+"138867": {
+"leg": "lf",
+"joint": "CTr",
+"limit": "neg",
+"dtorque": 0.081,
+"joint_basis": "annotated"
+},
+"138995": {
+"leg": "lf",
+"joint": "ThC_pro",
+"limit": "none",
+"dtorque": -0.0,
+"joint_basis": "assumed"
+},
+"141402": {
+"leg": "lf",
+"joint": "ThC_pro",
+"limit": "pos",
+"dtorque": -0.344,
+"joint_basis": "assumed"
+},
+"142289": {
+"leg": "lf",
+"joint": "ThC_pro",
+"limit": "none",
+"dtorque": -0.005,
+"joint_basis": "assumed"
+},
+"144224": {
+"leg": "lf",
+"joint": "ThC_pro",
+"limit": "none",
+"dtorque": -0.0,
+"joint_basis": "assumed"
+},
+"145262": {
+"leg": "lf",
+"joint": "CTr",
+"limit": "pos",
+"dtorque": -0.418,
+"joint_basis": "annotated"
+},
+"146944": {
+"leg": "lf",
+"joint": "CTr",
+"limit": "neg",
+"dtorque": 0.092,
+"joint_basis": "annotated"
+},
+"147200": {
+"leg": "lf",
+"joint": "CTr",
+"limit": "neg",
+"dtorque": 0.091,
+"joint_basis": "annotated"
+},
+"148764": {
+"leg": "lf",
+"joint": "CTr",
+"limit": "neg",
+"dtorque": 0.041,
+"joint_basis": "annotated"
+},
+"150395": {
+"leg": "lf",
+"joint": "ThC_pro",
+"limit": "none",
+"dtorque": 0.0,
+"joint_basis": "assumed"
+},
+"150521": {
+"leg": "lf",
+"joint": "CTr",
+"limit": "pos",
+"dtorque": -1.192,
+"joint_basis": "annotated"
+},
+"152487": {
+"leg": "lf",
+"joint": "CTr",
+"limit": "pos",
+"dtorque": -1.308,
+"joint_basis": "annotated"
+},
+"153413": {
+"leg": "lf",
+"joint": "CTr",
+"limit": "neg",
+"dtorque": 0.089,
+"joint_basis": "annotated"
+},
+"153509": {
+"leg": "lf",
+"joint": "CTr",
+"limit": "neg",
+"dtorque": 0.118,
+"joint_basis": "annotated"
+},
+"155817": {
+"leg": "lf",
+"joint": "CTr",
+"limit": "none",
+"dtorque": 0.0,
+"joint_basis": "annotated"
+},
+"156188": {
+"leg": "lf",
+"joint": "CTr",
+"limit": "neg",
+"dtorque": 0.403,
+"joint_basis": "annotated"
+},
+"156491": {
+"leg": "lf",
+"joint": "ThC_pro",
+"limit": "none",
+"dtorque": -0.005,
+"joint_basis": "assumed"
+},
+"157285": {
+"leg": "lf",
+"joint": "CTr",
+"limit": "pos",
+"dtorque": -4.05,
+"joint_basis": "annotated"
+},
+"158043": {
+"leg": "lf",
+"joint": "CTr",
+"limit": "pos",
+"dtorque": -5.306,
+"joint_basis": "annotated"
+},
+"161123": {
+"leg": "lf",
+"joint": "ThC_pro",
+"limit": "none",
+"dtorque": -0.0,
+"joint_basis": "assumed"
+},
+"161298": {
+"leg": "lf",
+"joint": "ThC_pro",
+"limit": "none",
+"dtorque": 0.0,
+"joint_basis": "assumed"
+},
+"138718": {
+"leg": "lh",
+"joint": "ThC_pro",
+"limit": "none",
+"dtorque": 0.0,
+"joint_basis": "assumed"
+},
+"139642": {
+"leg": "lh",
+"joint": "ThC_pro",
+"limit": "pos",
+"dtorque": -0.378,
+"joint_basis": "assumed"
+},
+"141091": {
+"leg": "lh",
+"joint": "ThC_pro",
+"limit": "none",
+"dtorque": 0.0,
+"joint_basis": "assumed"
+},
+"141120": {
+"leg": "lh",
+"joint": "ThC_pro",
+"limit": "none",
+"dtorque": 0.0,
+"joint_basis": "assumed"
+},
+"142584": {
+"leg": "lh",
+"joint": "ThC_pro",
+"limit": "pos",
+"dtorque": -1.06,
+"joint_basis": "assumed"
+},
+"142751": {
+"leg": "lh",
+"joint": "ThC_pro",
+"limit": "none",
+"dtorque": -0.0,
+"joint_basis": "assumed"
+},
+"144661": {
+"leg": "lh",
+"joint": "ThC_pro",
+"limit": "none",
+"dtorque": 0.0,
+"joint_basis": "assumed"
+},
+"144690": {
+"leg": "lh",
+"joint": "ThC_pro",
+"limit": "neg",
+"dtorque": 1.83,
+"joint_basis": "assumed"
+},
+"146662": {
+"leg": "lh",
+"joint": "ThC_pro",
+"limit": "none",
+"dtorque": 0.0,
+"joint_basis": "assumed"
+},
+"147222": {
+"leg": "lh",
+"joint": "ThC_pro",
+"limit": "neg",
+"dtorque": 0.491,
+"joint_basis": "assumed"
+},
+"147514": {
+"leg": "lh",
+"joint": "ThC_pro",
+"limit": "neg",
+"dtorque": 0.12,
+"joint_basis": "assumed"
+},
+"147638": {
+"leg": "lh",
+"joint": "ThC_pro",
+"limit": "none",
+"dtorque": 0.0,
+"joint_basis": "assumed"
+},
+"150173": {
+"leg": "lh",
+"joint": "ThC_pro",
+"limit": "none",
+"dtorque": 0.0,
+"joint_basis": "assumed"
+},
+"150923": {
+"leg": "lh",
+"joint": "ThC_pro",
+"limit": "none",
+"dtorque": 0.0,
+"joint_basis": "assumed"
+},
+"151371": {
+"leg": "lh",
+"joint": "ThC_pro",
+"limit": "none",
+"dtorque": 0.0,
+"joint_basis": "assumed"
+},
+"152048": {
+"leg": "lh",
+"joint": "ThC_pro",
+"limit": "pos",
+"dtorque": -0.634,
+"joint_basis": "assumed"
+},
+"152164": {
+"leg": "lh",
+"joint": "ThC_pro",
+"limit": "neg",
+"dtorque": 0.285,
+"joint_basis": "assumed"
+},
+"152169": {
+"leg": "lh",
+"joint": "ThC_pro",
+"limit": "none",
+"dtorque": 0.0,
+"joint_basis": "assumed"
+},
+"152893": {
+"leg": "lh",
+"joint": "ThC_pro",
+"limit": "neg",
+"dtorque": 1.855,
+"joint_basis": "assumed"
+},
+"153610": {
+"leg": "lh",
+"joint": "ThC_pro",
+"limit": "none",
+"dtorque": -0.001,
+"joint_basis": "assumed"
+},
+"153714": {
+"leg": "lh",
+"joint": "ThC_pro",
+"limit": "pos",
+"dtorque": -5.007,
+"joint_basis": "assumed"
+},
+"154728": {
+"leg": "lh",
+"joint": "ThC_pro",
+"limit": "none",
+"dtorque": -0.004,
+"joint_basis": "assumed"
+},
+"154832": {
+"leg": "lh",
+"joint": "ThC_pro",
+"limit": "none",
+"dtorque": 0.0,
+"joint_basis": "assumed"
+},
+"154883": {
+"leg": "lh",
+"joint": "ThC_pro",
+"limit": "none",
+"dtorque": 0.0,
+"joint_basis": "assumed"
+},
+"155022": {
+"leg": "lh",
+"joint": "ThC_pro",
+"limit": "pos",
+"dtorque": -0.512,
+"joint_basis": "assumed"
+},
+"155395": {
+"leg": "lh",
+"joint": "ThC_pro",
+"limit": "none",
+"dtorque": 0.0,
+"joint_basis": "assumed"
+},
+"156235": {
+"leg": "lh",
+"joint": "ThC_pro",
+"limit": "none",
+"dtorque": 0.0,
+"joint_basis": "assumed"
+},
+"156827": {
+"leg": "lh",
+"joint": "ThC_pro",
+"limit": "none",
+"dtorque": 0.0,
+"joint_basis": "assumed"
+},
+"157012": {
+"leg": "lh",
+"joint": "ThC_pro",
+"limit": "none",
+"dtorque": 0.0,
+"joint_basis": "assumed"
+},
+"158063": {
+"leg": "lh",
+"joint": "ThC_pro",
+"limit": "none",
+"dtorque": 0.0,
+"joint_basis": "assumed"
+},
+"158154": {
+"leg": "lh",
+"joint": "ThC_pro",
+"limit": "none",
+"dtorque": 0.0,
+"joint_basis": "assumed"
+},
+"158403": {
+"leg": "lh",
+"joint": "ThC_pro",
+"limit": "none",
+"dtorque": 0.0,
+"joint_basis": "assumed"
+},
+"159074": {
+"leg": "lh",
+"joint": "ThC_pro",
+"limit": "none",
+"dtorque": 0.0,
+"joint_basis": "assumed"
+},
+"159788": {
+"leg": "lh",
+"joint": "ThC_pro",
+"limit": "none",
+"dtorque": 0.0,
+"joint_basis": "assumed"
+},
+"161278": {
+"leg": "lh",
+"joint": "ThC_pro",
+"limit": "none",
+"dtorque": 0.0,
+"joint_basis": "assumed"
+},
+"138883": {
+"leg": "lm",
+"joint": "ThC_pro",
+"limit": "neg",
+"dtorque": 1.785,
+"joint_basis": "assumed"
+},
+"139450": {
+"leg": "lm",
+"joint": "ThC_pro",
+"limit": "neg",
+"dtorque": 0.026,
+"joint_basis": "assumed"
+},
+"139589": {
+"leg": "lm",
+"joint": "ThC_pro",
+"limit": "pos",
+"dtorque": -3.935,
+"joint_basis": "assumed"
+},
+"140942": {
+"leg": "lm",
+"joint": "ThC_pro",
+"limit": "neg",
+"dtorque": 0.267,
+"joint_basis": "assumed"
+},
+"141786": {
+"leg": "lm",
+"joint": "ThC_pro",
+"limit": "pos",
+"dtorque": -0.099,
+"joint_basis": "assumed"
+},
+"142129": {
+"leg": "lm",
+"joint": "ThC_pro",
+"limit": "pos",
+"dtorque": -4.069,
+"joint_basis": "assumed"
+},
+"143061": {
+"leg": "lm",
+"joint": "ThC_pro",
+"limit": "pos",
+"dtorque": -2.469,
+"joint_basis": "assumed"
+},
+"143081": {
+"leg": "lm",
+"joint": "ThC_pro",
+"limit": "none",
+"dtorque": -0.009,
+"joint_basis": "assumed"
+},
+"143813": {
+"leg": "lm",
+"joint": "ThC_pro",
+"limit": "neg",
+"dtorque": 0.333,
+"joint_basis": "assumed"
+},
+"143940": {
+"leg": "lm",
+"joint": "ThC_pro",
+"limit": "none",
+"dtorque": 0.002,
+"joint_basis": "assumed"
+},
+"144405": {
+"leg": "lm",
+"joint": "ThC_pro",
+"limit": "none",
+"dtorque": -0.006,
+"joint_basis": "assumed"
+},
+"145400": {
+"leg": "lm",
+"joint": "ThC_pro",
+"limit": "neg",
+"dtorque": 2.529,
+"joint_basis": "assumed"
+},
+"147190": {
+"leg": "lm",
+"joint": "ThC_pro",
+"limit": "pos",
+"dtorque": -1.861,
+"joint_basis": "assumed"
+},
+"148435": {
+"leg": "lm",
+"joint": "ThC_pro",
+"limit": "pos",
+"dtorque": -0.099,
+"joint_basis": "assumed"
+},
+"148563": {
+"leg": "lm",
+"joint": "ThC_pro",
+"limit": "neg",
+"dtorque": 0.39,
+"joint_basis": "assumed"
+},
+"148835": {
+"leg": "lm",
+"joint": "ThC_pro",
+"limit": "pos",
+"dtorque": -0.119,
+"joint_basis": "assumed"
+},
+"149964": {
+"leg": "lm",
+"joint": "ThC_pro",
+"limit": "pos",
+"dtorque": -4.113,
+"joint_basis": "assumed"
+},
+"149983": {
+"leg": "lm",
+"joint": "ThC_pro",
+"limit": "none",
+"dtorque": 0.009,
+"joint_basis": "assumed"
+},
+"150514": {
+"leg": "lm",
+"joint": "ThC_pro",
+"limit": "pos",
+"dtorque": -0.099,
+"joint_basis": "assumed"
+},
+"152907": {
+"leg": "lm",
+"joint": "ThC_pro",
+"limit": "neg",
+"dtorque": 2.956,
+"joint_basis": "assumed"
+},
+"153051": {
+"leg": "lm",
+"joint": "ThC_pro",
+"limit": "pos",
+"dtorque": -0.288,
+"joint_basis": "assumed"
+},
+"153140": {
+"leg": "lm",
+"joint": "ThC_pro",
+"limit": "neg",
+"dtorque": 0.328,
+"joint_basis": "assumed"
+},
+"153802": {
+"leg": "lm",
+"joint": "ThC_pro",
+"limit": "neg",
+"dtorque": 0.647,
+"joint_basis": "assumed"
+},
+"153924": {
+"leg": "lm",
+"joint": "ThC_pro",
+"limit": "pos",
+"dtorque": -0.038,
+"joint_basis": "assumed"
+},
+"154758": {
+"leg": "lm",
+"joint": "ThC_pro",
+"limit": "pos",
+"dtorque": -5.053,
+"joint_basis": "assumed"
+},
+"155244": {
+"leg": "lm",
+"joint": "ThC_pro",
+"limit": "none",
+"dtorque": -0.01,
+"joint_basis": "assumed"
+},
+"155742": {
+"leg": "lm",
+"joint": "ThC_pro",
+"limit": "pos",
+"dtorque": -0.056,
+"joint_basis": "assumed"
+},
+"156420": {
+"leg": "lm",
+"joint": "ThC_pro",
+"limit": "neg",
+"dtorque": 0.503,
+"joint_basis": "assumed"
+},
+"156607": {
+"leg": "lm",
+"joint": "ThC_pro",
+"limit": "pos",
+"dtorque": -1.319,
+"joint_basis": "assumed"
+},
+"157493": {
+"leg": "lm",
+"joint": "ThC_pro",
+"limit": "pos",
+"dtorque": -2.056,
+"joint_basis": "assumed"
+},
+"158771": {
+"leg": "lm",
+"joint": "ThC_pro",
+"limit": "neg",
+"dtorque": 0.075,
+"joint_basis": "assumed"
+},
+"159414": {
+"leg": "lm",
+"joint": "ThC_pro",
+"limit": "pos",
+"dtorque": -0.158,
+"joint_basis": "assumed"
+},
+"140113": {
+"leg": "rf",
+"joint": "CTr",
+"limit": "neg",
+"dtorque": 2.311,
+"joint_basis": "annotated"
+},
+"140162": {
+"leg": "rf",
+"joint": "ThC_pro",
+"limit": "none",
+"dtorque": 0.0,
+"joint_basis": "assumed"
+},
+"141190": {
+"leg": "rf",
+"joint": "ThC_pro",
+"limit": "pos",
+"dtorque": -0.78,
+"joint_basis": "assumed"
+},
+"142573": {
+"leg": "rf",
+"joint": "ThC_pro",
+"limit": "neg",
+"dtorque": 1.101,
+"joint_basis": "assumed"
+},
+"142643": {
+"leg": "rf",
+"joint": "CTr",
+"limit": "pos",
+"dtorque": -1.136,
+"joint_basis": "annotated"
+},
+"143974": {
+"leg": "rf",
+"joint": "CTr",
+"limit": "neg",
+"dtorque": 1.796,
+"joint_basis": "annotated"
+},
+"146030": {
+"leg": "rf",
+"joint": "ThC_pro",
+"limit": "neg",
+"dtorque": 0.025,
+"joint_basis": "assumed"
+},
+"146889": {
+"leg": "rf",
+"joint": "CTr",
+"limit": "neg",
+"dtorque": 0.174,
+"joint_basis": "annotated"
+},
+"146901": {
+"leg": "rf",
+"joint": "ThC_pro",
+"limit": "neg",
+"dtorque": 1.601,
+"joint_basis": "assumed"
+},
+"147620": {
+"leg": "rf",
+"joint": "ThC_pro",
+"limit": "pos",
+"dtorque": -0.242,
+"joint_basis": "assumed"
+},
+"147850": {
+"leg": "rf",
+"joint": "ThC_pro",
+"limit": "none",
+"dtorque": 0.019,
+"joint_basis": "assumed"
+},
+"150428": {
+"leg": "rf",
+"joint": "CTr",
+"limit": "pos",
+"dtorque": -0.021,
+"joint_basis": "annotated"
+},
+"150651": {
+"leg": "rf",
+"joint": "ThC_pro",
+"limit": "neg",
+"dtorque": 0.242,
+"joint_basis": "assumed"
+},
+"150794": {
+"leg": "rf",
+"joint": "CTr",
+"limit": "pos",
+"dtorque": -0.237,
+"joint_basis": "annotated"
+},
+"150809": {
+"leg": "rf",
+"joint": "ThC_pro",
+"limit": "none",
+"dtorque": -0.012,
+"joint_basis": "assumed"
+},
+"151002": {
+"leg": "rf",
+"joint": "ThC_pro",
+"limit": "neg",
+"dtorque": 0.033,
+"joint_basis": "assumed"
+},
+"151171": {
+"leg": "rf",
+"joint": "ThC_pro",
+"limit": "none",
+"dtorque": 0.0,
+"joint_basis": "assumed"
+},
+"152308": {
+"leg": "rf",
+"joint": "CTr",
+"limit": "pos",
+"dtorque": -1.088,
+"joint_basis": "annotated"
+},
+"152495": {
+"leg": "rf",
+"joint": "CTr",
+"limit": "neg",
+"dtorque": 0.429,
+"joint_basis": "annotated"
+},
+"152806": {
+"leg": "rf",
+"joint": "ThC_pro",
+"limit": "none",
+"dtorque": 0.0,
+"joint_basis": "assumed"
+},
+"155995": {
+"leg": "rf",
+"joint": "ThC_pro",
+"limit": "none",
+"dtorque": -0.005,
+"joint_basis": "assumed"
+},
+"156515": {
+"leg": "rf",
+"joint": "CTr",
+"limit": "pos",
+"dtorque": -0.955,
+"joint_basis": "annotated"
+},
+"156609": {
+"leg": "rf",
+"joint": "CTr",
+"limit": "neg",
+"dtorque": 0.423,
+"joint_basis": "annotated"
+},
+"157635": {
+"leg": "rf",
+"joint": "CTr",
+"limit": "pos",
+"dtorque": -0.345,
+"joint_basis": "annotated"
+},
+"158058": {
+"leg": "rf",
+"joint": "ThC_pro",
+"limit": "pos",
+"dtorque": -0.378,
+"joint_basis": "assumed"
+},
+"158234": {
+"leg": "rf",
+"joint": "ThC_pro",
+"limit": "none",
+"dtorque": 0.015,
+"joint_basis": "assumed"
+},
+"158339": {
+"leg": "rf",
+"joint": "ThC_pro",
+"limit": "none",
+"dtorque": -0.011,
+"joint_basis": "assumed"
+},
+"159358": {
+"leg": "rf",
+"joint": "ThC_pro",
+"limit": "none",
+"dtorque": 0.011,
+"joint_basis": "assumed"
+},
+"159782": {
+"leg": "rf",
+"joint": "ThC_pro",
+"limit": "none",
+"dtorque": -0.004,
+"joint_basis": "assumed"
+},
+"160183": {
+"leg": "rf",
+"joint": "ThC_pro",
+"limit": "pos",
+"dtorque": -0.035,
+"joint_basis": "assumed"
+},
+"160343": {
+"leg": "rf",
+"joint": "CTr",
+"limit": "neg",
+"dtorque": 0.221,
+"joint_basis": "annotated"
+},
+"160898": {
+"leg": "rf",
+"joint": "CTr",
+"limit": "neg",
+"dtorque": 1.761,
+"joint_basis": "annotated"
+},
+"138710": {
+"leg": "rh",
+"joint": "ThC_pro",
+"limit": "neg",
+"dtorque": 0.42,
+"joint_basis": "assumed"
+},
+"138837": {
+"leg": "rh",
+"joint": "ThC_pro",
+"limit": "none",
+"dtorque": 0.0,
+"joint_basis": "assumed"
+},
+"138993": {
+"leg": "rh",
+"joint": "ThC_pro",
+"limit": "none",
+"dtorque": 0.0,
+"joint_basis": "assumed"
+},
+"139239": {
+"leg": "rh",
+"joint": "ThC_pro",
+"limit": "none",
+"dtorque": 0.0,
+"joint_basis": "assumed"
+},
+"139437": {
+"leg": "rh",
+"joint": "ThC_pro",
+"limit": "pos",
+"dtorque": -1.079,
+"joint_basis": "assumed"
+},
+"140413": {
+"leg": "rh",
+"joint": "ThC_pro",
+"limit": "none",
+"dtorque": 0.0,
+"joint_basis": "assumed"
+},
+"140851": {
+"leg": "rh",
+"joint": "ThC_pro",
+"limit": "neg",
+"dtorque": 1.61,
+"joint_basis": "assumed"
+},
+"141130": {
+"leg": "rh",
+"joint": "ThC_pro",
+"limit": "none",
+"dtorque": 0.0,
+"joint_basis": "assumed"
+},
+"142703": {
+"leg": "rh",
+"joint": "ThC_pro",
+"limit": "neg",
+"dtorque": 0.816,
+"joint_basis": "assumed"
+},
+"142822": {
+"leg": "rh",
+"joint": "ThC_pro",
+"limit": "pos",
+"dtorque": -0.989,
+"joint_basis": "assumed"
+},
+"144583": {
+"leg": "rh",
+"joint": "ThC_pro",
+"limit": "pos",
+"dtorque": -0.068,
+"joint_basis": "assumed"
+},
+"144904": {
+"leg": "rh",
+"joint": "ThC_pro",
+"limit": "none",
+"dtorque": 0.0,
+"joint_basis": "assumed"
+},
+"146902": {
+"leg": "rh",
+"joint": "ThC_pro",
+"limit": "none",
+"dtorque": 0.0,
+"joint_basis": "assumed"
+},
+"147196": {
+"leg": "rh",
+"joint": "ThC_pro",
+"limit": "none",
+"dtorque": 0.0,
+"joint_basis": "assumed"
+},
+"147764": {
+"leg": "rh",
+"joint": "ThC_pro",
+"limit": "none",
+"dtorque": 0.0,
+"joint_basis": "assumed"
+},
+"148647": {
+"leg": "rh",
+"joint": "ThC_pro",
+"limit": "none",
+"dtorque": -0.0,
+"joint_basis": "assumed"
+},
+"149229": {
+"leg": "rh",
+"joint": "ThC_pro",
+"limit": "none",
+"dtorque": 0.0,
+"joint_basis": "assumed"
+},
+"152310": {
+"leg": "rh",
+"joint": "ThC_pro",
+"limit": "none",
+"dtorque": 0.0,
+"joint_basis": "assumed"
+},
+"152367": {
+"leg": "rh",
+"joint": "ThC_pro",
+"limit": "none",
+"dtorque": 0.0,
+"joint_basis": "assumed"
+},
+"152910": {
+"leg": "rh",
+"joint": "ThC_pro",
+"limit": "pos",
+"dtorque": -1.231,
+"joint_basis": "assumed"
+},
+"152940": {
+"leg": "rh",
+"joint": "ThC_pro",
+"limit": "none",
+"dtorque": 0.0,
+"joint_basis": "assumed"
+},
+"153320": {
+"leg": "rh",
+"joint": "ThC_pro",
+"limit": "pos",
+"dtorque": -0.071,
+"joint_basis": "assumed"
+},
+"153427": {
+"leg": "rh",
+"joint": "ThC_pro",
+"limit": "none",
+"dtorque": 0.0,
+"joint_basis": "assumed"
+},
+"154362": {
+"leg": "rh",
+"joint": "ThC_pro",
+"limit": "none",
+"dtorque": 0.0,
+"joint_basis": "assumed"
+},
+"154849": {
+"leg": "rh",
+"joint": "ThC_pro",
+"limit": "neg",
+"dtorque": 1.301,
+"joint_basis": "assumed"
+},
+"156073": {
+"leg": "rh",
+"joint": "ThC_pro",
+"limit": "none",
+"dtorque": 0.0,
+"joint_basis": "assumed"
+},
+"157006": {
+"leg": "rh",
+"joint": "ThC_pro",
+"limit": "none",
+"dtorque": 0.0,
+"joint_basis": "assumed"
+},
+"157673": {
+"leg": "rh",
+"joint": "ThC_pro",
+"limit": "none",
+"dtorque": 0.0,
+"joint_basis": "assumed"
+},
+"157813": {
+"leg": "rh",
+"joint": "ThC_pro",
+"limit": "none",
+"dtorque": 0.0,
+"joint_basis": "assumed"
+},
+"157952": {
+"leg": "rh",
+"joint": "ThC_pro",
+"limit": "pos",
+"dtorque": -0.859,
+"joint_basis": "assumed"
+},
+"158055": {
+"leg": "rh",
+"joint": "ThC_pro",
+"limit": "none",
+"dtorque": 0.0,
+"joint_basis": "assumed"
+},
+"158076": {
+"leg": "rh",
+"joint": "ThC_pro",
+"limit": "none",
+"dtorque": 0.0,
+"joint_basis": "assumed"
+},
+"158264": {
+"leg": "rh",
+"joint": "ThC_pro",
+"limit": "none",
+"dtorque": 0.0,
+"joint_basis": "assumed"
+},
+"158730": {
+"leg": "rh",
+"joint": "ThC_pro",
+"limit": "pos",
+"dtorque": -0.174,
+"joint_basis": "assumed"
+},
+"159863": {
+"leg": "rh",
+"joint": "ThC_pro",
+"limit": "none",
+"dtorque": 0.0,
+"joint_basis": "assumed"
+},
+"159864": {
+"leg": "rh",
+"joint": "ThC_pro",
+"limit": "pos",
+"dtorque": -0.053,
+"joint_basis": "assumed"
+},
+"160922": {
+"leg": "rh",
+"joint": "ThC_pro",
+"limit": "none",
+"dtorque": 0.0,
+"joint_basis": "assumed"
+},
+"160995": {
+"leg": "rh",
+"joint": "ThC_pro",
+"limit": "none",
+"dtorque": 0.0,
+"joint_basis": "assumed"
+},
+"161246": {
+"leg": "rh",
+"joint": "ThC_pro",
+"limit": "none",
+"dtorque": 0.0,
+"joint_basis": "assumed"
+},
+"161311": {
+"leg": "rh",
+"joint": "ThC_pro",
+"limit": "none",
+"dtorque": 0.0,
+"joint_basis": "assumed"
+},
+"139093": {
+"leg": "rm",
+"joint": "ThC_pro",
+"limit": "neg",
+"dtorque": 0.781,
+"joint_basis": "assumed"
+},
+"139507": {
+"leg": "rm",
+"joint": "ThC_pro",
+"limit": "neg",
+"dtorque": 0.133,
+"joint_basis": "assumed"
+},
+"139582": {
+"leg": "rm",
+"joint": "ThC_pro",
+"limit": "pos",
+"dtorque": -2.507,
+"joint_basis": "assumed"
+},
+"139801": {
+"leg": "rm",
+"joint": "ThC_pro",
+"limit": "none",
+"dtorque": 0.0,
+"joint_basis": "assumed"
+},
+"139905": {
+"leg": "rm",
+"joint": "ThC_pro",
+"limit": "neg",
+"dtorque": 0.152,
+"joint_basis": "assumed"
+},
+"140914": {
+"leg": "rm",
+"joint": "ThC_pro",
+"limit": "neg",
+"dtorque": 0.426,
+"joint_basis": "assumed"
+},
+"141246": {
+"leg": "rm",
+"joint": "ThC_pro",
+"limit": "pos",
+"dtorque": -3.976,
+"joint_basis": "assumed"
+},
+"141701": {
+"leg": "rm",
+"joint": "ThC_pro",
+"limit": "neg",
+"dtorque": 0.032,
+"joint_basis": "assumed"
+},
+"141897": {
+"leg": "rm",
+"joint": "ThC_pro",
+"limit": "neg",
+"dtorque": 0.097,
+"joint_basis": "assumed"
+},
+"142900": {
+"leg": "rm",
+"joint": "ThC_pro",
+"limit": "neg",
+"dtorque": 0.278,
+"joint_basis": "assumed"
+},
+"143325": {
+"leg": "rm",
+"joint": "ThC_pro",
+"limit": "pos",
+"dtorque": -0.289,
+"joint_basis": "assumed"
+},
+"143367": {
+"leg": "rm",
+"joint": "ThC_pro",
+"limit": "pos",
+"dtorque": -0.831,
+"joint_basis": "assumed"
+},
+"143536": {
+"leg": "rm",
+"joint": "ThC_pro",
+"limit": "none",
+"dtorque": -0.004,
+"joint_basis": "assumed"
+},
+"144381": {
+"leg": "rm",
+"joint": "ThC_pro",
+"limit": "pos",
+"dtorque": -4.807,
+"joint_basis": "assumed"
+},
+"144719": {
+"leg": "rm",
+"joint": "ThC_pro",
+"limit": "neg",
+"dtorque": 0.073,
+"joint_basis": "assumed"
+},
+"145059": {
+"leg": "rm",
+"joint": "ThC_pro",
+"limit": "pos",
+"dtorque": -1.896,
+"joint_basis": "assumed"
+},
+"145312": {
+"leg": "rm",
+"joint": "ThC_pro",
+"limit": "neg",
+"dtorque": 0.022,
+"joint_basis": "assumed"
+},
+"145470": {
+"leg": "rm",
+"joint": "ThC_pro",
+"limit": "none",
+"dtorque": 0.0,
+"joint_basis": "assumed"
+},
+"145718": {
+"leg": "rm",
+"joint": "ThC_pro",
+"limit": "neg",
+"dtorque": 2.008,
+"joint_basis": "assumed"
+},
+"146078": {
+"leg": "rm",
+"joint": "ThC_pro",
+"limit": "none",
+"dtorque": -0.018,
+"joint_basis": "assumed"
+},
+"146107": {
+"leg": "rm",
+"joint": "ThC_pro",
+"limit": "neg",
+"dtorque": 1.319,
+"joint_basis": "assumed"
+},
+"147178": {
+"leg": "rm",
+"joint": "ThC_pro",
+"limit": "neg",
+"dtorque": 0.313,
+"joint_basis": "assumed"
+},
+"147657": {
+"leg": "rm",
+"joint": "ThC_pro",
+"limit": "neg",
+"dtorque": 0.028,
+"joint_basis": "assumed"
+},
+"147717": {
+"leg": "rm",
+"joint": "ThC_pro",
+"limit": "neg",
+"dtorque": 1.174,
+"joint_basis": "assumed"
+},
+"147827": {
+"leg": "rm",
+"joint": "ThC_pro",
+"limit": "pos",
+"dtorque": -1.856,
+"joint_basis": "assumed"
+},
+"148167": {
+"leg": "rm",
+"joint": "ThC_pro",
+"limit": "neg",
+"dtorque": 1.335,
+"joint_basis": "assumed"
+},
+"148539": {
+"leg": "rm",
+"joint": "ThC_pro",
+"limit": "none",
+"dtorque": 0.003,
+"joint_basis": "assumed"
+},
+"150555": {
+"leg": "rm",
+"joint": "ThC_pro",
+"limit": "pos",
+"dtorque": -0.093,
+"joint_basis": "assumed"
+},
+"150559": {
+"leg": "rm",
+"joint": "ThC_pro",
+"limit": "neg",
+"dtorque": 2.975,
+"joint_basis": "assumed"
+},
+"150708": {
+"leg": "rm",
+"joint": "ThC_pro",
+"limit": "pos",
+"dtorque": -0.292,
+"joint_basis": "assumed"
+},
+"151272": {
+"leg": "rm",
+"joint": "ThC_pro",
+"limit": "neg",
+"dtorque": 0.136,
+"joint_basis": "assumed"
+},
+"152014": {
+"leg": "rm",
+"joint": "ThC_pro",
+"limit": "neg",
+"dtorque": 2.722,
+"joint_basis": "assumed"
+},
+"152144": {
+"leg": "rm",
+"joint": "ThC_pro",
+"limit": "pos",
+"dtorque": -0.024,
+"joint_basis": "assumed"
+},
+"153973": {
+"leg": "rm",
+"joint": "ThC_pro",
+"limit": "pos",
+"dtorque": -4.082,
+"joint_basis": "assumed"
+},
+"155173": {
+"leg": "rm",
+"joint": "ThC_pro",
+"limit": "pos",
+"dtorque": -3.21,
+"joint_basis": "assumed"
+},
+"155255": {
+"leg": "rm",
+"joint": "ThC_pro",
+"limit": "pos",
+"dtorque": -0.316,
+"joint_basis": "assumed"
+},
+"156514": {
+"leg": "rm",
+"joint": "ThC_pro",
+"limit": "pos",
+"dtorque": -0.033,
+"joint_basis": "assumed"
+},
+"156660": {
+"leg": "rm",
+"joint": "ThC_pro",
+"limit": "neg",
+"dtorque": 0.102,
+"joint_basis": "assumed"
+},
+"156999": {
+"leg": "rm",
+"joint": "ThC_pro",
+"limit": "neg",
+"dtorque": 0.02,
+"joint_basis": "assumed"
+},
+"157272": {
+"leg": "rm",
+"joint": "ThC_pro",
+"limit": "pos",
+"dtorque": -3.565,
+"joint_basis": "assumed"
+},
+"157616": {
+"leg": "rm",
+"joint": "ThC_pro",
+"limit": "neg",
+"dtorque": 0.317,
+"joint_basis": "assumed"
+},
+"158827": {
+"leg": "rm",
+"joint": "ThC_pro",
+"limit": "pos",
+"dtorque": -4.033,
+"joint_basis": "assumed"
+},
+"159409": {
+"leg": "rm",
+"joint": "ThC_pro",
+"limit": "neg",
+"dtorque": 0.347,
+"joint_basis": "assumed"
+},
+"159433": {
+"leg": "rm",
+"joint": "ThC_pro",
+"limit": "neg",
+"dtorque": 0.317,
+"joint_basis": "assumed"
+},
+"160045": {
+"leg": "rm",
+"joint": "ThC_pro",
+"limit": "none",
+"dtorque": -0.001,
+"joint_basis": "assumed"
+},
+"160950": {
+"leg": "rm",
+"joint": "ThC_pro",
+"limit": "neg",
+"dtorque": 0.278,
+"joint_basis": "assumed"
+}
+}
