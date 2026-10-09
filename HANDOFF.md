@@ -180,6 +180,46 @@ Architecture:
 Known data gaps: BANC leg campaniform sensilla annotated almost only in the front legs (2 per middle/hind leg); receptor identity per synapse (only per cell type, from transcriptomics); peptide release sites (dense-core
 vesicles are not in the connectome); diffusion and uptake constants for most modulators.
 
+### 5c. Back burner: memory and plasticity, plus the complete sensory set (owner's request, 2026-10-09)
+
+**When to build:** after walking and the escape-circuit fixes, together with 5b (dopamine release is part of the
+chemical layer, so the plasticity rules sit on it). It must be fully wired into the live brain, learn the way the real
+brain does, and use only mechanisms with published evidence.
+
+**Circuit in our data** (FlyWire v783, both hemispheres):
+- Kenyon cells: 5,177 (2,580 left / 2,597 right). Uniglomerular PNs 277, multiglomerular PNs 400.
+- Dopaminergic neurons: 331 (PAM 307, PPL1 16, PPL2 8). MBONs: 96 (48 per side, 35 types). APL: graded, already in.
+- Corrections to the overview the owner pasted: ~3,000 KCs -> 5,177; ~42 DANs -> 331; "21 MBON pairs" is the older
+  per-hemisphere type count (Aso et al. 2014), FlyWire has 48 MBONs per side.
+
+**Mechanisms to implement (fact-checked):**
+- Sparse KC coding (5-10% of KCs per odour), held by APL feedback inhibition (already in the model, graded).
+- KC->MBON plasticity: dopamine depresses the synapses of co-active KCs in that compartment (Hige et al. 2015).
+  Coincidence detection by the rutabaga adenylyl cyclase (Ca2+ x dopamine -> cAMP); dunce PDE degrades cAMP.
+- Timing rule: odour then dopamine depresses; dopamine then odour potentiates (Handler et al. 2019; Dop1R1 vs DopEcR).
+- Valence: PAM mostly reward, PPL1 mostly punishment (exceptions exist per compartment). MBON approach/avoid balance.
+- Memory phases: short-term (gamma lobe; no protein synthesis), middle-term (alpha'/beta'), anesthesia-resistant memory
+  after massed training (missing from the overview), long-term (alpha/beta; spaced training, CREB-dependent protein
+  synthesis, Tully et al. 1994).
+- Working memory: central-complex attractors (EPG heading ring attractor, Kim et al. 2017, established). The PFG/hDeltaK
+  working-memory claim (NYU Langone press release) is NOT yet verified; check the paper before use.
+- Social CO2-facilitated recall of aversive long-term memory (J Exp Biol 2021, JEB236893): check before use.
+- Beyond the mushroom body: visual place learning (central complex), courtship conditioning; review before building.
+
+**Implementation sketch:** per-synapse weight state for KC->MBON (and later other plastic sites) on the GPU. Updates are
+driven by local dopamine (5b particles/field) x presynaptic KC activity traces, with the measured timing rule, decay
+constants per memory phase, and protein-synthesis-gated consolidation for long-term memory. Validate on published
+assays: odour-shock conditioning (T-maze), sugar reward, spaced vs massed training.
+
+**Complete sensory set ("all the fly gets, no more and no less"), status 2026-10-09:**
+- In: compound eyes (1,709 facets incl. dorsal rim); olfaction (ORNs per glomerulus, DoOR); taste (labellum, legs);
+  antennal wind (Johnston's organ); leg proprioceptors (886); neck proprioceptors (70).
+- Neurons present but not driven by any stimulus: ocelli (63 neurons in FlyWire), thermosensory (29),
+  hygrosensory (74), CO2 (V glomerulus ORNs, if no CO2 odour is modelled), Johnston's organ hearing (sound),
+  gravity sensing, bristle touch over the body, wing and haltere sensors, multidendritic nociceptors (owner decides),
+  internal senses (gut, nutrient sensing, pharyngeal taste).
+- Data gaps: middle/hind-leg campaniform annotations (BANC).
+
 ## 6. How to work with this user
 
 - The user is non-technical-to-intermediate and driven by the research question.
