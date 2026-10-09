@@ -10,13 +10,15 @@ The brain and body run in a closed loop in real time.
 | Part | State | Basis |
 |---|---|---|
 | Brain | FlyWire v783 (139,255 neurons) as Shiu et al. LIF, with conductance synapses, spontaneous activity, adaptation, homeostasis, hunger neuromodulation, and graded APL / patchy AL LNs. Sugar → MN9 and other Shiu benchmarks reproduced. | measured wiring; literature and assumed physiology (see sections below) |
-| Nerve cord | BANC VNC (22,681 resident neurons) joined to the brain: 161,320 neurons and ~15.7M edges in total. VNC interneurons and leg motor neurons are rate units (Pugliese et al. 2025 model). | measured wiring; literature model |
+| Nerve cord | BANC VNC (22,681 resident neurons) joined to the brain: 161,320 neurons and 15.73M edges in total. 12,791 VNC interneurons and 371 leg motor neurons are rate units (Pugliese et al. 2025 model); the escape circuit (giant-fibre-coupled GFC1–4, TTMn, PSI, flight motor neurons) spikes. Since 2026-10-09 the interneuron rate units have homeostasis (1 Hz set point, learned with the fly upright); leg motor neurons have none. | measured wiring; literature model; set points approximate |
 | Eyes and vision | 1,709-facet compound eyes → FlyVis + graded optic lobe → VPNs | measured / literature |
 | Taste, smell, wind | per-neuron sense organs on the NeuroMechFly body | measured mapping; approximate response curves |
-| Legs | 391 real leg motor neurons → muscles → joints (torque model); 886 proprioceptors feed back | measured mapping; assumed mechanics (calibration ledger) |
-| Walking | Walking CPG reproduced exactly offline. Offline, the tuned descending mix (DNg100 + DNb08 + DNa02 + DNg97) gives swing/stance anti-phase in 5 of 6 legs at 4.2 Hz. Live on the kinematic body (2026-10-05): with wiring-derived claw/hook tuning and presynaptic gating, 4 of 6 legs switch stance/swing (1.4–3.8 cycles/s); left front and right middle stay planted; best free-walking speed 0.29 mm/s (real 10–30). **Not walking yet.** | see "Neuromuscular legs" |
+| Legs | 391 real leg motor neurons → muscles → joint torques; 915 leg proprioceptors feed back (FeCO claw/hook/club, hair plates, campaniform sensilla; incl. 34 FeCO afferents identified from shape and wiring). Hair-plate and FeCO direction tuning from wiring. Load sensing is weak in the middle and hind legs: BANC annotates only 2 campaniform neurons per leg there (data gap, unresolved by MANC or shape/wiring). | measured mapping; assumed mechanics (calibration ledger) |
+| Walking | Walking CPG reproduced exactly offline. Offline, the tuned descending mix (DNg100 + DNb08 + DNa02 + DNg97) gives swing/stance anti-phase in 5 of 6 legs at 4.2 Hz. Live on the kinematic body (2026-10-05): with wiring-derived claw/hook tuning and presynaptic gating, 4 of 6 legs switch stance/swing (1.4–3.8 cycles/s); left front and right middle stay planted; best free-walking speed 0.29 mm/s (real 10–30). **Not walking yet.** On the physical body (2026-10-09) the fly stands but does not step; see "Physics". | see "Neuromuscular legs" and the 2026-10-08/09 sections |
 | Escape | giant fibre → TTMn follows 1:1 (gap junction, 16 mV). After the upright homeostasis warm-up, 1 escape (start-up) in 20 s at rest; before, the GF fired spontaneously at 0.4–0.8 Hz (tonic LC4 plus DNp70 bursts). | literature + calibrated |
-| Physics | One body: `--physics=mujoco` runs the live FlyWire+BANC brain and the 1,709-facet eyes on the physical NeuroMechFly body in MuJoCo (FlyGym 2.1.0, true scale, 1.02 mg, friction 1.0, pad adhesion). The brain's 391 leg and 16 neck motor neurons drive it; 915 leg and 70 neck proprioceptors are fed back from the physics (incl. 33 FeCO afferents identified from shape and wiring). Every segment, including the head carrying the eyes, takes the MuJoCo pose (mapping check: max deviation 5×10⁻⁶). The brain still runs at 1.00× real time (15–17 fps vs 25 without physics). **No walking yet**, live or offline (closed-loop descending-mix search: best 1.2 mm/s vs 0.5 mm/s drift with no drive). Standing needs pad adhesion of about body weight per leg. | literature model + assumed (ledger) |
+| Physics | One body: `--physics=mujoco` runs the live FlyWire+BANC brain and the 1,709-facet eyes on the physical NeuroMechFly body in MuJoCo (FlyGym 2.1.0, true scale, 1.02 mg, friction 1.0, pad adhesion). The brain's 391 leg and 16 neck motor neurons drive it; 915 leg and 70 neck proprioceptors are fed back from the physics (incl. 33 FeCO afferents identified from shape and wiring). Every segment, including the head carrying the eyes, takes the MuJoCo pose (mapping check: max deviation 5×10⁻⁶). Head yaw/roll is driven by the real neck motor neurons, so the eyes move with a physical head. The brain still runs at 1.00× real time (15–17 fps vs 25 without physics). **Standing:** after the upright homeostasis calibration the fly holds itself at 0.62–0.72 mm instead of collapsing (passive height 0.76 mm). Only the middle legs (and weakly the right hind leg) drive their depressors, the front legs do not, and right middle pushes about twice as hard as left middle (lean). **No walking yet**, live or offline (closed-loop descending-mix search: best 1.2 mm/s vs 0.5 mm/s drift with no drive). | literature model + assumed (ledger) |
+| Neck and head | 16 annotated neck motor neurons (ADNM yaw, DProN roll) drive the MuJoCo head; 70 neck proprioceptors (prosternal organ, neck chordotonal) feed back. 27 neck motor neurons have no axis annotation (data gap). | axes measured; direction and range assumed |
+| Chemical signalling, memory/learning | not yet; designed and fact-checked in HANDOFF 5b/5c (back burner) | — |
 | Leg sugar → PER | known gap (see Phase 5b) | — |
 
 Sources and papers with DOI links: [REFERENCES.md](REFERENCES.md). Everything below is in chronological order. Dated sections describe the state at that date; this table is the current summary.
@@ -58,29 +60,35 @@ Test harness (arguments go after `--`):
 - `--connectome=flywire|synthetic` choose the brain
 - `--physiology=0` turn off spontaneous activity and adaptation (pure Shiu et al.)
 - `--phys_ablate=noise,mu,adapt,homeo` turn off parts of the intrinsic physiology
-- `--homeostasis` learn homeostatic offsets during the run and save them at the end; use it with `--clean_air`
+- `--homeostasis` learn homeostatic offsets during the run (from zero) and save them at the end; use it with `--clean_air`. `--homeostasis=continue` starts from the saved offsets. With `--physics=mujoco` the result is saved only if the fly stayed upright (thorax ≥ 0.5 mm, up-axis ≥ 0.5 after 2 s); learn with `--mj_tether=1` first, then free standing.
 - `--clean_air` no odour, wind or taste stimuli
 - `--opto` start with P9 optogenetics on
 - `--record=recordings/run.csv` write body state plus every population's firing rate every 100 ms of emulated time
-- `--probe=groups.json --probe_out=out.csv` per-frame activity of chosen neurons (plus leg joint angles, stance and foot height when the legs are on)
+- `--probe=groups.json --probe_out=out.csv` per-frame activity of chosen neurons (plus leg joint angles, stance and foot height when the legs are on; with `--physics=mujoco` also head yaw/roll, thorax height and thorax up-axis)
 - `--act_tau=5` time constant (ms) of the activity readout (default 60; use 5 at `--fixed-fps 120` for rhythms)
 - `--synapses=current` Shiu et al.'s current-like synapses instead of the default conductance synapses
 - `--drive=i,j:Hz;k:Hz` Poisson drive on chosen model neurons (e.g. descending neurons)
 - `--silence=i,j` and `--release_gain=i,j:g` set chosen neurons' transmitter release (diagnostics)
 - `--sugar_release=x` force the sugar-GRN release gain (otherwise set by hunger)
 - `--legs=0` cosmetic legs instead of the neuromuscular model; `--legs_log`, `--legs_lift_test` leg diagnostics
-- `--locomotion=legs` the body moves only by its stance feet (default: descending-neuron rate kinematics)
+- `--locomotion=legs` the body moves only by its stance feet on the kinematic body (default: descending-neuron rate kinematics)
+- `--proprio=0` cut the leg proprioceptors off from the brain (diagnostic)
 - `--physics=mujoco` the physical body: starts `tools/body_server.py` (needs `.venv-flygym`; localhost only) and moves the fly by MuJoCo physics. Options: `--pad_fmax=10` pad strength in µN per leg; `--mj_port=47830`; `--mj_rigid_head=1` diagnostic (head held on the thorax); `--mj_tether=1` thorax held level at standing height (use for `--homeostasis` warm-ups: learn only while upright)
 
-Always add Godot's `--quit-after` as a watchdog.
+Always add Godot's `--quit-after` as a watchdog. On this PC also use `--disable-vsync --fixed-fps 30` (windowed Godot freezes on vsync), and never run two GPU Godot instances at once.
+
+Offline tools for the physical body (run with `.venv-flygym/Scripts/python`): `tools/nmf_closed_loop.py` (nerve-cord rate model + MuJoCo body), `tools/body_server_test.py` (protocol check), `tools/reflex_probe.py`, `tools/dn_mix_closed_loop.py`.
 
 ## What is in it
 
 | Layer | File | Notes |
 |---|---|---|
 | Connectome builder | `tools/build_connectome.py` | Synthetic stand-in, or the real FlyWire v783 connectome |
-| Brain emulator | `shaders/lif.glsl`, `scripts/fly_brain.gd` | Leaky integrate-and-fire neurons with Shiu et al. 2024 parameters (plus conductance synapses, intrinsic physiology, graded and rate units: see later sections). Integration step 0.5 ms; synapses stored in sparse row format with fixed-point atomic adds. About 17 ms of GPU time per frame for 161,320 neurons on an RTX 2080 (50 fps). |
-| Legs | `scripts/fly_legs.gd`, `tools/build_leg_map.py` | Neuromuscular legs and proprioceptors (Phase 6) |
+| Brain emulator | `shaders/lif.glsl`, `scripts/fly_brain.gd` | Leaky integrate-and-fire neurons with Shiu et al. 2024 parameters (plus conductance synapses, intrinsic physiology, graded and rate units: see later sections). Integration step 0.5 ms; synapses stored in sparse row format with fixed-point atomic adds. About 35 ms of GPU time per frame for 161,320 neurons with FlyVis and the graded optic lobe on an RTX 2080 (about 25 fps; 15–17 fps with the MuJoCo body). |
+| Legs | `scripts/fly_legs.gd`, `tools/build_leg_map.py` | Neuromuscular legs and proprioceptors (Phase 6); client of the MuJoCo body server |
+| Physical body | `tools/nmf_body.py`, `tools/body_server.py`, `tools/vnc_body_model.py` | NeuroMechFly in MuJoCo (FlyGym 2.1.0, `.venv-flygym`): leg and neck torques, pad adhesion, tether, proprioceptor rates; served to Godot over localhost |
+| Neck | `tools/build_neck_map.py`, `tools/neck_sensor_tuning.py` | Neck motor neurons → head axes; neck proprioceptor tuning |
+| Sensory identification | `tools/classify_leg_sensory.py`, `tools/manc_leg_sensory_check.py` | Leg sensory neurons identified from shape and wiring; MANC cross-check |
 | Taste | `scripts/fly_taste.gd` | Per-neuron taste organs (Phase 3) |
 | Body, senses, motor | `scripts/fly.gd` | See the sensory and motor lists below |
 | World, HUD, brain view | `scripts/main.gd`, `shaders/neuron_view.gdshader` | Every neuron is drawn as a point at its position, coloured by neuropil and brightened by recent spiking |
@@ -92,16 +100,16 @@ Senses in `scripts/fly.gd`:
 - **Taste:** sweet and bitter taste receptor neurons.
 - **Sun compass.**
 
-Motor outputs (descending neurons → behaviour; walking is still driven this way by default, the neuromuscular legs are opt-in for locomotion via `--locomotion=legs`):
+Motor outputs (descending neurons → behaviour; walking is still driven this way by default; the body moves by its own legs with `--locomotion=legs` on the kinematic body or with `--physics=mujoco`):
 - P9 → walk forward
 - DNa02 → turn
 - MDN → walk backward
-- Giant fibre → escape takeoff
+- Giant fibre → TTMn → escape takeoff (scripted flight; with `--physics=mujoco` it is counted but not executed: no jump/flight model)
 - MN9 → proboscis extension and feeding
 
 Behaviours verified in test runs:
 - Feeding on sugar, which lowers hunger.
-- Giant-fibre escape from a looming object, with no false escapes while walking or turning (thanks to the efference copy).
+- Giant-fibre escape from a looming object, with no false escapes while walking or turning (thanks to the efference copy). (Verified with the early sector-vision model; with facet vision and the graded optic lobe, loom-triggered escape is not reliable yet, see the loom tests below.)
 - Wind-driven turning.
 - Spontaneous meandering.
 - Local search in food odour.
@@ -116,6 +124,15 @@ Odour-guided approach works only partly. The fly stays in the plume and circles 
 | `Completeness_783.csv`, `Connectivity_783.parquet` | github.com/philshiu/Drosophila_brain_model | FlyWire v783: 138,639 proofread neurons, 15,091,983 connections, 54.5M synapses, signed by predicted transmitter |
 | `model.py`, `utils.py`, `example.ipynb`, `figures.ipynb`, `sez_neurons.pickle`, `environment*.yml` | same | Shiu et al. 2024 reference model. MN9 = root 720575940660219265. The pickle holds data only and was checked before loading. |
 | `annot_Supplemental_file1..5` | github.com/flyconnectome/flywire_annotations | Schlegel et al. 2024: super class, class, subclass, cell type, side, soma and anchor positions, neurotransmitter; plus hemilineages and hemibrain matches |
+| `cell_stats.csv.gz`, `column_assignment.csv.gz`, `visual_neuron_types.csv.gz` | FlyWire / Codex | neuron sizes, optic-lobe column assignment (Matsliah et al. 2024), visual types |
+| `banc/` | BANC (Bates et al. 2025; Codex release 888, Harvard Dataverse doi:10.7910/DVN/8TFGGB) | nerve-cord neurons, connections, SWC skeletons |
+| `pugliese/` | Zenodo 22260924, github smpuglie/Pugliese_2026 | VNC CPG model data (weights, surface areas) |
+| `manc/` | Janelia FlyEM export bucket (MANC v1.0) | neuron properties, used for the leg load-sensor cross-check |
+| `door/` | github.com/Dahaniel/DoOR.data | odorant response and spontaneous-rate tables |
+| `eyemap_T4/` | github.com/reiserlab/eyemap_T4 (GPL-3.0) | micro-CT compound-eye map (Zhao et al. 2025) |
+| `neck/` | github.com/flyconnectome/2023neckconnective | neck connective tables (Stürner et al. 2025) |
+
+Sources, commits and checksums: `tools/fetch_data.py`. Raw data is git-ignored.
 
 ## Real-brain mode: what maps to what
 
@@ -148,8 +165,9 @@ Odour-guided approach works only partly. The fly stays in the plume and circles 
 - **The synthetic connectome** (`--connectome=synthetic`) It uses FlyWire's neuron count and the real neuropils and pathways, but the synapse-level wiring was written by hand to produce these behaviours. It is **not** an upload of a real fly.
 - **The real brain** is the actual FlyWire wiring. It still runs a simplified neuron model and uses a hand-built body.
 - **What no connectome contains.** A UI in the Pantheon sense would need all of the following, and none of them is in a wiring diagram:
-  - learning and synaptic plasticity (still missing)
-  - neuromodulators (dopamine, octopamine): only hunger → sugar-pathway release is modelled so far
+  - learning and synaptic plasticity (still missing; plan in HANDOFF 5c)
+  - neuromodulators (dopamine, octopamine): only hunger → sugar-pathway release is modelled so far (plan in HANDOFF 5b)
+  - receptor identity per synapse (only per cell type, from transcriptomics)
   - gap junctions and synaptic delays: delays modelled; gap junctions only for the documented giant-fibre ones
   - dendritic nonlinearities (still missing; graded and conductance neurons are a partial step)
   - the ventral nerve cord (the fly's "spinal cord"): now added from BANC, a different fly than FlyWire's brain
@@ -187,7 +205,7 @@ Caveats:
 
 ## Compound-eye vision in Godot (facet vision, default with the FlyWire brain)
 
-The fly in Godot is the NeuroMechFly micro-CT body (`assets/fly/fly.glb`, exported from `blender/fly_body.blend`). Every segment is a named node (`c_head`, `lf_tibia`, `l_arista`, …) where further sense organs can be attached. Leg and wing motion is cosmetic; there is no nerve-cord motor model yet.
+The fly in Godot is the NeuroMechFly micro-CT body (`assets/fly/fly.glb`, exported from `blender/fly_body.blend`). Every segment is a named node (`c_head`, `lf_tibia`, `l_arista`, …) where further sense organs can be attached. (2026-09-30: leg and wing motion was cosmetic. Since 2026-10-05 the legs are driven by the real leg motor neurons, and with `--physics=mujoco` every segment, including the head carrying the eye cameras, takes its pose from the MuJoCo body.)
 
 Pipeline:
 1. **Cube map.** Six 90° cameras (48 px per face) form a cube map. It is locked to the `c_head` node, centred between the eyes. The fly's own body is on render layer 2 and hidden from these cameras.
@@ -469,7 +487,8 @@ Shiu et al.'s model is silent without input and has no adaptation. Real fly neur
 - **Spike-frequency adaptation:** AdEx-style current, τ_w = 300 ms. Its step is calibrated to a per-class adaptation index; Kenyon cells adapt strongly (0.3), motor neurons weakly (0.85). basis: approximate (Nagel & Wilson 2011).
 - **Homeostatic intrinsic plasticity:**
   - A 60 s warm-up (`--homeostasis --clean_air`) learns a per-neuron offset that brings each neuron in the network to its target rate. It is saved to `data/homeostasis_offsets.bin` and loaded automatically.
-  - Offsets: 5th–95th percentile −3.4 to +0.5 mV.
+  - Offsets (2026-10-03 warm-up): 5th–95th percentile −3.4 to +0.5 mV.
+  - Since 2026-10-09 the offsets are learned on the physical body with the fly upright (tethered, then free standing), and also cover the nerve-cord interneuron rate units. Offsets are applied only to neurons with a homeostatic target. See the 2026-10-09 sections.
 - **Synapse signs by Dale's principle:** each neuron's transmitter is `known_nt`, else FlyWire's neuron-level `top_nt` (Eckstein et al. 2024).
   - ACh is excitatory; GABA, glutamate and histamine are inhibitory.
   - Dopamine, serotonin, octopamine and tyramine have no fast effect.
@@ -512,7 +531,7 @@ Results:
 - **Sugar → MN9:** bilateral labellar sugar at 30/60/100/200 Hz gives MN9_R 8/14/20/38 Hz and MN9_L 5/7/11/20 Hz, rising steadily with input.
   - Shiu's exact model gives about 29/75/116 Hz at 60/100/200 Hz.
   - Much of that comes from a recurrent pharyngeal premotor loop (CB4055 / CB0910 / CB0707 / CB0708) that ignites to about 100 Hz in Shiu's model. With bilateral input it ignites 8,002 neurons at ≥ 15 Hz. With adaptation that loop stays moderate, so our MN9 is lower. Which is closer to the real fly is not settled by data; MN9 has not been recorded in Hz.
-- **Giant fibre:** opto at 100 Hz drives TTMn at 44–57 Hz through the gap junction. Escape still works.
+- **Giant fibre:** opto at 100 Hz drives TTMn at 44–57 Hz through the gap junction (8 mV coupling then; 16 mV and 1:1 following since 2026-10-09). Escape still works.
 - **Leg sugar** (embodied, standing on the food patch): MN9 rises from 0.2 to 2.8 Hz but there is no visible PER. Real flies extend the proboscis to tarsal sugar, so the leg → PER route is still too weak (open issue).
 - **Ablations** (`--phys_ablate=noise,mu,adapt,homeo`, γ = 0.38 build, 100 Hz bilateral sugar, MN9_R):
 
@@ -705,7 +724,7 @@ Results after a fresh warm-up:
   - Ranges and time constants are approximate.
 - These replace the cosmetic leg swing (`--legs=0` restores it).
 
-**Sensory side:** 886 proprioceptors drive their real BANC neurons every frame:
+**Sensory side:** 886 proprioceptors (915 since the 2026-10-09 re-labels) drive their real BANC neurons every frame:
 - femoral chordotonal organ claw (tibia position, flexion- and extension-tuned)
 - hook (movement direction)
 - club (movement or vibration)
@@ -832,8 +851,7 @@ Live tests:
 
   FlyGym downloads about 14 MB of meshes on first use. Our tools point `FLYGYM_ASSET_CACHE_DIR` at `assets/flygym_cache` (git-ignored).
   - Smoke test: a free NeuroMechFly with default contact (sliding friction 1.0) and leg adhesion, legs held at the neutral pose, stays upright for 0.5 s. All 6 legs are in ground contact, and the lowest segment is at 0.06 mm.
-  - Porting the MN → joint torque output onto this body is the next step.
-- Deferred until the motor pattern produces clean swing/stance, since friction cannot create propulsion the legs do not generate.
+  - Porting the MN → joint torque output onto this body: done 2026-10-08 (offline) and 2026-10-09 (live, `--physics=mujoco`); see the sections below.
 
 ### Descending-mix search and live test (2026-10-05)
 
@@ -1134,11 +1152,12 @@ This step moves the body from our kinematic Godot legs to a physical body. The g
 
 ## Calibration ledger (motor side): what is data, what is set by hand
 
-Kept so that any walking result can state exactly how much came from the connectome and how much from hand-set values. Basis: **measured** = from data; **literature** = published model or parameter; **assumed** = an approximate value I chose; **tuned** = adjusted while looking at walking. Nothing on the motor side has been tuned to walking yet.
+Kept so that any walking result can state exactly how much came from the connectome and how much from hand-set values. Basis: **measured** = from data; **literature** = published model or parameter; **assumed** = an approximate value I chose; **tuned** = adjusted while looking at walking. Only the descending command mix has been tuned to walking; everything else is measured, literature or assumed.
 
 | Item | Value | Basis | Walking depends on it? |
 |---|---|---|---|
 | Wiring: BANC VNC synapses, signs (Dale), DN/AN joining | — | measured | yes |
+| VNC transmitter predictions | used as given; some motor neurons have implausible predictions (e.g. TTMn octopamine / GABA); motor output uses rates, not signs | measured (predicted) | no |
 | Motor neuron → muscle → joint DoF | BANC annotations | measured | yes |
 | VNC interneuron dynamics | Pugliese et al. rate model (τ 20 ms, gain, θ, f_cap 200 Hz, W × 0.03) | literature | yes |
 | Neuron size for rate units | measured area / cable-predicted (r = 0.947) / synapse fit | measured + fit | yes (stance recruitment depends on it) |
@@ -1149,7 +1168,7 @@ Kept so that any walking result can state exactly how much came from the connect
 | DTHETA_MN 0.4 rad per motor neuron | — | assumed | yes (amplitude) |
 | Joint range and τ_joint 30 ms | NeuroMechFly-like ranges | assumed | yes |
 | Stance rule: foot ≤ rest + 5% of reach | no-slip contact | assumed | yes |
-| LOAD_HZ 40 Hz campaniform ground load | — | assumed | under test |
+| LOAD_HZ 40 Hz campaniform ground load (kinematic body only) | — | assumed | kinematic body only |
 | Claw/hook flexion vs extension tuning | per neuron from its wiring: signed 1+2-hop drive to tibia extensor vs flexor MNs (Lee et al. 2025 criterion) | measured wiring + literature | yes |
 | Presynaptic inhibition of hook/club afferents | release × 1/(1 + Σ syn·rate / I_HALF) using BANC inhibitory inputs onto each terminal (Dallmann et al. 2025); I_HALF = 500 syn·Hz | wiring measured; I_HALF assumed | yes |
 | Proprioceptor tuning curve shapes (claw sigmoid width, hook/club gains, hair plate limits) | — | assumed | yes |
@@ -1160,6 +1179,10 @@ Kept so that any walking result can state exactly how much came from the connect
 | Hair-plate joint and limit direction | joint from BANC annotation (trochanter) or coxa (assumed); direction = the limit its network output opposes (Pratt et al. 2024 limit detectors) | measured wiring + literature function | yes |
 | Neck motor neurons → head yaw/roll | ADNM1/2 yaw, DProN1–5 roll (BANC); motor-neuron side from its nerve; ipsilateral rotation; range 0.35 rad | axes measured (annotation); direction and range assumed | head/eye stabilisation |
 | Neck proprioceptor axis/direction | signed 1+2-hop wiring onto the neck pools; prosternal = negative feedback (Preuss & Hengstenberg 1992) | measured wiring + literature function | head/eye stabilisation |
+| Rate-unit homeostasis | interneurons: set point 1 Hz (the default sparse baseline); leg motor neurons: none (a 0.5 Hz set point removed the tonic depressor drive). Learned upright: 60 s tethered (`--mj_tether=1`), then 60 s free standing (`--homeostasis=continue`) | mechanism literature; set points approximate | yes (without it the nerve cord ran at ~110 Hz and inhibition silenced the depressors) |
+| Homeostatic offsets applied only to neurons with a set point | stale offsets (e.g. 371 leg motor neurons, learned when they were spiking) are ignored | — (bug fix 2026-10-09) | yes |
+| Leg sensory re-labels | 34 FeCO afferents added, 4 hair plates corrected, from morphology + wiring (`data/leg_sensory_relabel.json`; acceptance rule 95% precise on labelled middle/hind neurons) | inferred from data | yes |
+| Thorax tether (calibration only) | thorax held level at neutral-pose height with all feet down (1.03 mm); 2000 µN/mm, 100 µN·mm/rad, critically damped | assumed (calibration device, not physiology) | only during warm-ups |
 | Giant-fibre electrical coupling (GF→TTMn, GF→PSI) | 16 mV (one GF spike lifts the quiescent motor neuron from its resting offset just over threshold) | calibrated to measured 1:1 following | escape |
 | GFC1–4 dynamics | spiking with adaptation (not rate units) | assumed | escape (rate units latched) |
 | Descending command (which DNs, how strong) | DNg100 : DNb08 : DNa02 : DNg97 = 4 : 1 : 1 : 1 (offline amplitude 400/100/100/100; live 200 Hz / 50 / 50 / 50 Hz), from a 300-trial random search plus an 81-point refinement (`tools/dn_mix_search.py`, `recordings/dn_mix_search.csv`, `dn_mix_refine.csv`) | **tuned** | yes |
@@ -1204,7 +1227,7 @@ Real antennal lobes have spike-frequency adaptation, gap junctions and non-spiki
 - Run blind on descending neurons, the similarity matcher picks the right type 81% of the time.
 - **95%** of matched ascending pairs, and 88% of descending pairs, agree on predicted transmitter, consistently across the similarity range.
 
-**Added nerve-cord neurons: 22,832**
+**Added nerve-cord neurons: 22,832** (first build; the current build has 22,681 resident nerve-cord neurons)
 
 | Class | Neurons |
 |---|---|
@@ -1213,12 +1236,12 @@ Real antennal lobes have spike-frequency adaptation, gap junctions and non-spiki
 | Motor (leg, wing, haltere, neck, abdominal) | 699 |
 | Unmatched ascending | 650 |
 
-Only BANC synapses inside nerve-cord neuropils are used (818,000 connections, 7.5 million synapses); the brain stays FlyWire's. Total model size: **161,471 neurons, 15.9 million connections**. Turn the nerve cord off with `FLY_NO_VNC=1`.
+Only BANC synapses inside nerve-cord neuropils are used (818,000 connections, 7.5 million synapses); the brain stays FlyWire's. Total model size at that build: 161,471 neurons, 15.9 million connections (current build: **161,320 neurons, 15.73 million connections**). Turn the nerve cord off with `FLY_NO_VNC=1`.
 
 **Electrical synapses** (`data/vnc/electrical_synapses.json`):
-- Connectomes record chemical synapses only. The giant fibre's gap junctions onto TTMn (jump motor neuron) and PSI are documented (ShakB; Allen et al. 2006; Tanouye & Wyman 1980). They are modelled as true voltage coupling: one spike → +8 mV on the partner's membrane at the next 0.5 ms step (`lif.glsl` mode 2).
+- Connectomes record chemical synapses only. The giant fibre's gap junctions onto TTMn (jump motor neuron) and PSI are documented (ShakB; Allen et al. 2006; Tanouye & Wyman 1980). They are modelled as true voltage coupling: one spike → +8 mV on the partner's membrane at the next 0.5 ms step (`lif.glsl` mode 2). Since 2026-10-09: +16 mV, because the quiescent escape motor neurons rest 8 mV lower; TTMn then follows the giant fibre 0.92:1 at 53 Hz.
 - With the giant fibre driven at about 100–115 Hz, TTMn follows at 0.73–0.85 of its spikes and PSI at 0.70–0.79. PSI drives the DLM flight-muscle motor neurons through 397 chemical synapses.
-- The escape take-off is now executed when **TTMn** fires (`vnc_jump_ttmn`).
+- The escape take-off is now executed when **TTMn** fires (`vnc_jump_ttmn`); with the MuJoCo body it is counted but not executed.
 
 **Leg taste through the nerve cord:**
 - 701 BANC leg taste neurons are placed on the tarsi of their actual leg. Modality comes from BANC receptor labels: 211 sugar (Gr5a/Gr64f), 82 sugar/low-salt, 9 bitter and 398 pheromone (ppk23/25, Ir52).
@@ -1226,16 +1249,16 @@ Only BANC synapses inside nerve-cord neuropils are used (818,000 connections, 7.
 - Anatomically, leg sugar neurons put 8,865 of their nerve-cord synapses onto FlyWire-matched ascending neurons. Those are mostly **GABAergic** in both datasets, and so are their main brain targets (DNg103, VESa1_P02). The route to the feeding circuit appears to be **disinhibitory**.
 - The Shiu et al. model has no spontaneous activity, so silencing an already-silent inhibitory neuron has no effect.
 
-**What's needed next, all central-brain physiology rather than wiring:**
-- spontaneous / resting activity;
-- spike-frequency adaptation;
-- non-spiking neurons.
+**What was needed next, all central-brain physiology rather than wiring:**
+- spontaneous / resting activity (added 2026-10-03);
+- spike-frequency adaptation (added 2026-10-03);
+- non-spiking neurons (added 2026-10-04).
 
 The antennal-lobe/mushroom-body runaway (above) points to the same missing properties.
 
-Leg motor neurons are annotated by muscle and joint action (for example `flex_femur_tibia_joint`), and so are leg proprioceptors. Connecting these to the body's joints (biomechanics) is the next body step.
+Leg motor neurons are annotated by muscle and joint action (for example `flex_femur_tibia_joint`), and so are leg proprioceptors. Connecting these to the body's joints was done in Phase 6 (2026-10-05) and on the MuJoCo body (2026-10-08/09).
 
-Performance with everything on (brain + nerve cord + FlyVis + graded optic lobe + taste): about 25 fps, close to real time.
+Performance with everything on (brain + nerve cord + FlyVis + graded optic lobe + taste): about 25 fps, close to real time; 15–17 fps with the MuJoCo body (brain still at 1.00× real time).
 
 ## License
 
