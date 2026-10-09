@@ -135,3 +135,48 @@ class Legs:
         if self.Pre is None:
             return r
         return r / (1.0 + (self.Pre @ np.maximum(self.cord.R, 0.0)) / I_HALF)
+
+
+NECK_AXES = ["yaw", "roll"]          # head axes with annotated neck motor neurons (+ = toward the left)
+NECK_RANGE = 0.35                    # rad of head rotation at full activation of one side's pool (assumed, ~20 deg)
+
+
+class Neck:
+    """Neck motor neurons -> head yaw/roll torques; head state -> neck proprioceptor rates
+    (data/neck_motor_map.json from tools/build_neck_map.py; sensor axis/direction from data/neck_sensor_tuning.json,
+    tools/neck_sensor_tuning.py). Same muscle rule as the legs; sensor curve shapes as the leg hair plates
+    (prosternal organ: position) and FeCO club (neck chordotonal: speed). basis: annotated axes; shapes assumed."""
+
+    def __init__(self, cord=None, k_joint=10.0):
+        nm = json.load(open(ROOT / "data/neck_motor_map.json"))
+        p = cord.pos if cord is not None else _Id(); self.cord = cord; self.k = k_joint
+        ids = [x for a in NECK_AXES for s in ("pos", "neg") for x in nm["motor"][a][s]]
+        self.mn_ids = np.array(ids, int); self.mn_idx = np.array([p[x] for x in ids], int)
+        rows = []
+        for ai, a in enumerate(NECK_AXES):
+            for si, s in enumerate(("pos", "neg")):
+                rows += [ai * 2 + si] * len(nm["motor"][a][s])
+        self.P = sp.csr_matrix((np.ones(len(ids)), (rows, np.arange(len(ids)))), shape=(2 * len(NECK_AXES), len(ids)))
+        self.act = np.zeros(len(ids))
+        tun_p = ROOT / "data/neck_sensor_tuning.json"
+        tun = json.load(open(tun_p)) if tun_p.exists() else {}
+        S = [(x, k) for k in ("prosternal", "neck_chordotonal") for x in nm["sensory"][k]]
+        self.s_ids = np.array([x for x, _ in S], int); self.s_idx = np.array([p[x] for x, _ in S], int)
+        self.s_kind = np.array([0 if k == "prosternal" else 1 for _, k in S])
+        self.s_axis = np.array([NECK_AXES.index(tun.get(str(x), {}).get("axis", "yaw")) for x, _ in S])
+        self.s_dir = np.array([{"pos": 1.0, "neg": -1.0}.get(tun.get(str(x), {}).get("limit"), 0.0) for x, _ in S])
+
+    def torques(self, dt, mn_rates=None):
+        """(len(NECK_AXES),) torques in biological sign (+ = head toward the left)."""
+        r = np.maximum(self.cord.R[self.mn_idx] if mn_rates is None else np.asarray(mn_rates, float), 0.0)
+        self.act += (r / (r + R_HALF) - self.act) * (1 - np.exp(-dt / TAU_ACT))
+        A = (self.P @ self.act).reshape(len(NECK_AXES), 2); self.A = A
+        return self.k * NECK_RANGE * np.tanh(DTHETA_MN * (A[:, 0] - A[:, 1]) / NECK_RANGE)
+
+    def afferents(self, ang, om):
+        """ang, om: (len(NECK_AXES),) head angle re neutral / angular velocity, biological sign."""
+        th = ang[self.s_axis] / NECK_RANGE; w = om[self.s_axis]
+        x = np.where(self.s_dir != 0, self.s_dir * th, np.abs(th))
+        pos = 80.0 / (1.0 + np.exp(-(x - 0.6) / 0.08))
+        spd = np.clip(np.abs(w) * 10.0, 0.0, 120.0)
+        return np.where(self.s_kind == 0, pos, spd)

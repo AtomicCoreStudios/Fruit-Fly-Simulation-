@@ -338,6 +338,8 @@ var _mj_prev := Vector3.ZERO           # virtual root (x, y, yaw) in the MuJoCo 
 var _mj_have_prev := false
 var _mj_odo := [0.0, 0.0, 0.0]
 var _mj_last_ms := -1.0
+var head_yaw := 0.0                    # rad, + = left (MuJoCo neck, driven by the real neck motor neurons)
+var head_roll := 0.0
 
 
 static func _user_arg(key: String, def: String) -> String:
@@ -497,6 +499,11 @@ func _mujoco_update() -> void:
 		for di in DOFS.size():
 			angle[leg][DOFS[di]] = out[o2 + 24 + li * 6 + di]
 	sense = {"thorax_z_mm": th.origin.z, "load_lf": out[o2 + 6], "load_rf": out[o2 + 9]}
+	if out.size() >= o2 + 24 + 36 + 2:       # protocol v2: head yaw/roll (rad, + = left) driven by the neck motor neurons
+		head_yaw = out[o2 + 60]
+		head_roll = out[o2 + 61]
+		sense["head_yaw"] = head_yaw
+		sense["head_roll"] = head_roll
 	_presyn_gate()
 
 

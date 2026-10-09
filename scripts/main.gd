@@ -639,6 +639,9 @@ func _probe() -> void:
 					head.append("joint_%s_%s" % [leg, d])
 				head.append("stance_%s" % leg)
 				head.append("foot_h_%s" % leg)
+			if fly.legs.physics_mujoco:
+				head.append("head_yaw")
+				head.append("head_roll")
 		_probe_f.store_csv_line(head)
 	var act := brain.activity_bytes.to_float32_array()
 	var row := PackedStringArray(["%.1f" % brain.sim_time_ms, str(int(threat.visible))])
@@ -654,6 +657,9 @@ func _probe() -> void:
 				row.append("%.4f" % fly.legs.angle[leg][d])
 			row.append(str(int(fly.legs.stance.get(leg, false))))
 			row.append("%.5f" % fly.legs.foot_height.get(leg, 0.0))
+		if fly.legs.physics_mujoco:
+			row.append("%.4f" % fly.legs.head_yaw)
+			row.append("%.4f" % fly.legs.head_roll)
 	_probe_f.store_csv_line(row)
 
 

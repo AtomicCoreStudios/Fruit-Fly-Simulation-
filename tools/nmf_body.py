@@ -28,6 +28,9 @@ MJ_DOF = {"ThC_pro": "c_thorax-{l}_coxa-pitch", "ThC_add": "c_thorax-{l}_coxa-ro
           "CTr": "{l}_coxa-{l}_trochanterfemur-pitch", "FeRot": "{l}_coxa-{l}_trochanterfemur-roll",
           "FTi": "{l}_trochanterfemur-{l}_tibia-pitch", "TiTa": "{l}_tibia-{l}_tarsus1-pitch"}
 DT_P = 0.0001                     # MuJoCo step (FlyGym default)
+# neck: FlyGym names its head joint axes in its own convention (the "roll" joint turns about the vertical axis);
+# mapped here to biological head yaw/roll and checked kinematically in Body._signs
+NECK_DOF = {"yaw": "c_thorax-c_head-roll", "roll": "c_thorax-c_head-yaw"}
 
 
 class Body:
@@ -41,6 +44,8 @@ class Body:
         jorder = fly.get_jointdofs_order(); self.jname = [j.name for j in jorder]
         act_dofs = [jorder[self.jname.index(MJ_DOF[d].format(l=leg))] for leg in LEGS for d in DOFS]
         fly.add_actuators(act_dofs, ActuatorType.MOTOR, forcerange=(-30.0, 30.0))
+        fly.add_actuators([jorder[self.jname.index(NECK_DOF[a])] for a in ("yaw", "roll")], ActuatorType.MOTOR,
+                          forcerange=(-30.0, 30.0))
         fly.add_leg_adhesion(gain=adh_gain if adhesion != "pad" else 0.0)
         world = FlatGroundWorld()
         world.add_fly(fly, np.array([0.0, 0.0, spawn_z]), Rotation3D("quat", [1, 0, 0, 0]), add_ground_contact_sensors=True)
@@ -62,6 +67,9 @@ class Body:
         legs_order = list(fly.get_legs_order()); self.leg_perm = [legs_order.index(l) for l in LEGS]
         self.q_slot = np.array([self.jname.index(MJ_DOF[dd].format(l=leg)) for leg in LEGS for dd in DOFS])
         self.q0 = np.array(self.sim.get_joint_angles(fly.name)).copy()
+        self.n_slot = np.array([self.jname.index(NECK_DOF[a]) for a in ("yaw", "roll")])
+        order = [j.name for j in fly.get_actuated_jointdofs_order(ActuatorType.MOTOR)]
+        assert order[:36] == [self.jname[i] for i in self.q_slot] and order[36:] == [NECK_DOF["yaw"], NECK_DOF["roll"]], order
         # all segment bodies (names without the 'nmf/' prefix), for rendering
         self.seg_names, self.seg_ids = [], []
         for i in range(m.nbody):
@@ -104,7 +112,21 @@ class Body:
                 self.sign[li * 6 + di] = 1.0 if metric >= 0 else -1.0
                 if dd == "CTr":
                     self.lift_sign[li] = 1.0 if (dp @ up) * self.sign[li * 6 + di] > 0 else -1.0
+        # head: + yaw = head turns to the left (its anterior axis gains +y); + roll = left side down
+        h = self._bid("c_head"); self.neck_sign = np.ones(2)
+        mj.mj_kinematics(m, d); R0 = d.xmat[h].reshape(3, 3).copy()
+        for k, a in enumerate(("yaw", "roll")):
+            d.qpos[:] = qs; d.qpos[self._qadr(NECK_DOF[a])] += 0.05; mj.mj_kinematics(m, d)
+            R1 = d.xmat[h].reshape(3, 3)
+            metric = (R1[1, 0] - R0[1, 0]) if a == "yaw" else -(R1[2, 1] - R0[2, 1])
+            assert abs(metric) > 1e-3, f"neck axis mapping wrong for {a}"
+            self.neck_sign[k] = 1.0 if metric > 0 else -1.0
         d.qpos[:] = qs; mj.mj_forward(m, d)
+
+    def head_state(self):
+        """(angle, velocity) of the head re neutral, (yaw, roll), biological sign."""
+        qa = np.array(self.sim.get_joint_angles(self.fly.name)); qv = np.array(self.sim.get_joint_velocities(self.fly.name))
+        return self.neck_sign * (qa[self.n_slot] - self.q0[self.n_slot]), self.neck_sign * qv[self.n_slot]
 
     def state(self):
         """(ang, om) as (6 legs, 6 dofs) in biological sign re neutral; contact flags (6,); contact force norms (6,)."""
@@ -125,11 +147,13 @@ class Body:
             out[i] = np.linalg.norm(tp - (tp @ ax) * ax) / self.M_REF[i]
         return out
 
-    def step(self, torque_bio, lift, contact, n_sub):
-        """Apply leg torques (36, biological sign), update adhesion, advance n_sub MuJoCo steps.
-        lift: (6,) net trochanter drive in the lifting direction (> 0 = actively levating)."""
+    def step(self, torque_bio, lift, contact, n_sub, neck_torque=None):
+        """Apply leg torques (36, biological sign) and neck torques ((yaw, roll), biological sign), update adhesion,
+        advance n_sub MuJoCo steps. lift: (6,) net trochanter drive in the lifting direction (> 0 = levating)."""
         m, d = self.model, self.data
-        self.sim.set_actuator_inputs(self.fly.name, ActuatorType.MOTOR, self.sign * torque_bio)
+        nt = np.zeros(2) if neck_torque is None else np.asarray(neck_torque, float)
+        self.sim.set_actuator_inputs(self.fly.name, ActuatorType.MOTOR,
+                                     np.concatenate([self.sign * torque_bio, self.neck_sign * nt]))
         if self.adhesion == "pad":
             self.pad_force[:] = 0.0
             for k in np.where(d.efc_type[:d.nefc] == mj.mjtConstraint.mjCNSTR_EQUALITY)[0]:

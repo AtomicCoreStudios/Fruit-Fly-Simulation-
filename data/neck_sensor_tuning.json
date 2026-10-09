@@ -1,0 +1,632 @@
+{
+"140725": {
+"kind": "prosternal",
+"axis": "roll",
+"limit": "pos",
+"score": [
+0.0006,
+-0.00252
+]
+},
+"140843": {
+"kind": "prosternal",
+"axis": "roll",
+"limit": "neg",
+"score": [
+0.00144,
+0.00178
+]
+},
+"141097": {
+"kind": "prosternal",
+"axis": "roll",
+"limit": "neg",
+"score": [
+0.00148,
+0.00151
+]
+},
+"141582": {
+"kind": "prosternal",
+"axis": "yaw",
+"limit": "neg",
+"score": [
+0.0036,
+-0.00137
+]
+},
+"141705": {
+"kind": "prosternal",
+"axis": "yaw",
+"limit": "neg",
+"score": [
+0.00132,
+0.00058
+]
+},
+"142334": {
+"kind": "prosternal",
+"axis": "roll",
+"limit": "pos",
+"score": [
+0.00032,
+-0.00609
+]
+},
+"142374": {
+"kind": "prosternal",
+"axis": "roll",
+"limit": "pos",
+"score": [
+-0.00068,
+-0.00129
+]
+},
+"142425": {
+"kind": "prosternal",
+"axis": "roll",
+"limit": "pos",
+"score": [
+-0.00083,
+-0.00471
+]
+},
+"143026": {
+"kind": "prosternal",
+"axis": "roll",
+"limit": "pos",
+"score": [
+0.00122,
+-0.00237
+]
+},
+"144251": {
+"kind": "prosternal",
+"axis": "roll",
+"limit": "neg",
+"score": [
+0.00149,
+0.00168
+]
+},
+"144347": {
+"kind": "prosternal",
+"axis": "roll",
+"limit": "neg",
+"score": [
+-0.00069,
+0.00099
+]
+},
+"144852": {
+"kind": "prosternal",
+"axis": "roll",
+"limit": "pos",
+"score": [
+1e-05,
+-0.00169
+]
+},
+"145985": {
+"kind": "prosternal",
+"axis": "roll",
+"limit": "pos",
+"score": [
+0.00123,
+-0.00237
+]
+},
+"148735": {
+"kind": "prosternal",
+"axis": "roll",
+"limit": "pos",
+"score": [
+-0.00036,
+-0.00088
+]
+},
+"148742": {
+"kind": "prosternal",
+"axis": "roll",
+"limit": "pos",
+"score": [
+0.00092,
+-0.00392
+]
+},
+"149603": {
+"kind": "prosternal",
+"axis": "yaw",
+"limit": "pos",
+"score": [
+-0.00225,
+-5e-05
+]
+},
+"150088": {
+"kind": "prosternal",
+"axis": "roll",
+"limit": "pos",
+"score": [
+-0.00095,
+-0.00177
+]
+},
+"150280": {
+"kind": "prosternal",
+"axis": "roll",
+"limit": "pos",
+"score": [
+-0.00209,
+-0.0062
+]
+},
+"150624": {
+"kind": "prosternal",
+"axis": "roll",
+"limit": "neg",
+"score": [
+0.00081,
+0.00209
+]
+},
+"153498": {
+"kind": "prosternal",
+"axis": "roll",
+"limit": "pos",
+"score": [
+0.00022,
+-0.00035
+]
+},
+"153987": {
+"kind": "prosternal",
+"axis": "roll",
+"limit": "pos",
+"score": [
+-0.00094,
+-0.00373
+]
+},
+"153989": {
+"kind": "prosternal",
+"axis": "roll",
+"limit": "pos",
+"score": [
+-0.00037,
+-0.00284
+]
+},
+"155257": {
+"kind": "prosternal",
+"axis": "roll",
+"limit": "neg",
+"score": [
+-0.00109,
+0.00112
+]
+},
+"155358": {
+"kind": "prosternal",
+"axis": "roll",
+"limit": "neg",
+"score": [
+-0.00079,
+0.00231
+]
+},
+"155776": {
+"kind": "prosternal",
+"axis": "yaw",
+"limit": "neg",
+"score": [
+0.00142,
+-0.00042
+]
+},
+"156182": {
+"kind": "prosternal",
+"axis": "roll",
+"limit": "pos",
+"score": [
+-0.00071,
+-0.00396
+]
+},
+"156320": {
+"kind": "prosternal",
+"axis": "roll",
+"limit": "pos",
+"score": [
+0.00092,
+-0.00462
+]
+},
+"156949": {
+"kind": "prosternal",
+"axis": "roll",
+"limit": "neg",
+"score": [
+0.00117,
+0.00562
+]
+},
+"157518": {
+"kind": "prosternal",
+"axis": "roll",
+"limit": "pos",
+"score": [
+-0.00123,
+-0.005
+]
+},
+"159714": {
+"kind": "prosternal",
+"axis": "roll",
+"limit": "neg",
+"score": [
+-0.00054,
+0.0007
+]
+},
+"160615": {
+"kind": "prosternal",
+"axis": "yaw",
+"limit": "neg",
+"score": [
+0.00131,
+0.00086
+]
+},
+"139116": {
+"kind": "neck_chordotonal",
+"axis": "yaw",
+"limit": "none",
+"score": [
+0.0,
+0.0
+]
+},
+"140808": {
+"kind": "neck_chordotonal",
+"axis": "yaw",
+"limit": "none",
+"score": [
+0.0,
+0.0
+]
+},
+"140949": {
+"kind": "neck_chordotonal",
+"axis": "roll",
+"limit": "none",
+"score": [
+0.0,
+-0.0
+]
+},
+"140950": {
+"kind": "neck_chordotonal",
+"axis": "roll",
+"limit": "none",
+"score": [
+0.0,
+-0.0
+]
+},
+"141008": {
+"kind": "neck_chordotonal",
+"axis": "roll",
+"limit": "none",
+"score": [
+0.0,
+0.0
+]
+},
+"141153": {
+"kind": "neck_chordotonal",
+"axis": "roll",
+"limit": "none",
+"score": [
+0.0,
+-1e-05
+]
+},
+"141252": {
+"kind": "neck_chordotonal",
+"axis": "roll",
+"limit": "none",
+"score": [
+0.0,
+-0.0
+]
+},
+"141784": {
+"kind": "neck_chordotonal",
+"axis": "yaw",
+"limit": "none",
+"score": [
+1e-05,
+0.0
+]
+},
+"142429": {
+"kind": "neck_chordotonal",
+"axis": "yaw",
+"limit": "none",
+"score": [
+0.0,
+0.0
+]
+},
+"142776": {
+"kind": "neck_chordotonal",
+"axis": "yaw",
+"limit": "none",
+"score": [
+0.0,
+0.0
+]
+},
+"143687": {
+"kind": "neck_chordotonal",
+"axis": "yaw",
+"limit": "none",
+"score": [
+0.0,
+0.0
+]
+},
+"144483": {
+"kind": "neck_chordotonal",
+"axis": "roll",
+"limit": "none",
+"score": [
+0.0,
+-1e-05
+]
+},
+"144756": {
+"kind": "neck_chordotonal",
+"axis": "roll",
+"limit": "none",
+"score": [
+0.0,
+-1e-05
+]
+},
+"144768": {
+"kind": "neck_chordotonal",
+"axis": "yaw",
+"limit": "none",
+"score": [
+0.0,
+0.0
+]
+},
+"145343": {
+"kind": "neck_chordotonal",
+"axis": "yaw",
+"limit": "none",
+"score": [
+1e-05,
+0.0
+]
+},
+"145440": {
+"kind": "neck_chordotonal",
+"axis": "yaw",
+"limit": "none",
+"score": [
+0.0,
+0.0
+]
+},
+"145558": {
+"kind": "neck_chordotonal",
+"axis": "yaw",
+"limit": "none",
+"score": [
+0.0,
+0.0
+]
+},
+"147582": {
+"kind": "neck_chordotonal",
+"axis": "yaw",
+"limit": "none",
+"score": [
+0.0,
+0.0
+]
+},
+"147631": {
+"kind": "neck_chordotonal",
+"axis": "yaw",
+"limit": "none",
+"score": [
+0.0,
+0.0
+]
+},
+"148003": {
+"kind": "neck_chordotonal",
+"axis": "roll",
+"limit": "none",
+"score": [
+0.0,
+-1e-05
+]
+},
+"148772": {
+"kind": "neck_chordotonal",
+"axis": "roll",
+"limit": "none",
+"score": [
+0.0,
+-1e-05
+]
+},
+"149115": {
+"kind": "neck_chordotonal",
+"axis": "yaw",
+"limit": "none",
+"score": [
+-1e-05,
+0.0
+]
+},
+"149379": {
+"kind": "neck_chordotonal",
+"axis": "yaw",
+"limit": "none",
+"score": [
+0.0,
+0.0
+]
+},
+"150599": {
+"kind": "neck_chordotonal",
+"axis": "yaw",
+"limit": "none",
+"score": [
+0.0,
+0.0
+]
+},
+"152501": {
+"kind": "neck_chordotonal",
+"axis": "yaw",
+"limit": "none",
+"score": [
+0.0,
+0.0
+]
+},
+"153325": {
+"kind": "neck_chordotonal",
+"axis": "roll",
+"limit": "none",
+"score": [
+0.0,
+0.0
+]
+},
+"153759": {
+"kind": "neck_chordotonal",
+"axis": "yaw",
+"limit": "none",
+"score": [
+0.0,
+0.0
+]
+},
+"153885": {
+"kind": "neck_chordotonal",
+"axis": "roll",
+"limit": "none",
+"score": [
+0.0,
+0.0
+]
+},
+"155140": {
+"kind": "neck_chordotonal",
+"axis": "yaw",
+"limit": "none",
+"score": [
+0.0,
+0.0
+]
+},
+"155810": {
+"kind": "neck_chordotonal",
+"axis": "yaw",
+"limit": "none",
+"score": [
+0.0,
+0.0
+]
+},
+"156418": {
+"kind": "neck_chordotonal",
+"axis": "roll",
+"limit": "none",
+"score": [
+0.0,
+-0.0
+]
+},
+"156998": {
+"kind": "neck_chordotonal",
+"axis": "yaw",
+"limit": "none",
+"score": [
+0.0,
+0.0
+]
+},
+"158112": {
+"kind": "neck_chordotonal",
+"axis": "yaw",
+"limit": "none",
+"score": [
+0.0,
+0.0
+]
+},
+"159068": {
+"kind": "neck_chordotonal",
+"axis": "yaw",
+"limit": "none",
+"score": [
+0.0,
+0.0
+]
+},
+"159264": {
+"kind": "neck_chordotonal",
+"axis": "roll",
+"limit": "none",
+"score": [
+0.0,
+-1e-05
+]
+},
+"159932": {
+"kind": "neck_chordotonal",
+"axis": "roll",
+"limit": "none",
+"score": [
+0.0,
+-0.0
+]
+},
+"160075": {
+"kind": "neck_chordotonal",
+"axis": "yaw",
+"limit": "none",
+"score": [
+0.0,
+0.0
+]
+},
+"160286": {
+"kind": "neck_chordotonal",
+"axis": "roll",
+"limit": "none",
+"score": [
+0.0,
+-0.0
+]
+},
+"160537": {
+"kind": "neck_chordotonal",
+"axis": "yaw",
+"limit": "none",
+"score": [
+0.0,
+0.0
+]
+}
+}

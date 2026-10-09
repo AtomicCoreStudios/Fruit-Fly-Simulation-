@@ -10,7 +10,8 @@ Protocol (little endian):
   server -> client: uint32 m, float32[m] = [7 per segment (pos mm x,y,z; quat w,x,y,z; MuJoCo world, z up),
                                             rate_Hz per sensor_ids entry, stance x6, load x6, pad x6,
                                             foot height mm x6, joint angle rad x36 (leg-major, ThC_pro..TiTa,
-                                            biological sign re neutral)]
+                                            biological sign re neutral), head yaw/roll rad x2 (+ = left)]
+  mn_ids / sensor_ids: leg motor neurons then neck motor neurons (n_leg_mn); leg then neck proprioceptors
 Motor activation and torque are updated every 1 ms of simulated time inside a frame (MuJoCo steps of 0.1 ms).
 usage: .venv-flygym/Scripts/python tools/body_server.py [--port 47830] [--pad_fmax 10] [--k_joint 10]"""
 import sys, json, socket, struct, time, argparse, pathlib
@@ -18,7 +19,7 @@ ROOT = pathlib.Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
 import numpy as np
 from nmf_body import Body, DT_P, LEGS
-from vnc_body_model import Legs
+from vnc_body_model import Legs, Neck
 
 ap = argparse.ArgumentParser()
 ap.add_argument("--port", type=int, default=47830)
@@ -29,8 +30,12 @@ ap.add_argument("--memory_mb", type=float, default=64.0)
 args = ap.parse_args()
 
 legs = Legs(None, k_joint=args.k_joint)
+neck = Neck(None, k_joint=args.k_joint)
+N_LEG_MN, N_LEG_S = len(legs.mn_idx), len(legs.s_idx)
 body = Body(k_joint=args.k_joint, adhesion=args.adhesion, pad_fmax=args.pad_fmax, memory_mb=args.memory_mb)
-hello = {"version": 1, "mn_ids": [int(x) for x in legs.mn_idx], "sensor_ids": [int(x) for x in legs.s_idx],
+hello = {"version": 2, "mn_ids": [int(x) for x in legs.mn_idx] + [int(x) for x in neck.mn_ids],
+         "sensor_ids": [int(x) for x in legs.s_idx] + [int(x) for x in neck.s_ids],
+         "n_leg_mn": N_LEG_MN, "n_leg_sensors": N_LEG_S,
          "segments": body.seg_names, "dt_phys": DT_P, "weight_uN": body.W, "legs": LEGS,
          "rest_poses": body.segment_poses().round(6).tolist()}     # neutral pose at reset (renderer self-check)
 CHUNK = int(round(0.001 / DT_P))
@@ -67,16 +72,18 @@ try:
         while done < steps:
             k = min(CHUNK, steps - done)
             ang, om, contact, fn = body.state()
-            tq = legs.torques(k * DT_P, rates)
+            tq = legs.torques(k * DT_P, rates[:N_LEG_MN])
+            ntq = neck.torques(k * DT_P, rates[N_LEG_MN:])
             lift = (legs.A[:, 0] - legs.A[:, 1]).reshape(6, 6)[:, 2] * body.lift_sign
-            body.step(tq, lift, contact, k)
+            body.step(tq, lift, contact, k, ntq)
             done += k
         ang, om, contact, fn = body.state()
         lx = body.leg_load()
-        aff = legs.afferents(ang, om, lx)
+        ha, hv = body.head_state()
+        aff = np.concatenate([legs.afferents(ang, om, lx), neck.afferents(ha, hv)])
         foot_z = body.data.xpos[body.tip_b][:, 2]
         out = np.concatenate([body.segment_poses().ravel(), aff, (contact | (body.adh > 0)).astype(float), lx,
-                              body.adh, foot_z, ang.ravel()]).astype("<f4")
+                              body.adh, foot_z, ang.ravel(), ha]).astype("<f4")
         conn.sendall(struct.pack("<I", out.size) + out.tobytes())
         frames += 1; sim_t += steps * DT_P
         if frames % 100 == 0:

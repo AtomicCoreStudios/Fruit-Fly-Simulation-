@@ -1,0 +1,142 @@
+{
+ "basis": "Neck motor map: real neck motor neurons -> head rotation axes, and the neck proprioceptors.\nSource: BANC annotations in data/vnc/vnc_neurons.csv (function / sub_class), FlyWire brain annotations (nerve CV).\n  yaw  : ADNM1, ADNM2 (sub_class neck_yaw_motor_neuron, cervical nerve)\n  roll : DProN1-4 (neck_roll_motor_neuron), DProN5 (neck_roll_pitch_motor_neuron; roll only, its pitch direction is\n         not annotated)\n  side: the nerve the axon leaves through (one ADNM soma lies contralateral to its nerve)\n  direction: each motor neuron rotates the head toward its own side (yaw: turns toward that side; roll: lowers that\n         side). basis: axis from annotation (measured), side convention assumed\n  not mapped (data gap, no axis or muscle annotated): DProN6-9 and the 20 brain neck motor neurons of the cervical\n         nerve (FlyWire CB0705, CB0706, CB0831, CB0835, CB0838, CB0899, CB0913, CB0916, CB4212)",
+ "motor": {
+  "yaw": {
+   "pos": [
+    149919,
+    154365
+   ],
+   "neg": [
+    148963,
+    154286
+   ]
+  },
+  "roll": {
+   "pos": [
+    141432,
+    145047,
+    145410,
+    146312,
+    146500,
+    148786
+   ],
+   "neg": [
+    140863,
+    145071,
+    147396,
+    149333,
+    150938,
+    154680
+   ]
+  }
+ },
+ "sensory": {
+  "prosternal": [
+   140725,
+   140843,
+   141097,
+   141582,
+   141705,
+   142334,
+   142374,
+   142425,
+   143026,
+   144251,
+   144347,
+   144852,
+   145985,
+   148735,
+   148742,
+   149603,
+   150088,
+   150280,
+   150624,
+   153498,
+   153987,
+   153989,
+   155257,
+   155358,
+   155776,
+   156182,
+   156320,
+   156949,
+   157518,
+   159714,
+   160615
+  ],
+  "neck_chordotonal": [
+   139116,
+   140808,
+   140949,
+   140950,
+   141008,
+   141153,
+   141252,
+   141784,
+   142429,
+   142776,
+   143687,
+   144483,
+   144756,
+   144768,
+   145343,
+   145440,
+   145558,
+   147582,
+   147631,
+   148003,
+   148772,
+   149115,
+   149379,
+   150599,
+   152501,
+   153325,
+   153759,
+   153885,
+   155140,
+   155810,
+   156418,
+   156998,
+   158112,
+   159068,
+   159264,
+   159932,
+   160075,
+   160286,
+   160537
+  ]
+ },
+ "unmapped": {
+  "vnc_neck_mn_no_axis": [
+   138743,
+   140367,
+   144001,
+   145498,
+   154489,
+   154865,
+   161282
+  ],
+  "brain_cervical_mn_root_ids": [
+   "720575940624342569",
+   "720575940631715896",
+   "720575940640640061",
+   "720575940616570966",
+   "720575940624943084",
+   "720575940607880578",
+   "720575940631023099",
+   "720575940629464582",
+   "720575940605287358",
+   "720575940622008560",
+   "720575940636044143",
+   "720575940633710756",
+   "720575940623457535",
+   "720575940628164612",
+   "720575940624117528",
+   "720575940641811419",
+   "720575940624679463",
+   "720575940634813536",
+   "720575940650119289",
+   "720575940632898105"
+  ]
+ }
+}

@@ -16,7 +16,7 @@ The brain and body run in a closed loop in real time.
 | Legs | 391 real leg motor neurons → muscles → joints (torque model); 886 proprioceptors feed back | measured mapping; assumed mechanics (calibration ledger) |
 | Walking | Walking CPG reproduced exactly offline. Offline, the tuned descending mix (DNg100 + DNb08 + DNa02 + DNg97) gives swing/stance anti-phase in 5 of 6 legs at 4.2 Hz. Live on the kinematic body (2026-10-05): with wiring-derived claw/hook tuning and presynaptic gating, 4 of 6 legs switch stance/swing (1.4–3.8 cycles/s); left front and right middle stay planted; best free-walking speed 0.29 mm/s (real 10–30). **Not walking yet.** | see "Neuromuscular legs" |
 | Escape | giant fibre → TTMn (gap junction) works | literature |
-| Physics | One body: `--physics=mujoco` runs the live FlyWire+BANC brain and the 1,709-facet eyes on the physical NeuroMechFly body in MuJoCo (FlyGym 2.1.0, true scale, 1.02 mg, friction 1.0, pad adhesion). The brain's 391 leg motor neurons drive it; 886 leg proprioceptors are fed back from the physics. Every segment, including the head carrying the eyes, takes the MuJoCo pose (mapping check: max deviation 5×10⁻⁶). The brain still runs at 1.00× real time (15–17 fps vs 25 without physics). **No walking yet**, live or offline (closed-loop descending-mix search: best 1.2 mm/s vs 0.5 mm/s drift with no drive). Standing needs pad adhesion of about body weight per leg. | literature model + assumed (ledger) |
+| Physics | One body: `--physics=mujoco` runs the live FlyWire+BANC brain and the 1,709-facet eyes on the physical NeuroMechFly body in MuJoCo (FlyGym 2.1.0, true scale, 1.02 mg, friction 1.0, pad adhesion). The brain's 391 leg and 16 neck motor neurons drive it; 886 leg and 70 neck proprioceptors are fed back from the physics. Every segment, including the head carrying the eyes, takes the MuJoCo pose (mapping check: max deviation 5×10⁻⁶). The brain still runs at 1.00× real time (15–17 fps vs 25 without physics). **No walking yet**, live or offline (closed-loop descending-mix search: best 1.2 mm/s vs 0.5 mm/s drift with no drive). Standing needs pad adhesion of about body weight per leg. | literature model + assumed (ledger) |
 | Leg sugar → PER | known gap (see Phase 5b) | — |
 
 Sources and papers with DOI links: [REFERENCES.md](REFERENCES.md). Everything below is in chronological order. Dated sections describe the state at that date; this table is the current summary.
@@ -998,6 +998,37 @@ This step moves the body from our kinematic Godot legs to a physical body. The g
   - The escape counter treats every TTMn spike as a jump command. In physics mode the jump is counted but not executed (no jump model yet).
 - **Not driven by the physics yet:** the proboscis (PER animation), the wings, and the neck motor neurons (head held by a passive spring). The MuJoCo floor is flat, and the Godot arena objects are not in the physics.
 
+### Neck motor neurons drive the physical head; TTMn traced (2026-10-09)
+
+**Neck** (`tools/build_neck_map.py` → `data/neck_motor_map.json`; `Neck` in `tools/vnc_body_model.py`; neck actuators in `tools/nmf_body.py`):
+- **Motor neurons and axes, from BANC annotations:**
+  - Yaw: ADNM1/2.
+  - Roll: DProN1–4, plus DProN5 for roll only (its pitch direction is not annotated).
+- **Side:** taken from the nerve the axon leaves through. One ADNM soma lies on the opposite side from its nerve.
+- **Direction:** each motor neuron turns or rolls the head toward its own side. This is assumed.
+- **Muscle model:** the same activation-to-torque rule as the legs, with a range of 0.35 rad (about 20°, assumed).
+- **Axis mapping:** FlyGym's head-joint names are not biological axes (its "roll" joint turns about the vertical axis). The mapping is set and checked kinematically.
+- **Test** (`tools/body_server_test.py`, passes): the left-yaw motor neurons at 150 Hz turn the head +0.335 rad left, with no roll.
+- **Sensors** (`tools/neck_sensor_tuning.py` → `data/neck_sensor_tuning.json`): 31 prosternal-organ hair plates (SNpp19, head position) and 39 neck chordotonal neurons (speed).
+  - Axis and direction come from the same signed 1+2-hop wiring criterion as the leg claw/hook sensors.
+  - Prosternal: 15 roll afferents on the left and 11 on the right tuned to each direction; 5 yaw afferents.
+  - Chordotonal: 21 of the 39 have no path to the annotated neck motor neurons inside the nerve cord.
+  - A full-network test was rejected: the left DProN1 has only 231 annotated input synapses against 1,438 on the right, a reconstruction asymmetry, so every afferent appeared to roll the head right.
+- **Live** (20 s, `recordings/probe_neck_ttmn_live.csv`): the neck motor neurons fire sporadically (up to 13–16 Hz) and move the head within ±0.14 rad yaw and ±0.18 rad roll. The eyes ride on it.
+- **Not mapped (data gap):** DProN6–9, and the 20 brain neck motor neurons of the cervical nerve. Neither dataset gives their axis.
+
+**TTMn** (the jump motor neuron; `recordings/probe_ttmn_r_inputs_live.csv`, `probe_gfc2_inputs_*.csv`):
+- **In physics mode, only the right TTMn fires,** tonically at 4.7 Hz (up to 37 Hz) in 93% of frames. A real TTMn is silent at rest.
+- **The giant fibre is not involved** (0 Hz).
+- **Where the excitation comes from** (synapse·Hz, live):
+  - About 11,300 of the 16,900 total comes from two right **GFC2** interneurons (giant-fibre-coupled), firing at 138 and 150 Hz. Without physics they fire at about 3 Hz.
+  - GFC2 itself is driven by leg premotor interneurons recruited by the physical proprioceptive input: IN04B036 (14,500), IN04B100 (7,600), IN20A.22A001/003 (6,300) and IN04B049 (3,000).
+  - GFC2 also gets recurrent GFC2→GFC2 excitation (9,400), which can hold the loop on.
+- **Open questions:**
+  - Whether real GFC2 is recruited by leg input this way. Its rate-unit model has no adaptation, which may let the recurrent loop latch.
+  - How strong the TTM muscle is. Only qualitative takeoff data was found (Card & Dickinson 2008, doi:10.1242/jeb.012682), so TTMn stays an ordinary member of the middle-leg trochanter-extensor pool.
+  - In physics mode, TTMn spikes are counted as escapes but not executed.
+
 ## Calibration ledger (motor side): what is data, what is set by hand
 
 Kept so that any walking result can state exactly how much came from the connectome and how much from hand-set values. Basis: **measured** = from data; **literature** = published model or parameter; **assumed** = an approximate value I chose; **tuned** = adjusted while looking at walking. Nothing on the motor side has been tuned to walking yet.
@@ -1024,6 +1055,8 @@ Kept so that any walking result can state exactly how much came from the connect
 | Tarsal adhesion | pad bond (default since 2026-10-09): connect constraint at touchdown, breaks above `pad_fmax` = 10 µN per leg or when the leg actively levates; FlyGym's constant-pull actuator (`--adhesion auto`, 40 µN) kept for comparison | mechanics approximate; pad_fmax assumed (no Drosophila measurement found; stick-insect pads ≤ 0.8 × body weight) | yes (falls below about 1× body weight per leg) |
 | Campaniform rate in MuJoCo | 150 Hz × x/(x+1), x = bending moment at the femur base / ((W/3) × leg length), from MuJoCo `cfrc_int` (2026-10-09; before: 120 Hz × ground force / W) | strain physics from the simulation; response shape and reference assumed | yes |
 | Hair-plate joint and limit direction | joint from BANC annotation (trochanter) or coxa (assumed); direction = the limit its network output opposes (Pratt et al. 2024 limit detectors) | measured wiring + literature function | yes |
+| Neck motor neurons → head yaw/roll | ADNM1/2 yaw, DProN1–5 roll (BANC); motor-neuron side from its nerve; ipsilateral rotation; range 0.35 rad | axes measured (annotation); direction and range assumed | head/eye stabilisation |
+| Neck proprioceptor axis/direction | signed 1+2-hop wiring onto the neck pools; prosternal = negative feedback (Preuss & Hengstenberg 1992) | measured wiring + literature function | head/eye stabilisation |
 | Descending command (which DNs, how strong) | DNg100 : DNb08 : DNa02 : DNg97 = 4 : 1 : 1 : 1 (offline amplitude 400/100/100/100; live 200 Hz / 50 / 50 / 50 Hz), from a 300-trial random search plus an 81-point refinement (`tools/dn_mix_search.py`, `recordings/dn_mix_search.csv`, `dn_mix_refine.csv`) | **tuned** | yes |
 
 **Free-walking diagnosis (2026-10-05)** (`stance_<leg>` and `foot_h_<leg>` columns in probe CSVs):

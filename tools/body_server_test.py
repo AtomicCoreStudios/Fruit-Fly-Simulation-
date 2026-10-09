@@ -27,7 +27,9 @@ def frame(rates, dt=1 / 30):
     out = np.frombuffer(f.read(4 * m), "<f4")
     pose = out[:7 * len(segs)].reshape(-1, 7); aff = out[7 * len(segs):7 * len(segs) + ns]
     rest = out[7 * len(segs) + ns:7 * len(segs) + ns + 24].reshape(4, 6)
-    assert out.size == 7 * len(segs) + ns + 24 + 36, out.size
+    assert out.size == 7 * len(segs) + ns + 24 + 36 + 2, out.size
+    global head
+    head = out[-2:]
     return pose, aff, rest
 
 
@@ -48,7 +50,14 @@ for _ in range(15):
 d1 = {l: dist(pose, f"{l}_trochanterfemur", f"{l}_tarsus1") for l in ["lf", "rf"]}
 print("femur base -> tarsus distance (mm) before/after LF tibia-flexor drive:",
       {l: (round(d0[l], 3), round(d1[l], 3)) for l in d0})
-ok = np.isfinite(pose).all() and d1["lf"] < d0["lf"] - 0.02 and abs(d1["rf"] - d0["rf"]) < 0.02
+nk = json.load(open(ROOT / "data/neck_motor_map.json"))["motor"]
+h0 = head.copy()
+r2 = np.array([150.0 if x in set(nk["yaw"]["pos"]) else 0.0 for x in hello["mn_ids"]])
+for _ in range(10):
+    pose, aff, rest = frame(r2)
+print(f"head yaw/roll before {h0.round(3)}, after left-yaw neck MNs at 150 Hz {head.round(3)} rad")
+ok = (np.isfinite(pose).all() and d1["lf"] < d0["lf"] - 0.02 and abs(d1["rf"] - d0["rf"]) < 0.02
+      and head[0] - h0[0] > 0.05)
 print("PASS" if ok else "FAIL", f"| total wall {time.time() - t0:.1f} s for 1.5 s simulated")
 s.sendall(struct.pack("<I", 0)); s.close(); srv.wait(timeout=30)
 print(srv.stdout.read().strip())
