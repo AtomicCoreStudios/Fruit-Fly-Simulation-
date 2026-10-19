@@ -89,6 +89,8 @@ class Body:
         # standing on a surface; the legs still carry load and sense it. Off by default.
         self.tether = tether
         self.tether_gain = 1.0                   # 0..1, ramped down for a gradual release
+        self.impose = None                       # (qpos adr, dof adr, neutral, sign, freq Hz, amp rad, t0 s)
+        self.t_sim = 0.0
         mj.mj_kinematics(m, d)
         self.stand_z = float(d.xpos[self.thor][2] - max(d.xpos[t][2] for t in self.tip_b))   # highest foot touches; others press
         self.tether_pos = np.array([d.xpos[self.thor][0], d.xpos[self.thor][1], self.stand_z])
@@ -186,7 +188,23 @@ class Body:
         for _ in range(n_sub):
             if self.tether:
                 self._tether_force()
-            self.sim.step()
+            self._apply_impose()
+            self.sim.step(); self.t_sim += DT_P
+            self._apply_impose()      # again after the step: the light tibia's velocity would otherwise be
+                                      # whatever one integration step of spring/damping/muscle torque left
+
+    def _apply_impose(self):
+        if self.impose is not None and self.t_sim >= self.impose[6]:
+            qa, va, q0, sg, f, amp, t0 = self.impose; ph = 2 * np.pi * f * (self.t_sim - t0)
+            self.data.qpos[qa] = q0 + sg * amp * np.sin(ph); self.data.qvel[va] = sg * amp * 2 * np.pi * f * np.cos(ph)
+
+    def set_impose(self, leg, dof, freq, amp, t0):
+        """Drive one leg DoF kinematically: biological-sign angle = amp sin(2 pi freq (t - t0)) around the neutral pose
+        (as an experimenter moving the tibia, e.g. the resistance-reflex protocol of Akitake et al. 2015)."""
+        name = MJ_DOF[dof].format(l=leg); m = self.model
+        j = next(j for j in range(m.njnt) if (mj.mj_id2name(m, mj.mjtObj.mjOBJ_JOINT, j) or '').endswith(name))
+        k = LEGS.index(leg) * 6 + DOFS.index(dof)
+        self.impose = (m.jnt_qposadr[j], m.jnt_dofadr[j], float(self.q0[self.q_slot[k]]), float(self.sign[k]), freq, amp, t0)
 
     def _tether_force(self):
         m, d, b = self.model, self.data, self.thor

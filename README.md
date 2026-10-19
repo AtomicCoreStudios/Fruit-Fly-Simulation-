@@ -73,7 +73,7 @@ Test harness (arguments go after `--`):
 - `--legs=0` cosmetic legs instead of the neuromuscular model; `--legs_log`, `--legs_lift_test` leg diagnostics
 - `--locomotion=legs` the body moves only by its stance feet on the kinematic body (default: descending-neuron rate kinematics)
 - `--proprio=0` cut the leg proprioceptors off from the brain (diagnostic)
-- `--physics=mujoco` the physical body: starts `tools/body_server.py` (needs `.venv-flygym`; localhost only) and moves the fly by MuJoCo physics. Options: `--pad_fmax=10` pad strength in µN per leg; `--mj_port=47830`; `--mj_rigid_head=1` diagnostic (head held on the thorax); `--mj_tether=1` thorax held level at standing height (use for `--homeostasis` warm-ups: learn only while upright); `--mj_release=s` set the fly down standing (tether ramped off over 0.5 s from s); `--mj_sensors=kinds` keep only these leg afferent kinds (diagnostic)
+- `--physics=mujoco` the physical body: starts `tools/body_server.py` (needs `.venv-flygym`; localhost only) and moves the fly by MuJoCo physics. Options: `--pad_fmax=10` pad strength in µN per leg; `--mj_port=47830`; `--mj_rigid_head=1` diagnostic (head held on the thorax); `--mj_tether=1` thorax held level at standing height (use for `--homeostasis` warm-ups: learn only while upright); `--mj_release=s` set the fly down standing (tether ramped off over 0.5 s from s); `--mj_sensors=kinds` keep only these leg afferent kinds (diagnostic); `--mj_impose=leg:dof:Hz:rad:t0` drive one joint kinematically (reflex experiments); `--mj_feco_gain=x` claw/hook rate gain; `--aff_gain=x` leg proprioceptor synaptic strength; `--presyn=0` presynaptic gate off (diagnostic)
 
 Always add Godot's `--quit-after` as a watchdog. On this PC also use `--disable-vsync --fixed-fps 30` (windowed Godot freezes on vsync), and never run two GPU Godot instances at once.
 
@@ -1215,6 +1215,31 @@ Also fixed: `--mj_sensors` diagnostic (afferent kinds to keep). An empty argumen
   No firing rates are given, so the loop gain of the femur-tibia reflex is not constrained by data.
 - **Not done:** tuning these gains until the fly stands, which would be tuning to behaviour. A defensible calibration target would be the measured femur-tibia resistance reflex (motor-neuron or tibia-torque response to imposed tibia movement). Owner's decision pending.
 
+### Resistance-reflex calibration attempt (2026-10-19)
+
+**Target** (Akitake et al. 2015, Nat Commun, Fig. 6): decapitated fly, femur fixed, tibia moved by about 20° as a 2 Hz sinusoid. Tibial extensor EMG: 107.2 ± 11.5 spikes per cycle (TRPγ mutants 46–65), silent without flexion.
+
+**Model protocol** (`--mj_impose=lf:FTi:2:0.1745:3`, `--mj_tether=1`, all descending neurons silenced = decapitated; `recordings/reflex_calib_*.csv`):
+- The imposed motion is exact. Position and velocity are re-applied after every MuJoCo step; before this fix, the light tibia's velocity was integration noise and the hook afferents fired in the wrong phase.
+- **Afferents are correct:** flexion-tuned hook neurons track velocity (r = +0.76) and claw neurons track position (r = +0.44), both with the ~33 ms pipeline delay.
+- **Reflex at default strengths:** essentially absent. The extensor pool fires 0.4 spikes per cycle against the target 107. Turning off the presynaptic gate does not change this.
+- **The wiring has the right structure** (afferents driven directly at 100 Hz, `recordings/reflex_capacity_*.csv`):
+  - flexion-tuned claw/hook afferents → INXXX464 22 Hz and IN20A.22A004 7 Hz → tibia extensors 18 Hz, flexors silenced;
+  - extension-tuned afferents → IN19A005 → flexors 6 Hz, extensors silenced.
+
+  So the connectome encodes a correct, bidirectional resistance reflex, but a weak one.
+- **Sensory-synapse strength** (`--aff_gain=k`, release gain on all leg proprioceptor terminals), with and without re-learning homeostasis decapitated at each k:
+
+  | k | Extensor spikes/cycle | Flexion vs extension half | Resting extensor |
+  |---|---|---|---|
+  | 1 | 0.4 | 2 vs 0 Hz | 1 |
+  | 4 | 8.1 | 24 vs 10 Hz | 19 |
+  | 16 | 15.1 (13.5 re-learned) | 46 vs 16 Hz | 17 (48) |
+  | 64 | 7.2 (10.5 re-learned) | 28 vs 3 Hz | 39 (80) |
+
+- **Result:** a flexion-locked resistance reflex appears with stronger sensory synapses (r up to +0.53). It saturates at about 15 spikes per cycle, 7× below the measurement, and resting extensor activity rises, whereas the real extensor is silent. **One sensory-synapse factor cannot match the measurement, so no calibrated value is set** (default k = 1; `data/afferent_gain.json` not created). The limit lies downstream: inhibitory recruitment, motor-neuron rate-unit gain, and interneuron set points.
+- **Also checked:** the MuJoCo fly's mass is 1.024 mg (weight 10.05 µN). Published: weight of a fruit fly about 10 µN (BioNumbers 110030); female dry mass 0.28–0.35 mg (BioNumbers 102571), i.e. about 1.0–1.2 mg wet at ~70% water. Consistent with the female micro-CT source; unchanged.
+
 ## Calibration ledger (motor side): what is data, what is set by hand
 
 Kept so that any walking result can state exactly how much came from the connectome and how much from hand-set values. Basis: **measured** = from data; **literature** = published model or parameter; **assumed** = an approximate value I chose; **tuned** = adjusted while looking at walking. Only the descending command mix has been tuned to walking; everything else is measured, literature or assumed.
@@ -1237,6 +1262,8 @@ Kept so that any walking result can state exactly how much came from the connect
 | Claw/hook flexion vs extension tuning | per neuron from its wiring: signed 1+2-hop drive to tibia extensor vs flexor MNs (Lee et al. 2025 criterion) | measured wiring + literature | yes |
 | Presynaptic inhibition of hook/club afferents | release × 1/(1 + Σ syn·rate / I_HALF) using BANC inhibitory inputs onto each terminal (Dallmann et al. 2025); I_HALF = 500 syn·Hz | wiring measured; I_HALF assumed | yes |
 | Proprioceptor tuning curve shapes (claw sigmoid width, hook/club gains, hair plate limits) | claw: 60 Hz sigmoids, width 0.1 rad; hook: 20 Hz per rad/s ≤ 120 Hz; club: 10 Hz per rad/s ≤ 120 Hz | assumed; shapes consistent with Mamiya et al. 2018 (calcium imaging, no rates) | yes: claw and hook feedback destabilise standing (2026-10-18) |
+| Body mass | 1.024 mg (NeuroMechFly, female micro-CT); weight 10.05 µN | measured (matches BioNumbers ~10 µN per fly) | yes |
+| Leg proprioceptor synaptic strength (`--aff_gain`) | 1 (default); a calibration to the measured resistance reflex could not reach the target (max 15 of 107 spikes/cycle, k = 16) | calibration attempted, unresolved | yes |
 | MuJoCo joint spring K (springref = neutral pose) | 10 µN·mm/rad (FlyGym default); damping K × 30 ms | assumed (FlyGym default) | yes |
 | MuJoCo torque per motor neuron | K × 0.4 rad (same equilibrium as DTHETA_MN), tanh-limited to the joint range | assumed | yes |
 | Tarsal adhesion | pad bond (default since 2026-10-09): connect constraint at touchdown, breaks above `pad_fmax` = 10 µN per leg or when the leg actively levates; FlyGym's constant-pull actuator (`--adhesion auto`, 40 µN) kept for comparison | mechanics approximate; pad_fmax assumed (no Drosophila measurement found; stick-insect pads ≤ 0.8 × body weight) | yes (falls below about 1× body weight per leg) |

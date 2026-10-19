@@ -30,6 +30,8 @@ ap.add_argument("--memory_mb", type=float, default=64.0)
 ap.add_argument("--tether", type=int, default=0)       # 1: thorax held level at standing height (calibration runs)
 ap.add_argument("--release", type=float, default=0.0)  # s: hold the fly standing (tether) until then, then let go
                                                        # (sets the fly down standing instead of dropping it)
+ap.add_argument("--feco_gain", type=float, default=1.0)  # shared claw/hook rate gain (resistance-reflex calibration)
+ap.add_argument("--impose", default="")              # leg:dof:freq_hz:amp_rad:t0_s, kinematic joint drive
 ap.add_argument("--sensors", default="")               # comma list of leg afferent kinds to keep (diagnostic; default all)
 args = ap.parse_args()
 
@@ -44,6 +46,11 @@ hello = {"version": 2, "mn_ids": [int(x) for x in legs.mn_idx] + [int(x) for x i
          "n_leg_mn": N_LEG_MN, "n_leg_sensors": N_LEG_S,
          "segments": body.seg_names, "dt_phys": DT_P, "weight_uN": body.W, "legs": LEGS,
          "rest_poses": body.segment_poses().round(6).tolist()}     # neutral pose at reset (renderer self-check)
+legs.feco_gain = args.feco_gain
+if args.impose:
+    _l, _d, _f, _a, _t = args.impose.split(":")
+    body.set_impose(_l, _d, float(_f), float(_a), float(_t))
+    print(f"body server: imposing {args.impose}", flush=True)
 CHUNK = int(round(0.001 / DT_P))
 RAMP = 0.5                                              # s, tether release ramp
 

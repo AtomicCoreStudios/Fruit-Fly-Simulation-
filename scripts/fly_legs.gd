@@ -108,6 +108,10 @@ func setup(p_brain: FlyBrain, p_fly) -> String:
 	if _user_arg("physics", "") == "mujoco":
 		enabled = false
 		return mujoco_start()
+	var _ids := PackedInt32Array()
+	for sv in _sens:
+		_ids.append(int(sv[2]))
+	_load_aff_gain(_ids)
 	if "--legs_lift_test" in OS.get_cmdline_user_args():
 		_lift_test()
 	return ""
@@ -292,10 +296,27 @@ func _proprio(load: Dictionary) -> void:
 	_presyn_gate()
 
 
+## Leg proprioceptor synaptic strength (release gain on every leg afferent terminal). Calibrated so that the
+## femur-tibia resistance reflex matches Akitake et al. 2015 (tools/reflex_calibration.md, data/afferent_gain.json);
+## --aff_gain=x overrides. Hook/club terminals also carry the presynaptic-inhibition gate (multiplied).
+var aff_gain := 1.0
+
+
+func _load_aff_gain(ids: PackedInt32Array) -> void:
+	aff_gain = 1.0
+	if FileAccess.file_exists("res://data/afferent_gain.json"):
+		var j = JSON.parse_string(FileAccess.get_file_as_string("res://data/afferent_gain.json"))
+		aff_gain = float(j.get("leg_proprioceptor_release_gain", 1.0))
+	aff_gain = float(_user_arg("aff_gain", str(aff_gain)))
+	if aff_gain != 1.0 and ids.size() > 0:
+		brain.set_release_gain(ids, aff_gain)
+	print("legs: proprioceptor release gain %.2f on %d afferents" % [aff_gain, ids.size()])
+
+
 func _presyn_gate() -> void:
 	# Dallmann et al. 2025: GABAergic presynaptic inhibition suppresses movement-encoding (hook, club) afferents
 	# during self-generated movement. Release gain = 1 / (1 + sum(syn x rate of inhibitory inputs) / I_HALF).
-	if _presyn.is_empty():
+	if _presyn.is_empty() or "--presyn=0" in OS.get_cmdline_user_args():   # --presyn=0: gate off (diagnostic)
 		return
 	var a := brain.activity_bytes.to_float32_array()
 	var to_hz := 1000.0 / brain.act_tau_ms
@@ -308,7 +329,7 @@ func _presyn_gate() -> void:
 			if j < a.size():
 				inh += float(pr[1]) * maxf(a[j] * to_hz, 0.0)
 		var gain := 1.0 / (1.0 + inh / I_HALF)
-		brain.set_release_gain(PackedInt32Array([int(key)]), snappedf(gain, 0.02))
+		brain.set_release_gain(PackedInt32Array([int(key)]), snappedf(gain * aff_gain, 0.02))
 		gsum += gain
 		gn += 1
 	sense["presyn_gain_mean"] = gsum / maxf(gn, 1)
@@ -358,6 +379,9 @@ func mujoco_start() -> String:
 	var port := int(_user_arg("mj_port", str(MJ_PORT)))
 	var argv := [ProjectSettings.globalize_path("res://tools/body_server.py"), "--port", str(port),
 		"--pad_fmax", _user_arg("pad_fmax", "10"), "--tether", _user_arg("mj_tether", "0"), "--release", _user_arg("mj_release", "0")]
+	argv.append_array(["--feco_gain", _user_arg("mj_feco_gain", "1")])
+	if _user_arg("mj_impose", "") != "":
+		argv.append_array(["--impose", _user_arg("mj_impose", "")])
 	if _user_arg("mj_sensors", "") != "":         # an empty argument is dropped on Windows and breaks argparse
 		argv.append_array(["--sensors", _user_arg("mj_sensors", "")])
 	_srv_pid = OS.create_process(py, argv, false)
@@ -425,6 +449,7 @@ func mujoco_start() -> String:
 			worst = dev
 			worst_info = "%s: node %s | mapped MuJoCo %s" % [names[k], str(nd.transform), str(g)]
 	physics_mujoco = true
+	_load_aff_gain(idx.slice(0, int(mj_info.get("n_leg_sensors", idx.size()))))
 	enabled = true
 	print("legs: MuJoCo body connected (%d segments, %d motor neurons, %d proprioceptors; pose-mapping check max deviation %.6f)"
 		% [names.size(), _mj_mn.size(), _mj_ns, worst])

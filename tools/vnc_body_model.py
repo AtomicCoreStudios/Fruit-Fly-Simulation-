@@ -122,8 +122,9 @@ class Legs:
         Campaniform rate 150 Hz x x / (x + 1): graded, half-maximal at M_REF (shape and M_REF assumed; campaniform
         sensilla encode cuticular strain, Zill et al. 2004; Dinges et al. 2021 for the Drosophila leg fields)."""
         L = self.s_leg; th = ang[L, 4]; w = om[L, 4]; sgn = np.where(self.s_flex, 1.0, -1.0)
-        claw = 60.0 / (1.0 + np.exp(-sgn * (th - (-0.6 + 1.8 * self.s_u)) / 0.1))
-        hook = np.clip(sgn * w * 20.0, 0.0, 120.0)
+        g = getattr(self, "feco_gain", 1.0)     # shared claw/hook gain, calibrated to the resistance reflex
+        claw = g * 60.0 / (1.0 + np.exp(-sgn * (th - (-0.6 + 1.8 * self.s_u)) / 0.1))
+        hook = g * np.clip(sgn * w * 20.0, 0.0, 120.0)
         club = np.clip(np.abs(w) * 10.0, 0.0, 120.0)
         hj = ang[L, self.hp_j] / np.where(self.hp_j == 0, RANGE["ThC_pro"][0], RANGE["CTr"][0])
         hp_x = np.where(self.hp_s != 0, self.hp_s * hj, np.abs(hj))
