@@ -1191,6 +1191,30 @@ Also fixed: `--mj_sensors` diagnostic (afferent kinds to keep). An empty argumen
    - Stage 2 (free standing) was refused by the upright guard (the fly went over).
    - A completeness correction for left leg motor neurons (`FLY_MN_COMPLETENESS=1`) was tested and rejected (see above); off.
 
+### What makes standing unstable: the femur-tibia reflex channels (2026-10-18)
+
+- **The resting bursts are not the walking CPG.** Held level (`recordings/probe_cpg_rest_tethered.csv`, 60 fps), the Pugliese CPG cells E1/E2/I1/I2 stay below 1 Hz on average, with occasional bursts. The leg pools fluctuate irregularly at 0.5–4 Hz with s.d. about equal to the mean. Left/right middle tibia extensors correlate at only −0.15.
+- **Sensory feedback is what destabilises standing** (set down with `--mj_release=2`, `recordings/probe_support_*_free.csv`, `probe_support_only_*.csv`):
+
+  | Leg afferents on | Result after release |
+  |---|---|
+  | none (with or without descending neurons) | upright for the whole run (up-axis ≥ 0.70), at about passive height (0.73–0.75 mm), low tone |
+  | club only | upright; raised to 0.85 mm |
+  | hair plates only | upright; raised to 0.91 mm |
+  | campaniform sensilla only | upright; raised to 0.87 mm, lowest variability |
+  | FeCO hook only | tips over at 3.1 s |
+  | FeCO claw only | tips over at 8.2 s |
+  | all | tips over at 3.3 s |
+
+- Club, hair-plate and campaniform feedback each **actively support the body** above its passive height: posture from the wiring. The femur-tibia position (claw) and velocity (hook) channels destabilise it.
+- **Their response curves are assumed:** claw sigmoid width 0.1 rad with 60 Hz maximum; hook 20 Hz per rad/s up to 120 Hz. Mamiya et al. 2018 (calcium imaging) constrains only their shape:
+  - claw neurons are tuned to narrow angle ranges that together tile 0–180°;
+  - hook neurons are direction-selective with similar responses from 100 to 800 °/s;
+  - club neurons are low-threshold vibration sensors (peak about 400 Hz).
+
+  No firing rates are given, so the loop gain of the femur-tibia reflex is not constrained by data.
+- **Not done:** tuning these gains until the fly stands, which would be tuning to behaviour. A defensible calibration target would be the measured femur-tibia resistance reflex (motor-neuron or tibia-torque response to imposed tibia movement). Owner's decision pending.
+
 ## Calibration ledger (motor side): what is data, what is set by hand
 
 Kept so that any walking result can state exactly how much came from the connectome and how much from hand-set values. Basis: **measured** = from data; **literature** = published model or parameter; **assumed** = an approximate value I chose; **tuned** = adjusted while looking at walking. Only the descending command mix has been tuned to walking; everything else is measured, literature or assumed.
@@ -1212,7 +1236,7 @@ Kept so that any walking result can state exactly how much came from the connect
 | LOAD_HZ 40 Hz campaniform ground load (kinematic body only) | — | assumed | kinematic body only |
 | Claw/hook flexion vs extension tuning | per neuron from its wiring: signed 1+2-hop drive to tibia extensor vs flexor MNs (Lee et al. 2025 criterion) | measured wiring + literature | yes |
 | Presynaptic inhibition of hook/club afferents | release × 1/(1 + Σ syn·rate / I_HALF) using BANC inhibitory inputs onto each terminal (Dallmann et al. 2025); I_HALF = 500 syn·Hz | wiring measured; I_HALF assumed | yes |
-| Proprioceptor tuning curve shapes (claw sigmoid width, hook/club gains, hair plate limits) | — | assumed | yes |
+| Proprioceptor tuning curve shapes (claw sigmoid width, hook/club gains, hair plate limits) | claw: 60 Hz sigmoids, width 0.1 rad; hook: 20 Hz per rad/s ≤ 120 Hz; club: 10 Hz per rad/s ≤ 120 Hz | assumed; shapes consistent with Mamiya et al. 2018 (calcium imaging, no rates) | yes: claw and hook feedback destabilise standing (2026-10-18) |
 | MuJoCo joint spring K (springref = neutral pose) | 10 µN·mm/rad (FlyGym default); damping K × 30 ms | assumed (FlyGym default) | yes |
 | MuJoCo torque per motor neuron | K × 0.4 rad (same equilibrium as DTHETA_MN), tanh-limited to the joint range | assumed | yes |
 | Tarsal adhesion | pad bond (default since 2026-10-09): connect constraint at touchdown, breaks above `pad_fmax` = 10 µN per leg or when the leg actively levates; FlyGym's constant-pull actuator (`--adhesion auto`, 40 µN) kept for comparison | mechanics approximate; pad_fmax assumed (no Drosophila measurement found; stick-insect pads ≤ 0.8 × body weight) | yes (falls below about 1× body weight per leg) |
