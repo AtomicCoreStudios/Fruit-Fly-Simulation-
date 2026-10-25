@@ -1,0 +1,7 @@
+k,extensor_spikes_per_cycle,extensor_rest_per_cycle,extensor_Hz_flexion_half,extensor_Hz_extension_half,flexor_spikes_per_cycle
+1,56.0,5.8,106.4,117.4,7.2
+2,65.9,19.9,129.8,133.6,13.6
+4,87.4,75.1,202.9,146.7,42.9
+8,103.2,88.5,236.8,175.9,36.3
+16,18.9,15.8,47.1,28.6,0.0
+32,0.0,0.0,0.0,0.0,1.0

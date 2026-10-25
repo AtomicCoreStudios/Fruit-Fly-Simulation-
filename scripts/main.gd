@@ -78,9 +78,14 @@ func _ready() -> void:
 	fly.sugar_release_override = float(_args.get("sugar_release", "0"))
 	if _args.has("silence"):     # diagnostic ablation: model indices whose transmitter release is set to 0
 		var si := PackedInt32Array()
-		for x in str(_args["silence"]).split(","):
-			si.append(int(x))
+		var spec := str(_args["silence"])
+		for part in spec.split("+"):       # "@file" reads comma-separated indices from a file; parts joined with "+"
+			var txt: String = FileAccess.get_file_as_string("res://" + part.substr(1)) if part.begins_with("@") else part
+			for x in txt.strip_edges().split(","):
+				if x.strip_edges() != "":
+					si.append(int(x))
 		brain.set_release_gain(si, 0.0)
+		print("silenced %d neurons" % si.size())
 	if _args.has("release_gain"):   # diagnostic: "i,j,k:gain;l,m:gain" sets presynaptic release gains
 		for part in str(_args["release_gain"]).split(";"):
 			var kv := part.split(":")

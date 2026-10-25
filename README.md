@@ -1240,6 +1240,21 @@ Also fixed: `--mj_sensors` diagnostic (afferent kinds to keep). An empty argumen
 - **Result:** a flexion-locked resistance reflex appears with stronger sensory synapses (r up to +0.53). It saturates at about 15 spikes per cycle, 7× below the measurement, and resting extensor activity rises, whereas the real extensor is silent. **One sensory-synapse factor cannot match the measurement, so no calibrated value is set** (default k = 1; `data/afferent_gain.json` not created). The limit lies downstream: inhibitory recruitment, motor-neuron rate-unit gain, and interneuron set points.
 - **Also checked:** the MuJoCo fly's mass is 1.024 mg (weight 10.05 µN). Published: weight of a fruit fly about 10 µN (BioNumbers 110030); female dry mass 0.28–0.35 mg (BioNumbers 102571), i.e. about 1.0–1.2 mg wet at ~70% water. Consistent with the female micro-CT source; unchanged.
 
+### Why the live model has no resistance reflex: a premotor assembly that cannot ignite (2026-10-25)
+
+1. **The live conversion of the Pugliese model is correct.** One synapse at 1 Hz gives 0.275 mV × 5 ms = 0.0014 mV live versus 0.03 input units offline, so 1 mV ≙ 21.8 units and the threshold 7.5 ≙ 0.344 mV, exactly as implemented. Driving the 29 flexion-tuned afferents at 100 Hz gives the same pathway output live and offline (`tools/reflex_path_compare.py`): INXXX464 24 vs 22 Hz, extensors 10.8 vs 8.9 Hz.
+2. **The published model on our wiring reproduces the measured reflex** (`tools/reflex_offline.py`, `recordings/reflex_offline.csv`). With afferents at default strength, the extensor fires 6 spikes per cycle at rest and **56 per cycle** during the imposed 2 Hz, ±10° movement (measured: 107 ± 12, silent at rest). With k = 8 it reaches 103 per cycle, but rest rises too.
+3. **Where offline gets it from** (`tools/reflex_offline_sources.py`, `reflex_input_compare.py`): a recurrently excitatory premotor assembly of hemilineage 4B/3A cholinergic interneurons (IN04B034, IN04B047, IN04B038, IN03A034, IN03A045, IN03A029, …) fires at 90–180 Hz during movement. For example it supplies about 12,000 of IN04B034's 12,250 synapse·Hz of excitation; its direct afferent input is about 0. Glutamatergic inhibitors (IN16B061, IN21A015) also run at 120–170 Hz.
+4. **Live, the assembly stays off** (all members 0–1 Hz; IN04B034 receives 215 instead of 12,000 synapse·Hz):
+   - The members carry large negative homeostatic offsets (IN04B034 −4.7 mV ≈ −96 Hz; IN03A065 −3.2 mV; IN16B061 −4.2 mV), learned while the fly stood tethered with the 1 Hz interneuron set point. About 7% of rate units have offsets worth more than −50 Hz.
+   - With homeostasis and adaptation ablated, plus descending and non-proprioceptive sensory input silenced, some members recover (IN04B031 43 Hz, IN04B072 49–54 Hz, IN21A015 50–73 Hz). The core (IN04B034, IN04B038, IN16B061) does not.
+   - **Not the cause:** the glutamate sign (−1 in BANC and live alike), ascending neurons, other nerve-cord sensory input, the presynaptic gate, motor-neuron reconstruction completeness.
+5. **Trade-off:**
+   - Without homeostasis and adaptation, recurrent premotor assemblies latch (the opposite-state left/right latch behind the lean).
+   - With a uniform 1 Hz set point learned while standing, the assembly that carries the resistance reflex cannot ignite.
+
+   Measured resting and evoked rates of these premotor interneuron types would settle the set points; none are in the data used here. Owner's decision pending.
+
 ## Calibration ledger (motor side): what is data, what is set by hand
 
 Kept so that any walking result can state exactly how much came from the connectome and how much from hand-set values. Basis: **measured** = from data; **literature** = published model or parameter; **assumed** = an approximate value I chose; **tuned** = adjusted while looking at walking. Only the descending command mix has been tuned to walking; everything else is measured, literature or assumed.
