@@ -41,21 +41,31 @@ for r in lm.itertuples():
 # motor-unit force ~ motor-neuron size (Henneman size principle; shown for Drosophila leg motor neurons by Azevedo et al.
 # 2020 eLife: small, early-recruited neurons give small forces, large ones large forces). Each neuron's weight in its
 # pool is scaled by its surface area (predicted from BANC skeleton cable length, r = 0.947; pool median where missing)
-# divided by the pool mean, so the pool's total force is unchanged. basis: principle literature, sizes measured,
-# proportionality assumed. FLY_MN_FORCE_UNIFORM=1: equal force per motor neuron (before 2026-10-09).
+# raised to a power p and divided by the pool mean, so the pool's total force is unchanged. p is fitted to the measured
+# force per spike of the tibia flexor motor neurons (Azevedo et al. 2020 Fig. 4: fast ~10 uN, intermediate ~1 uN, slow
+# < 0.1 uN, i.e. >= 100x from the smallest to the largest): p = ln 100 / ln(largest / smallest area) in each leg's
+# tibia flexor pool, median over the six legs (about 3; 1 before 2026-11-01), and used for all pools (assumed).
+# FLY_MN_FORCE_EXP=x overrides p; FLY_MN_FORCE_UNIFORM=1: equal force per motor neuron (before 2026-10-09).
 import os as _os, numpy as _np
 if _os.environ.get("FLY_MN_FORCE_UNIFORM") != "1":
     _cab = pd.read_csv(ROOT / "data/vnc/banc_cable_length.csv").set_index("root_id").cable_um
     _bid = v.set_index("model_index").bid
+    _area = lambda ids: _np.array([_np.exp(1.179 + 1.037 * _np.log(_cab.get(_bid.get(i), _np.nan))) for i in ids], float)
+    _fit = []
+    for _L in out["legs"].values():
+        _a = _area(_L["motor"]["FTi"]["pos"]); _a = _a[_np.isfinite(_a)]
+        _fit.append(_np.log(100.0) / _np.log(_a.max() / _a.min()))
+    _p = float(_os.environ.get("FLY_MN_FORCE_EXP", _np.median(_fit)))
+    print(f"motor force ~ area^{_p:.2f} (fit per leg: {', '.join(f'{x:.2f}' for x in _fit)})")
     for _leg, _L in out["legs"].items():
         for _dof, _m in _L["motor"].items():
             for _k in ("pos", "neg"):
-                _a = _np.array([_np.exp(1.179 + 1.037 * _np.log(_cab.get(_bid.get(i), _np.nan))) for i in _m[_k]], float)
+                _a = _area(_m[_k])
                 if len(_a) == 0:
                     continue
-                _a = _np.where(_np.isfinite(_a), _a, _np.nanmedian(_a) if _np.isfinite(_a).any() else 1.0)
+                _a = _np.where(_np.isfinite(_a), _a, _np.nanmedian(_a) if _np.isfinite(_a).any() else 1.0) ** _p
                 _m["w_" + _k] = [round(float(w * x / _a.mean()), 4) for w, x in zip(_m["w_" + _k], _a)]
-    out["motor_force_basis"] = "size principle: weight x area / pool mean area (Azevedo et al. 2020); FLY_MN_FORCE_UNIFORM=1 for equal force"
+    out["motor_force_basis"] = f"size principle: weight x area^{_p:.2f} / pool mean (exponent fitted to Azevedo et al. 2020 force per spike); FLY_MN_FORCE_UNIFORM=1 for equal force"
 SENS = {"claw_chordotonal": "FeCO_claw", "hook_chordotonal": "FeCO_hook", "club_chordotonal": "FeCO_club",
         "hair_plate": "hair_plate", "campaniform": "campaniform"}
 # validated re-labels of leg sensory neurons from morphology + wiring (tools/classify_leg_sensory.py, ~95% precision):

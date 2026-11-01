@@ -205,6 +205,46 @@ def main():
             target_rate[i] = target if r.get("homeostasis", True) else -1.0
             used[k] = used.get(k, 0) + 1
             break
+    # leg motor neurons: resting potential falls with size (Azevedo et al. 2020 Fig. 3, tibia flexors: slow -48 mV /
+    # 700 MOhm, intermediate -60 / 300, fast -68 / 150; ln(R_in) vs V_rest is linear, 13 mV per e-fold). R_in ~ 1/area
+    # (the measured R_in range 4.7x matches the BANC area range of these pools, 4.1-4.6x), so each motor neuron rests
+    # 13 mV x ln(area / smallest area in its pool) below the pool's smallest (slow) neuron. Applied to all leg pools
+    # (assumed). FLY_MN_REST=0 turns it off.
+    mpf = ROOT / "data/leg_motor_map.json"
+    rest = next((r["rate_unit"].get("rest_mv_per_efold_area") for r in rules["rules"] if "rate_unit" in r
+                 and r["rate_unit"].get("rest_mv_per_efold_area")), None)
+    if rest and mpf.exists() and vnc_size is not None and os.environ.get("FLY_MN_REST") != "0":
+        shift = {}
+        for L in json.loads(mpf.read_text())["legs"].values():
+            for m_ in L["motor"].values():
+                for k_ in ("pos", "neg"):
+                    ids = [int(x) for x in m_[k_]]
+                    if not ids:
+                        continue
+                    a0 = min(float(vnc_size[x]) for x in ids)
+                    for x in ids:
+                        shift[x] = max(shift.get(x, 0.0), min(rest * np.log(float(vnc_size[x]) / a0), 20.0))  # measured span
+        shift = {x: d_ for x, d_ in shift.items() if graded[x, 1] > 0}      # rate-unit motor neurons only (not TTMn)
+        for x, d_ in shift.items():
+            out[x, 0] -= d_
+        # the smallest (slow) motor neuron of each pool keeps its measured resting rate by homeostasis (Azevedo et al.
+        # 2020: slow tibia flexors fire 30 Hz at rest, other slow-type ones 12 and 28 Hz, fast/intermediate silent):
+        # tibia flexor pools 30 Hz, all other pools the mean of the three, 23 Hz (assumed to generalise)
+        slow_hz = next((r["rate_unit"].get("slow_target_hz") for r in rules["rules"] if "rate_unit" in r
+                        and r["rate_unit"].get("slow_target_hz")), None)
+        if slow_hz and os.environ.get("FLY_MN_SLOW_TARGET") != "0":
+            n_slow = 0
+            for L in json.loads(mpf.read_text())["legs"].values():
+                for dof, m_ in L["motor"].items():
+                    for k_ in ("pos", "neg"):
+                        ids = [int(x) for x in m_[k_] if graded[int(x), 1] > 0]
+                        if ids:
+                            x0 = min(ids, key=lambda x: float(vnc_size[x]))
+                            target_rate[x0] = max(target_rate[x0], slow_hz["FTi_pos"] if (dof, k_) == ("FTi", "pos") else slow_hz["other"])
+                            n_slow += 1
+            print(f"slow motor neurons with a resting set point: {n_slow}")
+        vals = np.array(list(shift.values()))
+        print(f"leg MN resting offsets: {len(shift)} neurons, 0 to -{vals.max():.1f} mV (median -{np.median(vals):.1f})")
     out.tofile(ROOT / "data/physiology.bin")
     target_rate.tofile(ROOT / "data/physiology_targets.bin")
     graded.astype(np.float32).tofile(ROOT / "data/graded_release.bin")

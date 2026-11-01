@@ -86,9 +86,14 @@
     "fcap_hz": 200.0,
     "gain_hz_per_mv": 21.82,
     "threshold_mv": 0.3437,
-    "adapt_index": 0.85
+    "adapt_index": 0.85,
+    "rest_mv_per_efold_area": 12.99,
+    "slow_target_hz": {
+     "FTi_pos": 30.0,
+     "other": 23.0
+    }
    },
-   "basis": "model abstraction: leg motor neurons as firing-rate units (as in Pugliese et al. 2025, whose model reproduces fly stepping); real MNs spike, the muscle model uses their rate | 2026-10-09: no homeostatic set point (tested 0.5 Hz: it removed the tonic depressor drive a standing fly needs; motor output is behaviour, not regulated to a fixed rate) | 2026-10-09: spike-frequency adaptation added (index 0.85 as the motor rule, tau_w 300 ms; approximate): without it premotor interneurons latched into opposite states on the two sides (~100 Hz vs 0)"
+   "basis": "model abstraction: leg motor neurons as firing-rate units (as in Pugliese et al. 2025, whose model reproduces fly stepping); real MNs spike, the muscle model uses their rate | 2026-10-09: no homeostatic set point (tested 0.5 Hz: it removed the tonic depressor drive a standing fly needs; motor output is behaviour, not regulated to a fixed rate) | 2026-10-09: spike-frequency adaptation added (index 0.85 as the motor rule, tau_w 300 ms; approximate): without it premotor interneurons latched into opposite states on the two sides (~100 Hz vs 0) | 2026-11-01: resting potential falls with size, 13 mV per e-fold of area within each pool (Azevedo et al. 2020 Fig. 3: slow -48 mV, intermediate -60, fast -68; fast and intermediate silent at rest), measured | 2026-11-01: the smallest (slow) MN of each pool has a homeostatic set point at its measured resting rate (Azevedo et al. 2020: slow tibia flexor 30 Hz; other slow types 12 and 28 Hz -> 23 Hz for other pools, assumed); all other MNs none"
   },
   {
    "match": {
@@ -112,7 +117,7 @@
    },
    "rate_hz": "door_sfr",
    "adapt_index": 0.5,
-   "basis": "measured: per-receptor spontaneous rate from DoOR (MÃ¼nch & Galizia 2016; Hallem & Carlson 2006; de Bruyne et al. 2001), class median where missing; adaptation approximate (Nagel & Wilson 2011)"
+   "basis": "measured: per-receptor spontaneous rate from DoOR (M\u00c3\u0192\u00c2\u00bcnch & Galizia 2016; Hallem & Carlson 2006; de Bruyne et al. 2001), class median where missing; adaptation approximate (Nagel & Wilson 2011)"
   },
   {
    "match": {

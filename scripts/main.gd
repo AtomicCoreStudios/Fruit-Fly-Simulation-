@@ -74,6 +74,7 @@ func _ready() -> void:
 	fly.taste_bench_set = _args.get("taste_set", "shiu")
 	fly.clean_air = _args.has("clean_air")
 	fly.drive_spec = str(_args.get("drive", ""))
+	fly.drive_at_ms = float(_args.get("drive_at", "0")) * 1000.0
 	fly.leg_locomotion = _args.get("locomotion", "dn") == "legs" or _args.get("physics", "") == "mujoco"
 	fly.sugar_release_override = float(_args.get("sugar_release", "0"))
 	if _args.has("silence"):     # diagnostic ablation: model indices whose transmitter release is set to 0
