@@ -1255,6 +1255,16 @@ Also fixed: `--mj_sensors` diagnostic (afferent kinds to keep). An empty argumen
 
    Measured resting and evoked rates of these premotor interneuron types would settle the set points; none are in the data used here. Owner's decision pending.
 
+### Homeostasis limited to a realistic range for nerve-cord rate units (2026-10-31)
+
+- Homeostatic intrinsic plasticity shifts a neuron's resting potential and threshold by a few mV (Desai et al. 1999; later work in spinal cord and Drosophila motor neurons). The learned offsets of the nerve-cord rate units are therefore capped at **±3 mV** (`RU_HOMEO_CAP` in `shaders/lif.glsl`; assumed order of magnitude). The brain keeps its −40/+15 mV range, which its antennal-lobe hubs need.
+- Re-learned upright (tethered, 60 s): 395 of 13,162 rate units sit at the cap.
+- **Reflex protocol** (`recordings/reflex_calib_cap3.csv`):
+  - The 4B/3A premotor assembly now partly ignites live: IN04B034 47 Hz, IN03A065 29 Hz, IN04B038 28 Hz (all 0 before).
+  - The extensor reflex rises from 0.4 to **5.4 spikes per cycle**, with the extensor **silent at rest** (0.1), as in the real fly.
+  - Still 20× below the measured 107, and only weakly phase-locked (flexion vs extension half 12 vs 10 Hz).
+- **Free set-down** (`recordings/probe_support_cap3.csv`): stands about 1 s after release, then tips over (about 3.5 s).
+
 ## Calibration ledger (motor side): what is data, what is set by hand
 
 Kept so that any walking result can state exactly how much came from the connectome and how much from hand-set values. Basis: **measured** = from data; **literature** = published model or parameter; **assumed** = an approximate value I chose; **tuned** = adjusted while looking at walking. Only the descending command mix has been tuned to walking; everything else is measured, literature or assumed.
@@ -1286,7 +1296,7 @@ Kept so that any walking result can state exactly how much came from the connect
 | Hair-plate joint and limit direction | joint from BANC annotation (trochanter) or coxa (assumed); direction = the limit its network output opposes (Pratt et al. 2024 limit detectors) | measured wiring + literature function | yes |
 | Neck motor neurons → head yaw/roll | ADNM1/2 yaw, DProN1–5 roll (BANC); motor-neuron side from its nerve; ipsilateral rotation; range 0.35 rad | axes measured (annotation); direction and range assumed | head/eye stabilisation |
 | Neck proprioceptor axis/direction | signed 1+2-hop wiring onto the neck pools; prosternal = negative feedback (Preuss & Hengstenberg 1992) | measured wiring + literature function | head/eye stabilisation |
-| Rate-unit homeostasis | interneurons: set point 1 Hz (the default sparse baseline); leg motor neurons: none (a 0.5 Hz set point removed the tonic depressor drive). Learned upright: 60 s tethered (`--mj_tether=1`), then 60 s free standing (`--homeostasis=continue`) | mechanism literature; set points approximate | yes (without it the nerve cord ran at ~110 Hz and inhibition silenced the depressors) |
+| Rate-unit homeostasis | offsets capped at ±3 mV (since 2026-10-31); interneurons: set point 1 Hz (the default sparse baseline); leg motor neurons: none (a 0.5 Hz set point removed the tonic depressor drive). Learned upright: 60 s tethered (`--mj_tether=1`), then 60 s free standing (`--homeostasis=continue`) | mechanism literature; set points approximate | yes (without it the nerve cord ran at ~110 Hz and inhibition silenced the depressors) |
 | Homeostatic offsets applied only to neurons with a set point | stale offsets (e.g. 371 leg motor neurons, learned when they were spiking) are ignored | — (bug fix 2026-10-09) | yes |
 | Rate-unit spike-frequency adaptation | AdEx-style, τ_w 300 ms, index 0.6 (interneurons) / 0.85 (leg motor neurons), b = (1/AI − 1)/(g τ_w) | mechanism literature; indices approximate | yes (removes latching; creates a resting oscillation) |
 | Motor-unit force ∝ motor-neuron size | weight × area / pool mean area | principle literature (Azevedo et al. 2020); sizes measured; proportionality assumed | yes |

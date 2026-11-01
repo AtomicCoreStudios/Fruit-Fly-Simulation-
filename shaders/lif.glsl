@@ -40,6 +40,10 @@ const float ETA_H = 0.0001;    // mV per ms per Hz of rate error
 // run away in this point-neuron model (README "Leg sugar"), so the wide range is kept: basis approximate.
 const float HOMEO_MIN = -40.0;
 const float HOMEO_MAX = 15.0;
+// nerve-cord rate units: homeostatic offset limited to a realistic range for intrinsic plasticity (a few mV;
+// Desai et al. 1999 and later work). basis: assumed order of magnitude (2026-10-31: unbounded offsets of -4..-8 mV
+// kept the 4B/3A premotor assembly that carries the resistance reflex from igniting)
+const float RU_HOMEO_CAP = 3.0;
 // Presynaptic release gain (neuromodulation of transmitter release, e.g. dopamine via DopEcR on sugar
 // GRN terminals in hungry flies, Inagaki et al. 2012): multiplies every outgoing synaptic weight; 1 = none.
 layout(set = 0, binding = 20, std430) readonly buffer Release { float release_gain[]; };
@@ -124,10 +128,10 @@ void main() {
 		vec2 hm = homeo[i];
 		if (p.pad == 1u && hm.x >= 0.0) {
 			float r_est = activity[i] / 0.06;   // spikes filtered with 60 ms time constant -> Hz
-			hm.y = clamp(hm.y + ETA_H * p.dt * (hm.x - r_est), HOMEO_MIN, HOMEO_MAX);
+			hm.y = clamp(hm.y + ETA_H * p.dt * (hm.x - r_est), rate_unit ? -RU_HOMEO_CAP : HOMEO_MIN, rate_unit ? RU_HOMEO_CAP : HOMEO_MAX);
 			homeo[i] = hm;
 		}
-		float bias = ext[p.n + i] + ph.x + (rate_unit ? -s2.x : s2.x - s2.y) + hm.y;
+		float bias = ext[p.n + i] + ph.x + (rate_unit ? -s2.x : s2.x - s2.y) + (rate_unit ? clamp(hm.y, -RU_HOMEO_CAP, RU_HOMEO_CAP) : hm.y);
 		float vi = v[i] + float(atomicExchange(v_kick[i], 0)) * 0.001;
 		bool not_refr = refrac[i] <= 0.0;
 		float gh = 0.0;
