@@ -12,11 +12,17 @@ from vnc_body_model import Cord, Legs, LEGS, DOFS, ROOT
 
 leg = sys.argv[1] if len(sys.argv) > 1 else "lf"; li = LEGS.index(leg)
 lm = json.load(open(ROOT / "data/leg_motor_map.json"))["legs"][leg]["motor"]["FTi"]
+import os
 cord = Cord(); body = Legs(cord)
+# REFLEX_LIVE=adapt,offsets: add the live model's adaptation and/or capped homeostatic offsets
+_lv = os.environ.get("REFLEX_LIVE", "")
+cord.use_live_physiology(adapt="adapt" in _lv, offsets=(ROOT / "data/homeostasis_offsets.bin") if "offsets" in _lv else None,
+                        ai_in=float(os.environ.get("REFLEX_AI", "0.6")))
+
 ext = [cord.pos[x] for x in lm["neg"]]; flx = [cord.pos[x] for x in lm["pos"]]
 AMP, F, T_SETTLE, N_CYC = 0.1745, 2.0, 0.5, 3
 rows = []
-for k in [1, 2, 4, 8, 16, 32]:
+for k in [float(x) for x in os.environ.get("REFLEX_K", "1,2,4,8,16,32").split(",")]:
     cord.reset(); body.act[:] = 0
     ang = np.zeros((6, 6)); om = np.zeros((6, 6)); lx = np.full(6, 0.5)
     se, sf, n = 0.0, 0.0, 0; rest, efl, eex, nfl, nex = 0.0, 0.0, 0.0, 0, 0

@@ -35,10 +35,30 @@ class Cord:
         self.dt, self.tau_s = dt, tau_s_ms
         self.D = int(round(delay_ms / 1000 / dt))
         self.I = np.zeros(self.n)
+        self.offset = np.zeros(self.n)    # optional homeostatic offsets (input units; live mV x 21.82)
+        self.adapt_b = np.zeros(self.n)   # optional spike-frequency adaptation step (input units per spike)
+        self.tau_w = 0.3
         self.reset()
 
     def reset(self):
         self.R = np.zeros(self.n); self.syn = np.zeros(self.n); self.hist = [np.zeros(self.n)] * (self.D + 1)
+        self.w = np.zeros(self.n)
+
+    def use_live_physiology(self, adapt=True, offsets=None, cap_mv=3.0, ai_in=0.6):
+        """Add the live model's rate-unit adaptation (index 0.6 interneurons / 0.85 leg motor neurons, tau_w 300 ms)
+        and/or homeostatic offsets (data/homeostasis_offsets.bin, capped, mV -> units x 21.82) to this offline cord."""
+        import csv
+        cls = {}
+        with open(ROOT / "data/vnc/vnc_neurons.csv", newline="") as f:
+            for r in csv.DictReader(f):
+                cls[int(r["model_index"])] = r["cell_class"]
+        size = 1.0 / self.a
+        if adapt:
+            ai = np.array([0.85 if cls.get(int(x)) == "leg_motor_neuron" else ai_in for x in self.ids])
+            self.adapt_b = (1.0 / ai - 1.0) * size / self.tau_w       # g = 1/size Hz per unit
+        if offsets is not None:
+            h = np.fromfile(offsets, dtype=np.float32)
+            self.offset = 21.82 * np.clip(np.array([h[int(x)] if int(x) < len(h) else 0.0 for x in self.ids]), -cap_mv, cap_mv)
 
     def set_drive(self, amps):
         self.I[:] = 0.0
@@ -49,7 +69,8 @@ class Cord:
     def step(self, drive_on=True, clamp_idx=None, clamp_val=None):
         self.hist.append(self.R.copy()); Rd = self.hist.pop(0)
         self.syn += self.dt * 1000 * (self.W @ Rd - self.syn) / self.tau_s
-        x = (self.I if drive_on else 0.0) + self.syn - self.theta
+        self.w += self.dt * (-self.w / self.tau_w + self.adapt_b * np.maximum(self.R, 0.0))
+        x = (self.I if drive_on else 0.0) + self.syn - self.theta + self.offset - self.w
         self.R += self.dt * (np.maximum(self.fcap * np.tanh((self.a / self.fcap) * x), 0.0) - self.R) / self.tau
         if clamp_idx is not None:
             self.R[clamp_idx] = clamp_val

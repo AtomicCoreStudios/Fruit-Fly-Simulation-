@@ -1265,6 +1265,21 @@ Also fixed: `--mj_sensors` diagnostic (afferent kinds to keep). An empty argumen
   - Still 20× below the measured 107, and only weakly phase-locked (flexion vs extension half 12 vs 10 Hz).
 - **Free set-down** (`recordings/probe_support_cap3.csv`): stands about 1 s after release, then tips over (about 3.5 s).
 
+### What limits the reflex: adaptation and homeostasis, not missing learning (2026-10-31)
+
+The offline model (`tools/reflex_offline.py`) can now add the live model's adaptation and capped offsets (`REFLEX_LIVE=adapt,offsets`, `REFLEX_AI=<interneuron adaptation index>`, `REFLEX_K=<gains>`), to see which live mechanism suppresses the 4B/3A assembly:
+
+| Offline condition (k = 1 unless stated) | Extensor spikes per cycle | Rest |
+|---|---|---|
+| Published model, nothing added | 56 | silent |
+| + learned ±3 mV offsets only | 12 | silent |
+| + adaptation, interneuron AI 0.6 (current live value, assumed) | 0.3 | silent |
+| + adaptation, AI 0.75–0.95 | 14–17 | silent |
+| + adaptation AI 0.85, k = 2–4 | 31–42 (strongly flexion-locked) | rises |
+
+- Live test of AI 0.85 (re-learned homeostasis tethered intact and headless, k = 1 and 2; `recordings/reflex_calib_ai085_*.csv`): 0.2–1.1 spikes per cycle, rest up to 3.6. **Worse than the current AI 0.6 + cap result (5.4)**: with weaker adaptation, homeostasis learned while standing pushes the assembly members toward the −3 mV cap. The change was reverted; live values are unchanged (AI 0.6, cap ±3 mV).
+- Conclusion: the reflex is innate (the published equations reproduce it from the wiring), so no memory or learning system is needed for it. It is limited by two assumed settings with no measured value: the interneuron adaptation index and the homeostatic set point / learning condition of the premotor interneurons. Measured adaptation and resting rates of 4B/3A interneurons would settle both.
+
 ## Calibration ledger (motor side): what is data, what is set by hand
 
 Kept so that any walking result can state exactly how much came from the connectome and how much from hand-set values. Basis: **measured** = from data; **literature** = published model or parameter; **assumed** = an approximate value I chose; **tuned** = adjusted while looking at walking. Only the descending command mix has been tuned to walking; everything else is measured, literature or assumed.
